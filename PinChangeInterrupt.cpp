@@ -27,3 +27,7 @@ THE SOFTWARE.
 // PinChangeInterrupt
 //================================================================================
 
+void __attribute__((weak)) PinChangeInterruptEvent(uint8_t port) {
+
+}
+

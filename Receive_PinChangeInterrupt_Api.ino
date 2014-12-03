@@ -12,20 +12,41 @@
  On Arduino Uno you can use any pin for receiving.
  On Arduino Mega you can use 10, 11, 12, 13, 14, 15, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64), A11 (65), A12 (66), A13 (67), A14 (68), A15 (69).
  On Arduino Leonardo you can use 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI).
- With HoodLoader you can use pin 1-7 and some other pins which are normally not connected.
+ With HoodLoader2 you can use pin 1-7 and some other pins which are normally not connected.
 
  */
 
 #include "IRLremote.h"
 #include "PinChangeInterrupt.h"
 
+#if defined(PCINT0_vect)
+ISR(PCINT0_vect) {
+  PCintPort(0);
+}
+#endif
+
+#if defined(PCINT1_vect)
+ISR(PCINT1_vect) {
+  PCintPort(1);
+}
+#endif
+
+#if defined(PCINT2_vect)
+ISR(PCINT2_vect) {
+  PCintPort(2);
+}
+#endif
+
+#if defined(PCINT3_vect)
+ISR(PCINT2_vect) {
+  //TODO currently not supported. which avr has 3 PCINT?
+  //PCintPort(3);
+}
+#endif
+
 //================================================================================
 // Main sketch
 //================================================================================
-
-//TODO move definition to the library
-// convert a normal pin to its PCINT number
-#define digitalPinToPinChangeInterrupt(p) (digitalPinToPCMSKbit(p) + 8 * digitalPinToPCICRbit(p))
 
 void PinChangeInterruptEvent(uint8_t port) {
   // PinChangeInterrupt weak event handler
@@ -41,10 +62,10 @@ void setup()
   Serial.println(F("Startup"));
 
   // attach the new PinChangeInterrupt function above
-  // 3966 - 217 (mega)
+  // 3966 - 217 (mega) - 3640 (uno)
   attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(11), CHANGE);
 
-  // 5126 - 233 (mega)
+  // 5126 - 233 (mega) - 4090 (uno)
   //attachInterrupt(digitalPinToPinChangeInterrupt(2), IRLinterrupt<IR_ALL>, CHANGE);
 }
 
