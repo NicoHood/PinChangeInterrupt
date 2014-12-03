@@ -37,18 +37,14 @@ THE SOFTWARE.
 
 // function prototypes
 inline void attachPinChangeInterrupt(const uint8_t pin, const uint8_t mode);
-
 inline void detachPinChangeInterrupt(const uint8_t pin);
-
 inline void PCintPort(uint8_t port);
-
 void PinChangeInterruptEvent(uint8_t port);
 
-
 // variables to save the last port states and the interrupt settings
-static uint8_t oldPorts[3] = {0};
-static uint8_t fallingPorts[3] = {0};
-static uint8_t risingPorts[3] = {0};
+extern uint8_t oldPorts[3];
+extern uint8_t fallingPorts[3];
+extern uint8_t risingPorts[3];
 
 
 void attachPinChangeInterrupt(const uint8_t pin, const uint8_t mode) {
@@ -82,7 +78,6 @@ void attachPinChangeInterrupt(const uint8_t pin, const uint8_t mode) {
   PCICR |= (1 << PCIE);
 }
 
-
 void detachPinChangeInterrupt(const uint8_t pin) {
   // get PCINT registers and bitmasks
   uint8_t PCIE = digitalPinToPCICRbit(pin);
@@ -96,7 +91,6 @@ void detachPinChangeInterrupt(const uint8_t pin) {
   if (*PCMSK == 0)
     PCICR &= ~(1 << PCIE);
 }
-
 
 void PCintPort(uint8_t port) {
   // get the new pin states for port
@@ -130,12 +124,10 @@ void PCintPort(uint8_t port) {
   else //if (port == 1)
     newPort = ((PINC >> 6) & (1 << 0)) | ((PINC >> 4) & (1 << 1)) |  ((PINC >> 2) & (1 << 2)) | ((PINC << 1) & (1 << 3)) | ((PIND >> 1) & (1 << 4));
 
-
 #else
 #error PinChangeInterrupt library doesnt support this MCU yet.
 
 #endif
-
 
   // compare with the old value to detect a rising or falling
   uint8_t change = newPort ^ oldPorts[port];
@@ -155,7 +147,7 @@ void PCintPort(uint8_t port) {
     trigger >>= 1;
     i++;
   }
-
+  //Serial.println(4);
   // save the new state for next comparison
   oldPorts[port] = newPort;
 }

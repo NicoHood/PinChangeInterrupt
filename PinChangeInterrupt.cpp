@@ -28,6 +28,37 @@ THE SOFTWARE.
 //================================================================================
 
 void __attribute__((weak)) PinChangeInterruptEvent(uint8_t port) {
-
+  // PinChangeInterrupt weak event handler
+  // The user has to overwrite this function!
 }
 
+// variables to save the last port states and the interrupt settings
+uint8_t oldPorts[3] = {0};
+uint8_t fallingPorts[3] = {0};
+uint8_t risingPorts[3] = {0};
+
+// interrupt handlers
+#if defined(PCINT0_vect)
+ISR(PCINT0_vect) {
+  PCintPort(0);
+}
+#endif
+
+#if defined(PCINT1_vect)
+ISR(PCINT1_vect) {
+  PCintPort(1);
+}
+#endif
+
+#if defined(PCINT2_vect)
+ISR(PCINT2_vect) {
+  PCintPort(2);
+}
+#endif
+
+#if defined(PCINT3_vect)
+ISR(PCINT2_vect) {
+  //TODO currently not supported. which avr has 3 PCINT?
+  //PCintPort(3);
+}
+#endif

@@ -19,42 +19,6 @@
 #include "IRLremote.h"
 #include "PinChangeInterrupt.h"
 
-#if defined(PCINT0_vect)
-ISR(PCINT0_vect) {
-  PCintPort(0);
-}
-#endif
-
-#if defined(PCINT1_vect)
-ISR(PCINT1_vect) {
-  PCintPort(1);
-}
-#endif
-
-#if defined(PCINT2_vect)
-ISR(PCINT2_vect) {
-  PCintPort(2);
-}
-#endif
-
-#if defined(PCINT3_vect)
-ISR(PCINT2_vect) {
-  //TODO currently not supported. which avr has 3 PCINT?
-  //PCintPort(3);
-}
-#endif
-
-//================================================================================
-// Main sketch
-//================================================================================
-
-void PinChangeInterruptEvent(uint8_t port) {
-  // PinChangeInterrupt weak event handler
-  // Do not use any Serial here or long function calls.
-  if (port == digitalPinToPinChangeInterrupt(11))
-    IRLinterrupt<IR_ALL>();
-}
-
 void setup()
 {
   // start serial debug output
@@ -85,4 +49,11 @@ void loop() {
     // resume reading to get new values
     IRLreset();
   }
+}
+
+void PinChangeInterruptEvent(uint8_t port) {
+  // PinChangeInterrupt weak event handler
+  // Do not use any Serial or long function calls here!
+  if (port == digitalPinToPinChangeInterrupt(11))
+    IRLinterrupt<IR_ALL>();
 }

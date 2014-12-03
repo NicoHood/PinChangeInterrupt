@@ -1,12 +1,13 @@
-dev stage
+PinChangeInterrupt Library DEV for Arduino
+==========================================
 
-rename your downloaded folder to "Receive_PinChangeInterrupt_Api" and install the IRLremote:
+**.h/.cpp conversation successful!**
 
+Install the IRLremote to test the example:
 https://github.com/NicoHood/IRLremote
-
 optionally you can add your own interrupt function to see if its working. like blink an led.
 
-this library has to be converted into a .cpp/.h library and also a 2nd more advanced library for each port should be added as well.
+a 2nd more advanced library for each port should be added as well.
 
 
 Licence and Copyright
