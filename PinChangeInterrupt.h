@@ -28,128 +28,168 @@ THE SOFTWARE.
 #include "Arduino.h"
 
 //================================================================================
-// PinChangeInterrupt
+// Settings
 //================================================================================
 
-// convert a normal pin to its PCINT number
-#define digitalPinToPinChangeInterrupt(p) (digitalPinToPCMSKbit(p) + 8 * digitalPinToPCICRbit(p))
+// Settings to de/activate ports
+// This will only save you some flash but no ram because of the arrays.
+// Arrays are just the smallest and clearest implementation if every port is enabled, that's why we use arrays.
+#define PCINT_PORT0_ENABLED
+#define PCINT_PORT1_ENABLED
+#define PCINT_PORT2_ENABLED
+// ISR 3 not used in this lib: http://www.nongnu.org/avr-libc/user-manual/group__avr__interrupts.html
+//#define PCINT_PORT3_ENABLED
 
+//================================================================================
+// Definitions
+//================================================================================
+
+// Microcontroller specific definitions
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
+#define EXTERNAL_NUM_PINCHANGEINTERRUPT 24
+#define pinChangeInterruptPortToInput(p) ((p == 0) ? PINB : (port == 1) ? PINC : PIND)
+
+#elif defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega640__)
+#define EXTERNAL_NUM_PINCHANGEINTERRUPT 24
+#define pinChangeInterruptPortToInput(p) ((p == 0) ? PINB : (port == 1) ? (PINE & (1 << 0)) | ((PINJ & 0x7F) << 1) : PINK)
+
+#elif defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
+#define EXTERNAL_NUM_PINCHANGEINTERRUPT 7
+#define pinChangeInterruptPortToInput(p) (PINB & 0x7F)
+
+#elif defined(__AVR_AT90USB82__) || defined(__AVR_AT90USB162__) || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega8U2__)
+#define EXTERNAL_NUM_PINCHANGEINTERRUPT 13
+// u2 Series has crappy pin mappings for port 1
+#define pinChangeInterruptPortToInput(p) ((p == 0) ? PINB : \
+((PINC >> 6) & (1 << 0)) | ((PINC >> 4) & (1 << 1)) | ((PINC >> 2) & (1 << 2)) | ((PINC << 1) & (1 << 3)) | ((PIND >> 1) & (1 << 4)))
+
+#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+#define EXTERNAL_NUM_PINCHANGEINTERRUPT 6
+#define pinChangeInterruptPortToInput(p) (PINB & 0x3F)
+
+#elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
+#define EXTERNAL_NUM_PINCHANGEINTERRUPT 10
+#define pinChangeInterruptPortToInput(p) ((p == 0) ? PINA : (PINB & 0x0F))
+
+#else // Microcontroller not supported
+#error PinChangeInterrupt library doesnt support this MCU yet.
+#endif
+
+// missing 1.0.6 definition workaround
+#if ARDUINO == 106 && not defined(NOT_AN_INTERRUPT)
+#define NOT_AN_INTERRUPT -1
+#endif
+
+// convert a normal pin to its PCINT number (0 - max 23)
+#define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * digitalPinToPCICRbit(p)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
+
+// define maximum number of PCINTs (0 - max 23)
+#define PCINT_PORTS (((EXTERNAL_NUM_PINCHANGEINTERRUPT - 1) / 8) + 1)
+
+//================================================================================
+// PinChangeInterrupt
+//================================================================================
 
 // function prototypes
 inline void attachPinChangeInterrupt(const uint8_t pin, const uint8_t mode);
 inline void detachPinChangeInterrupt(const uint8_t pin);
 inline void PCintPort(uint8_t port);
-void PinChangeInterruptEvent(uint8_t port);
+void PinChangeInterruptEvent(uint8_t pcintNum);
 
 // variables to save the last port states and the interrupt settings
-extern uint8_t oldPorts[3];
-extern uint8_t fallingPorts[3];
-extern uint8_t risingPorts[3];
+extern uint8_t oldPorts[PCINT_PORTS];
+extern uint8_t fallingPorts[PCINT_PORTS];
+extern uint8_t risingPorts[PCINT_PORTS];
 
+void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
+	// get PCINT registers and bitmask
+	uint8_t pcintPort = pcintNum / 8;
+	uint8_t pcintMask = (1 << (pcintNum % 8));
 
-void attachPinChangeInterrupt(const uint8_t pin, const uint8_t mode) {
-  // get PCINT registers and bitmasks
-  uint8_t PCIE = pin / 8;
-  uint8_t PCINT = pin % 8;
+	// check if pcint is a valid pcint, exclude deactivated ports
+	if (!(pcintNum < EXTERNAL_NUM_PINCHANGEINTERRUPT))
+		return;
+#if defined(PCINT0_vect) && !defined(PCINT_PORT0_ENABLED)
+	if (pcintPort == 0) return;
+#endif
+#if defined(PCINT1_vect) && !defined(PCINT_PORT1_ENABLED)
+	if (pcintPort == 1) return;
+#endif
+#if defined(PCINT2_vect) && !defined(PCINT_PORT2_ENABLED)
+	if (pcintPort == 2) return;
+#endif
 
-  // save settings related to mode and registers
-  if (mode == CHANGE || mode == RISING)
-    risingPorts[PCIE] |= (1 << PCINT);
-  if (mode == CHANGE || mode == FALLING)
-    fallingPorts[PCIE] |= (1 << PCINT);
+	// save settings related to mode and registers
+	if (mode == CHANGE || mode == RISING)
+		risingPorts[pcintPort] |= pcintMask;
+	if (mode == CHANGE || mode == FALLING)
+		fallingPorts[pcintPort] |= pcintMask;
 
-  // update the old state to the actual state
-  oldPorts[PCIE] = *portInputRegister(digitalPinToPort(pin));
+	// update the old state to the actual state
+	oldPorts[pcintPort] = *portInputRegister(digitalPinToPort(pcintNum));
 
-  // pin change mask registers decide which pins are enabled as triggers
-  switch (PCIE) {
-    case 0:
-      PCMSK0 |= (1 << PCINT);
-      break;
-    case 1:
-      PCMSK1 |= (1 << PCINT);
-      break;
-    case 2:
-      PCMSK2 |= (1 << PCINT);
-      break;
-  }
+	// pin change mask registers decide which pins are enabled as triggers
+	*(&PCMSK0 + pcintPort) |= pcintMask;
 
-  // PCICR: Pin Change Interrupt Control Register - enables interrupt vectors
-  PCICR |= (1 << PCIE);
+	// PCICR: Pin Change Interrupt Control Register - enables interrupt vectors
+	PCICR |= (1 << pcintPort);
 }
 
-void detachPinChangeInterrupt(const uint8_t pin) {
-  // get PCINT registers and bitmasks
-  uint8_t PCIE = digitalPinToPCICRbit(pin);
-  uint8_t PCINT = digitalPinToPCMSKbit(pin);
-  volatile unsigned char* PCMSK = digitalPinToPCMSK(pin);
+void detachPinChangeInterrupt(const uint8_t pcintNum) {
+	// get PCINT registers and bitmask
+	uint8_t pcintPort = pcintNum / 8;
+	uint8_t pcintMask = (1 << (pcintNum % 8));
 
-  // disable the mask.
-  *PCMSK &= ~(1 << PCINT);
+	// check if pcint is a valid pcint, exclude deactivated ports
+	if (!(pcintNum < EXTERNAL_NUM_PINCHANGEINTERRUPT))
+		return;
+#if defined(PCINT0_vect) && !defined(PCINT_PORT0_ENABLED)
+	if (pcintPort == 0) return;
+#endif
+#if defined(PCINT1_vect) && !defined(PCINT_PORT1_ENABLED)
+	if (pcintPort == 1) return;
+#endif
+#if defined(PCINT2_vect) && !defined(PCINT_PORT2_ENABLED)
+	if (pcintPort == 2) return;
+#endif
 
-  // if that's the last one, disable the interrupt.
-  if (*PCMSK == 0)
-    PCICR &= ~(1 << PCIE);
+	// delete setting
+	risingPorts[pcintPort] &= ~pcintMask;
+	fallingPorts[pcintPort] &= ~pcintMask;
+
+	// disable the mask.
+	*(&PCMSK0 + pcintPort) &= ~pcintMask;
+
+	// if that's the last one, disable the interrupt.
+	if (*(&PCMSK0 + pcintPort) == 0)
+		PCICR &= ~(1 << pcintPort);
 }
 
 void PCintPort(uint8_t port) {
-  // get the new pin states for port
-  uint8_t newPort;
+	// get the new and old pin states for port
+	uint8_t newPort = pinChangeInterruptPortToInput(port);
 
-#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) // || defined(__AVR_ATmega168__) || defined(__AVR_ATmega168p__)
-  if (port == 0)
-    newPort = PINB;
-  else if (port == 1)
-    newPort = PINC;
-  else //if (port == 2)
-    newPort = PIND;
+	// compare with the old value to detect a rising or falling
+	uint8_t change = newPort ^ oldPorts[port];
+	uint8_t rising = change & newPort;
+	uint8_t falling = change & oldPorts[port];
 
-#elif defined(__AVR_ATmega2560__) // || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega128RFA1__) || defined(__AVR_ATmega256RFR2__)
-  if (port == 0)
-    newPort = PINB;
-  else if (port == 1)
-    newPort = (PINE & (1 << 0)) | ((PINJ & 0x7F) << 1);
-  else //if (port == 2)
-    newPort = PINK;
+	// check which pins are triggered, compared with the settings
+	uint8_t trigger = (rising & risingPorts[port]) | (falling & fallingPorts[port]);
 
-#elif defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
-  // u4 Series has only 7 PCINT
-  //if (port == 0)
-  newPort = (PINB & 0x7F);
+	// execute all functions that should be triggered
+	uint8_t i = 0;
+	while (trigger) {
+		// if trigger is set, call the PCINT function with the specific port
+		if (trigger & 0x01)
+			PinChangeInterruptEvent((8 * port) + i);
 
-#elif defined(__AVR_AT90USB82__) || defined(__AVR_AT90USB162__) || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega8U2__)
-  // u2 Series has crappy pin mappings for port 1
-  if (port == 0)
-    newPort = PINB;
-  else //if (port == 1)
-    newPort = ((PINC >> 6) & (1 << 0)) | ((PINC >> 4) & (1 << 1)) |  ((PINC >> 2) & (1 << 2)) | ((PINC << 1) & (1 << 3)) | ((PIND >> 1) & (1 << 4));
+		trigger >>= 1;
+		i++;
+	}
 
-#else
-#error PinChangeInterrupt library doesnt support this MCU yet.
-
-#endif
-
-  // compare with the old value to detect a rising or falling
-  uint8_t change = newPort ^ oldPorts[port];
-  uint8_t rising = change & newPort;
-  uint8_t falling = change & oldPorts[port];
-
-  // check which pins are triggered, compared with the settings
-  uint8_t trigger = (rising & risingPorts[port]) | (falling & fallingPorts[port]);
-
-  // execute all functions that should be triggered
-  uint8_t i = 0;
-  while (trigger) {
-    // if trigger is set, call the PCINT function with the specific port
-    if (trigger & 0x01)
-      PinChangeInterruptEvent(i + 8 * port);
-
-    trigger >>= 1;
-    i++;
-  }
-  //Serial.println(4);
-  // save the new state for next comparison
-  oldPorts[port] = newPort;
+	// save the new state for next comparison
+	oldPorts[port] = newPort;
 }
 
 #endif

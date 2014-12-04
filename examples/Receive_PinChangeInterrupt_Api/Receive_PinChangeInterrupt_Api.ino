@@ -6,7 +6,7 @@
  Receives IR signals with custom Pin Change Interrupt Api.
 
  This is the PCINT version with an easy to use Api on almost any pin for the IRLremote.
- PCINT is usefull if you are running out of normal INTs or if you are using HoodLoader2.
+ PCINT is useful if you are running out of normal INTs or if you are using HoodLoader2.
  Keep in mind that this PCINT is not compatible with SoftSerial (at the moment).
 
  On Arduino Uno you can use any pin for receiving.
@@ -19,15 +19,18 @@
 #include "IRLremote.h"
 #include "PinChangeInterrupt.h"
 
+// see readme to choose the right pin (with a pin change interrupt!) for your Arduino board
+const int interruptIR = digitalPinToPinChangeInterrupt(11);
+
 void setup()
 {
   // start serial debug output
   Serial.begin(115200);
   Serial.println(F("Startup"));
 
-  // attach the new PinChangeInterrupt function above
+  // attach the new PinChangeInterrupt and enable Event function below
   // 3966 - 217 (mega) - 3640 (uno)
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(11), CHANGE);
+  attachPinChangeInterrupt(interruptIR, CHANGE);
 
   // 5126 - 233 (mega) - 4090 (uno)
   //attachInterrupt(digitalPinToPinChangeInterrupt(2), IRLinterrupt<IR_ALL>, CHANGE);
@@ -51,9 +54,9 @@ void loop() {
   }
 }
 
-void PinChangeInterruptEvent(uint8_t port) {
+void PinChangeInterruptEvent(uint8_t pcintNum) {
   // PinChangeInterrupt weak event handler
   // Do not use any Serial or long function calls here!
-  if (port == digitalPinToPinChangeInterrupt(11))
+  if (pcintNum == interruptIR)
     IRLinterrupt<IR_ALL>();
 }

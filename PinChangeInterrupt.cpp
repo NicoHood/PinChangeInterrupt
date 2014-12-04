@@ -27,38 +27,37 @@ THE SOFTWARE.
 // PinChangeInterrupt
 //================================================================================
 
-void __attribute__((weak)) PinChangeInterruptEvent(uint8_t port) {
-  // PinChangeInterrupt weak event handler
-  // The user has to overwrite this function!
+void __attribute__((weak)) PinChangeInterruptEvent(uint8_t pcintNum) {
+	// PinChangeInterrupt weak event handler
+	// The user has to overwrite this function!
 }
 
 // variables to save the last port states and the interrupt settings
-uint8_t oldPorts[3] = {0};
-uint8_t fallingPorts[3] = {0};
-uint8_t risingPorts[3] = {0};
+uint8_t oldPorts[PCINT_PORTS] = { 0 };
+uint8_t fallingPorts[PCINT_PORTS] = { 0 };
+uint8_t risingPorts[PCINT_PORTS] = { 0 };
 
 // interrupt handlers
-#if defined(PCINT0_vect)
+#if defined(PCINT0_vect) && defined(PCINT_PORT0_ENABLED)
 ISR(PCINT0_vect) {
-  PCintPort(0);
+	PCintPort(0);
 }
 #endif
 
-#if defined(PCINT1_vect)
+#if defined(PCINT1_vect) && defined(PCINT_PORT1_ENABLED)
 ISR(PCINT1_vect) {
-  PCintPort(1);
+	PCintPort(1);
 }
 #endif
 
-#if defined(PCINT2_vect)
+#if defined(PCINT2_vect) && defined(PCINT_PORT2_ENABLED)
 ISR(PCINT2_vect) {
-  PCintPort(2);
+	PCintPort(2);
 }
 #endif
 
-#if defined(PCINT3_vect)
-ISR(PCINT2_vect) {
-  //TODO currently not supported. which avr has 3 PCINT?
-  //PCintPort(3);
+#if defined(PCINT3_vect) && defined(PCINT_PORT3_ENABLED)
+ISR(PCINT3_vect) {
+	PCintPort(3);
 }
 #endif

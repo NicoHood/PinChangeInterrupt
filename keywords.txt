@@ -10,7 +10,9 @@
 # Methods and Functions (KEYWORD2)
 #######################################
 
-
+attachPinChangeInterrupt	KEYWORD2
+detachPinChangeInterrupt	KEYWORD2
+PinChangeInterruptEvent	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
