@@ -44,6 +44,11 @@ THE SOFTWARE.
 // Definitions
 //================================================================================
 
+// on HoodLoader2 Arduino boards only PB (port0) is broken out
+#if defined(ARDUINO_HOODLOADER2)
+#define PCINT_PORT1_DISABLED
+#endif
+
 // disabling ports is stronger than enabling
 #if defined(PCINT_PORT0_DISABLED)
 #undef PCINT_PORT0_ENABLED
@@ -80,7 +85,7 @@ THE SOFTWARE.
 #define EXTERNAL_NUM_PINCHANGEINTERRUPT 13
 #define PCINT_INPUT0 PINB
 // u2 Series has crappy pin mappings for port 1
-#define PCINT_INPUT1 (((PINC >> 6) & (1 << 0)) | ((PINC >> 4) & (1 << 1)) | ((PINC >> 2) & (1 << 2)) | ((PINC << 1) & (1 << 3)) | ((PIND >> 1) & (1 << 4))))
+#define PCINT_INPUT1 (((PINC >> 6) & (1 << 0)) | ((PINC >> 4) & (1 << 1)) | ((PINC >> 2) & (1 << 2)) | ((PINC << 1) & (1 << 3)) | ((PIND >> 1) & (1 << 4)))
 
 #elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
 #define EXTERNAL_NUM_PINCHANGEINTERRUPT 6
@@ -93,6 +98,20 @@ THE SOFTWARE.
 
 #else // Microcontroller not supported
 #error PinChangeInterrupt library doesnt support this MCU yet.
+#endif
+
+// add fakes if ports are not used
+#ifndef PCINT_INPUT0
+#define PCINT_INPUT0 0
+#endif
+#ifndef PCINT_INPUT1
+#define PCINT_INPUT1 0
+#endif
+#ifndef PCINT_INPUT2
+#define PCINT_INPUT2 0
+#endif
+#ifndef PCINT_INPUT3
+#define PCINT_INPUT3 0
 #endif
 
 // if ports are enabled add them together so we can calculate some fancy stuff below
