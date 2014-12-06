@@ -4,6 +4,10 @@
 
  IRL Receive_PinChangeInterrupt_Api
  Receives IR signals with custom Pin Change Interrupt Api.
+ 
+ To use this sketch you need to install these libraries:
+ https://github.com/NicoHood/IRLremote
+ https://github.com/NicoHood/PinChangeInterrupt
 
  This is the PCINT version with an easy to use Api on almost any pin for the IRLremote.
  PCINT is useful if you are running out of normal INTs or if you are using HoodLoader2.

@@ -33,9 +33,9 @@ void __attribute__((weak)) PinChangeInterruptEvent(uint8_t pcintNum) {
 }
 
 // variables to save the last port states and the interrupt settings
-uint8_t oldPorts[PCINT_PORTS] = { 0 };
-uint8_t fallingPorts[PCINT_PORTS] = { 0 };
-uint8_t risingPorts[PCINT_PORTS] = { 0 };
+uint8_t oldPorts[PCINT_ENABLED_PORTS] = { 0 };
+uint8_t fallingPorts[PCINT_ENABLED_PORTS] = { 0 };
+uint8_t risingPorts[PCINT_ENABLED_PORTS] = { 0 };
 
 // interrupt handlers
 #if defined(PCINT0_vect) && defined(PCINT_PORT0_ENABLED)
