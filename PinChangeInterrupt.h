@@ -60,6 +60,7 @@ THE SOFTWARE.
 
 // Microcontroller specific definitions
 #if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
+// some pins are not useable, we wont check this, since it doesnt matter as long as the user doesn't try to attach the individual PCINTs
 #define EXTERNAL_NUM_PINCHANGEINTERRUPT 24
 #define PCINT_INPUT0 PINB
 #define PCINT_INPUT1 PINC
@@ -72,8 +73,8 @@ THE SOFTWARE.
 #define PCINT_INPUT2 PINK
 
 #elif defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
-#define EXTERNAL_NUM_PINCHANGEINTERRUPT 7
-#define PCINT_INPUT0 (PINB & 0x7F)
+#define EXTERNAL_NUM_PINCHANGEINTERRUPT 8
+#define PCINT_INPUT0 PINB
 
 #elif defined(__AVR_AT90USB82__) || defined(__AVR_AT90USB162__) || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega8U2__)
 #define EXTERNAL_NUM_PINCHANGEINTERRUPT 13
