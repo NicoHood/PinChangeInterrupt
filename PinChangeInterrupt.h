@@ -158,7 +158,7 @@ THE SOFTWARE.
 #define PCINT_PORTS (((EXTERNAL_NUM_PINCHANGEINTERRUPT - 1) / 8) + 1)
 
 // missing 1.0.6 definition workaround
-#if ARDUINO == 106 && !defined(NOT_AN_INTERRUPT)
+#ifndef NOT_AN_INTERRUPT
 #define NOT_AN_INTERRUPT -1
 #endif
 
