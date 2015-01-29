@@ -61,3 +61,55 @@ ISR(PCINT3_vect) {
 	PCintPort(3);
 }
 #endif
+
+//================================================================================
+// Progmem callbacks
+//================================================================================
+
+// typedef for our callback function pointers
+typedef void(*callback)(void);
+
+// useless function for weak implemented/not used functions
+extern "C" void pcint_null_callback(void) {
+}
+
+// create all weak functions which are all (if not used) alias of the pcint_null_callback above
+#define PCINT_WEAK_ALIAS(n) void pcint_callback_ptr_ ## n () __attribute__ ((weak, alias ("pcint_null_callback")))
+
+PCINT_WEAK_ALIAS(0);
+PCINT_WEAK_ALIAS(1);
+PCINT_WEAK_ALIAS(2);
+PCINT_WEAK_ALIAS(3);
+PCINT_WEAK_ALIAS(4);
+PCINT_WEAK_ALIAS(5);
+PCINT_WEAK_ALIAS(6);
+PCINT_WEAK_ALIAS(7);
+
+// create the function pointer of all functions in progmem to save ram
+#define PCINT_CALLBACK(n) pcint_callback_ptr_ ## n
+
+static const PROGMEM callback pcint_callback_arr[] = {
+	PCINT_CALLBACK(0),
+	PCINT_CALLBACK(1),
+	PCINT_CALLBACK(2),
+	PCINT_CALLBACK(3),
+	PCINT_CALLBACK(4),
+	PCINT_CALLBACK(5),
+	PCINT_CALLBACK(6),
+	PCINT_CALLBACK(7),
+};
+
+// number of items in an array
+#define NUMITEMS(arg) ((unsigned int) (sizeof (arg) / sizeof (arg [0]))) 
+
+// calls all functions (for testing)
+void call_all_callbacks(void) {
+	int i;
+	for (i = 0; i < NUMITEMS(pcint_callback_arr); ++i) {
+#ifndef __AVR
+		pcint_callback_arr[i]();
+#else
+		((callback)pgm_read_word(pcint_callback_arr + i))();
+#endif
+	}
+}

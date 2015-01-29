@@ -166,6 +166,21 @@ THE SOFTWARE.
 #define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * digitalPinToPCICRbit(p)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
 
 
+//#ifdef __cplusplus
+//#define EXTERNC extern "C"
+//#else
+//#define EXTERNC
+//#endif
+
+// definition used by the user to create his custom PCINT functions
+//#define PinChangeInterruptEvent(n) EXTERNC void pcint_callback_ptr_ ## n (void)
+
+// creates a strong alias of a custom function to a user defined PCINT and function
+#define PinChangeInterruptStrongAlias(identifier, n) EXTERNC void pcint_callback_ptr_ ## n (void) __attribute__ ((alias (#identifier)))
+
+void call_all_callbacks();
+
+
 //================================================================================
 // PinChangeInterrupt
 //================================================================================
