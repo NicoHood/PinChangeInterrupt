@@ -178,9 +178,30 @@ THE SOFTWARE.
 // creates a strong alias of a custom function to a user defined PCINT and function
 #define PinChangeInterruptStrongAlias(identifier, n) EXTERNC void pcint_callback_ptr_ ## n (void) __attribute__ ((alias (#identifier)))
 
-void call_all_callbacks();
 
+inline void call_all_callbacks();
 
+// typedef for our callback function pointers
+typedef void(*callback)(void);
+
+extern const PROGMEM callback pcint_callback_arr[];
+
+// number of items in an array
+#define NUMITEMS(arg) ((unsigned int) (sizeof (arg) / sizeof (arg [0]))) 
+
+extern const size_t pcint_callback_arr_len;
+
+// calls all functions (for testing)
+void call_all_callbacks(void) {
+	int i;
+	for (i = 0; i < pcint_callback_arr_len; ++i) {
+#ifndef __AVR
+		pcint_callback_arr[i]();
+#else
+		((callback)pgm_read_word(pcint_callback_arr + i))();
+#endif
+	}
+}
 //================================================================================
 // PinChangeInterrupt
 //================================================================================
