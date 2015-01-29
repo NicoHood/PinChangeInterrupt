@@ -44,10 +44,13 @@ THE SOFTWARE.
 // Definitions
 //================================================================================
 
-// on HoodLoader2 Arduino boards only PB (port0) is broken out
+// on HoodLoader2 Arduino boards only PB (port0) is broken out, save this flash
 #if defined(ARDUINO_HOODLOADER2)
 #define PCINT_PORT1_DISABLED
 #endif
+
+// ISR 3 not used in this lib: http://www.nongnu.org/avr-libc/user-manual/group__avr__interrupts.html
+#define PCINT_PORT3_DISABLED
 
 // disabling ports is stronger than enabling
 #if defined(PCINT_PORT0_DISABLED)
@@ -97,7 +100,7 @@ THE SOFTWARE.
 #define PCINT_INPUT1 (PINB & 0x0F)
 
 #else // Microcontroller not supported
-#error PinChangeInterrupt library doesnt support this MCU yet.
+#error PinChangeInterrupt library does not support this MCU yet.
 #endif
 
 // add fakes if ports are not used
@@ -114,7 +117,7 @@ THE SOFTWARE.
 #define PCINT_INPUT3 0
 #endif
 
-// if ports are enabled add them together so we can calculate some fancy stuff below
+// if ports are enabled and physically available add them together so we can calculate some fancy stuff below
 #if defined(PCINT0_vect) && defined(PCINT_PORT0_ENABLED)
 #define PCINT_PORT0 1
 #else
@@ -165,43 +168,16 @@ THE SOFTWARE.
 // convert a normal pin to its PCINT number (0 - max 23), used by the user
 #define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * digitalPinToPCICRbit(p)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
 
-
-//#ifdef __cplusplus
-//#define EXTERNC extern "C"
-//#else
-//#define EXTERNC
-//#endif
-
 // definition used by the user to create his custom PCINT functions
-//#define PinChangeInterruptEvent(n) EXTERNC void pcint_callback_ptr_ ## n (void)
+#define PinChangeInterruptEvent_Wrapper(n) pcint_callback_ptr_ ## n
+#define PinChangeInterruptEvent(n) PinChangeInterruptEvent_Wrapper(n)
 
 // creates a strong alias of a custom function to a user defined PCINT and function
 #define PinChangeInterruptStrongAlias(identifier, n) EXTERNC void pcint_callback_ptr_ ## n (void) __attribute__ ((alias (#identifier)))
 
+void call_all_callbacks();
 
-inline void call_all_callbacks();
 
-// typedef for our callback function pointers
-typedef void(*callback)(void);
-
-extern const PROGMEM callback pcint_callback_arr[];
-
-// number of items in an array
-#define NUMITEMS(arg) ((unsigned int) (sizeof (arg) / sizeof (arg [0]))) 
-
-extern const size_t pcint_callback_arr_len;
-
-// calls all functions (for testing)
-void call_all_callbacks(void) {
-	int i;
-	for (i = 0; i < pcint_callback_arr_len; ++i) {
-#ifndef __AVR
-		pcint_callback_arr[i]();
-#else
-		((callback)pgm_read_word(pcint_callback_arr + i))();
-#endif
-	}
-}
 //================================================================================
 // PinChangeInterrupt
 //================================================================================
@@ -209,8 +185,6 @@ void call_all_callbacks(void) {
 // function prototypes
 inline void attachPinChangeInterrupt(const uint8_t pin, const uint8_t mode);
 inline void detachPinChangeInterrupt(const uint8_t pin);
-inline void PCintPort(uint8_t port);
-void PinChangeInterruptEvent(uint8_t pcintNum);
 
 // variables to save the last port states and the interrupt settings
 extern uint8_t oldPorts[PCINT_ENABLED_PORTS];
@@ -279,34 +253,6 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	// if that's the last one, disable the interrupt.
 	if (*(&PCMSK0 + pcintPort) == 0)
 		PCICR &= ~(1 << pcintPort);
-}
-
-void PCintPort(uint8_t port) {
-	// get the new and old pin states for port
-	uint8_t newPort = pinChangeInterruptPortToInput(port);
-
-	// compare with the old value to detect a rising or falling
-	uint8_t arrayPos = PCINT_ARRAY_POS(port);
-	uint8_t change = newPort ^ oldPorts[arrayPos];
-	uint8_t rising = change & newPort;
-	uint8_t falling = change & oldPorts[arrayPos];
-
-	// check which pins are triggered, compared with the settings
-	uint8_t trigger = (rising & risingPorts[arrayPos]) | (falling & fallingPorts[arrayPos]);
-
-	// execute all functions that should be triggered
-	uint8_t i = 0;
-	while (trigger) {
-		// if trigger is set, call the PCINT function with the specific port
-		if (trigger & 0x01)
-			PinChangeInterruptEvent((8 * port) + i);
-
-		trigger >>= 1;
-		i++;
-	}
-
-	// save the new state for next comparison
-	oldPorts[arrayPos] = newPort;
 }
 
 #endif
