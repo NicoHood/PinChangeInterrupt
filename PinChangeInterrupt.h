@@ -165,12 +165,20 @@ THE SOFTWARE.
 #define NOT_AN_INTERRUPT -1
 #endif
 
-// convert a normal pin to its PCINT number (0 - max 23), used by the user
-#define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * digitalPinToPCICRbit(p)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
-
 // definition used by the user to create his custom PCINT functions
 #define PinChangeInterruptEvent_Wrapper(n) pcint_callback_ptr_ ## n
 #define PinChangeInterruptEvent(n) PinChangeInterruptEvent_Wrapper(n)
+
+// convert a normal pin to its PCINT number (0 - max 23), used by the user
+// newer version, to work with the event definition above.
+#define digitalPinToPinChangeInterruptWrapper(p) PIN_TO_PCINT_ ## p
+#define digitalPinToPinChangeInterrupt(p) digitalPinToPinChangeInterruptWrapper(p)
+// old version, calculates the pin by the Arduino definitions
+#define digitalPinToPinChangeInterruptOld(p) (digitalPinToPCICR(p) ? ((8 * digitalPinToPCICRbit(p)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
+
+// digital pin -> pcint number definitions
+#define PIN_TO_PCINT_4 20
+#define PIN_TO_PCINT_5 21
 
 // creates a strong alias of a custom function to a user defined PCINT and function
 #define PinChangeInterruptStrongAlias(identifier, n) EXTERNC void pcint_callback_ptr_ ## n (void) __attribute__ ((alias (#identifier)))

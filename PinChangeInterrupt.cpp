@@ -69,8 +69,6 @@ PCINT_WEAK_ALIAS(22);
 PCINT_WEAK_ALIAS(23);
 #endif
 
-void pcint_callback_pin_4() __attribute__((alias("pcint_callback_ptr_20")));
-
 // create the function pointer of all functions in progmem to save ram
 #define PCINT_CALLBACK(n) pcint_callback_ptr_ ## n
 
@@ -170,8 +168,7 @@ ISR(PCINT3_vect) {
 }
 #endif
 
-
-
+/*
 // number of items in an array
 #define NUMITEMS(arg) ((unsigned int) (sizeof (arg) / sizeof (arg [0]))) 
 
@@ -186,3 +183,4 @@ void call_all_callbacks(void) {
 #endif
 	}
 }
+*/

@@ -23,10 +23,7 @@ but this library tries to reduce this disadvantage to a minimum, even with user 
 * Arduino Leonardo: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
 * With HoodLoader2 you can use pin 1-7 and some other pins which are normally not connected.
 
-**Todo:**
-* Change .cpp in .c?
-
-**[Comment for feedback on my blog.](http://nicohood.wordpress.com/)**
+**[Comment for feedback on my blog.](www.nicohood.de)**
 
 Installation/How to use
 =======================
@@ -64,17 +61,19 @@ How it works
 ============
 
 Coding a PCINT library is kind of tricky. At least if you want to keep flash and ram size low, as I always try to do ;)
-There are two main challenges: compare the cold values as fast as you can but still be able to get a RISING, FALLING, CHANGE for every port
+There are two main challenges: compare the old values with the new values as fast as you can but still be able to get a RISING, FALLING, CHANGE for every port
 and somehow start the function the user wants to use.
 
 The first challenge about the comparison is solved this way: we always compare a whole port at once. This saves us a lot of cpu cycles and also ram.
-We only need a value for the old port state, the rising and the falling setting. CHANGE is interpreted as rising or falling, so both settings are high.
+We only need 1 byte for the old port state, the rising and the falling setting each. CHANGE is interpreted as rising or falling, so both settings are set to 1.
 The rest is a bit of clever bit calculation to get the triggers for the whole port.
 
 The hardest challenge was to find a way to start the user functions. Should we save a function pointer array with up to 24 entries? That would cost 48 bytes of ram,
-some overhead for 24 functions of which the user might use 1-3. It took me some time to realize a different solution. What if you simply use only one function for every
-interrupt and pass the changed port? It turned out that it works perfectly. The user has to overwrite this function in the .ino file and it can only be accessed from there
-but that should work for many of you. And you could also implement another function pointer solution if needed.
+some overhead for 24 functions of which the user might use 1-3. It took me some time to realize a different solution. What if we put the function pointers into PROGEMEM?
+They point by default to a useless function and are all implemented weak. Meaning you can overwrite them if you want to.
+The user now only has to implement a strong function in his .ino file. The problem here is the digitalPin -> PCINT conversion which is done with some tricky macros.
+The downside is that the user pin can only be passed as a #define not with a const int because of that macro. And it takes a bit more work in the lib to define the pins for all boards.
+But if you want to we could simply switch the pointers to ram and be more flexible.
 
 On top of that is a logic of #defines which dynamically enable and disable not used ports - selected by the user or as limit by the chip itself.
 It automatically uses only the ram for the available and enabled ports and also only checks them. Its a bit tricky and hard to explain, you should just have a look
@@ -88,6 +87,11 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
+1.2 Release (xx.02.2015)
+* Added Progmem pointers
+* Improved interrupt function calls
+* Changed the digitalPinToPinChangeInterrupt(p) macro
+
 1.1 Release (06.12.2014)
 * Added port deactivation
 * Ram usage improvements for AVRs with <3 PCINT ports
