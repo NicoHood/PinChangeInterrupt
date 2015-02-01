@@ -72,78 +72,38 @@ PCINT_WEAK_ALIAS(23);
 // create the function pointer of all functions in progmem to save ram
 #define PCINT_CALLBACK(n) pcint_callback_ptr_ ## n
 
-static const PROGMEM callback pcint_callback_table[][8] =
-{
+static const PROGMEM callback pcint_callback_arr[] = {
 #if defined(PCINT0_vect) && defined(PCINT_PORT0_ENABLED)
-		{
-			PCINT_CALLBACK(0),
-			PCINT_CALLBACK(1),
-			PCINT_CALLBACK(2),
-			PCINT_CALLBACK(3),
-			PCINT_CALLBACK(4),
-			PCINT_CALLBACK(5),
-			PCINT_CALLBACK(6),
-			PCINT_CALLBACK(7),
-		},
+	PCINT_CALLBACK(0),
+	PCINT_CALLBACK(1),
+	PCINT_CALLBACK(2),
+	PCINT_CALLBACK(3),
+	PCINT_CALLBACK(4),
+	PCINT_CALLBACK(5),
+	PCINT_CALLBACK(6),
+	PCINT_CALLBACK(7),
 #endif
 #if defined(PCINT1_vect) && defined(PCINT_PORT1_ENABLED)
-			{
-				PCINT_CALLBACK(8),
-				PCINT_CALLBACK(9),
-				PCINT_CALLBACK(10),
-				PCINT_CALLBACK(11),
-				PCINT_CALLBACK(12),
-				PCINT_CALLBACK(13),
-				PCINT_CALLBACK(14),
-				PCINT_CALLBACK(15),
-			},
+	PCINT_CALLBACK(8),
+	PCINT_CALLBACK(9),
+	PCINT_CALLBACK(10),
+	PCINT_CALLBACK(11),
+	PCINT_CALLBACK(12),
+	PCINT_CALLBACK(13),
+	PCINT_CALLBACK(14),
+	PCINT_CALLBACK(15),
 #endif
 #if defined(PCINT2_vect) && defined(PCINT_PORT2_ENABLED)
-				{
-					PCINT_CALLBACK(16),
-					PCINT_CALLBACK(17),
-					PCINT_CALLBACK(18),
-					PCINT_CALLBACK(19),
-					PCINT_CALLBACK(20),
-					PCINT_CALLBACK(21),
-					PCINT_CALLBACK(22),
-					PCINT_CALLBACK(23),
-				},
+	PCINT_CALLBACK(16),
+	PCINT_CALLBACK(17),
+	PCINT_CALLBACK(18),
+	PCINT_CALLBACK(19),
+	PCINT_CALLBACK(20),
+	PCINT_CALLBACK(21),
+	PCINT_CALLBACK(22),
+	PCINT_CALLBACK(23),
 #endif
 };
-
-//static const PROGMEM callback pcint_callback_arr[] = {
-//#if defined(PCINT0_vect) && defined(PCINT_PORT0_ENABLED)
-//	PCINT_CALLBACK(0),
-//	PCINT_CALLBACK(1),
-//	PCINT_CALLBACK(2),
-//	PCINT_CALLBACK(3),
-//	PCINT_CALLBACK(4),
-//	PCINT_CALLBACK(5),
-//	PCINT_CALLBACK(6),
-//	PCINT_CALLBACK(7),
-//#endif
-//#if defined(PCINT1_vect) && defined(PCINT_PORT1_ENABLED)
-//	PCINT_CALLBACK(8),
-//	PCINT_CALLBACK(9),
-//	PCINT_CALLBACK(10),
-//	PCINT_CALLBACK(11),
-//	PCINT_CALLBACK(12),
-//	PCINT_CALLBACK(13),
-//	PCINT_CALLBACK(14),
-//	PCINT_CALLBACK(15),
-//#endif
-//#if defined(PCINT2_vect) && defined(PCINT_PORT2_ENABLED)
-//	PCINT_CALLBACK(16),
-//	PCINT_CALLBACK(17),
-//	PCINT_CALLBACK(18),
-//	PCINT_CALLBACK(19),
-//	PCINT_CALLBACK(20),
-//	PCINT_CALLBACK(21),
-//	PCINT_CALLBACK(22),
-//	PCINT_CALLBACK(23),
-//#endif
-//};
 
 //================================================================================
 // PinChangeInterrupt
@@ -172,10 +132,8 @@ static inline void PCintPort(uint8_t port) {
 	uint8_t i = 0;
 	while (trigger) {
 		// if trigger is set, call the PCINT function with the specific port
-		if (trigger & 0x01){
-			//((callback)pgm_read_word(pcint_callback_arr + ((arrayPos * 8) + i)))();
-			((callback)pgm_read_word(&pcint_callback_table[arrayPos][i]))();
-		}
+		if (trigger & 0x01)
+			((callback)pgm_read_word(pcint_callback_arr + ((arrayPos * 8) + i)))();
 
 		trigger >>= 1;
 		i++;
