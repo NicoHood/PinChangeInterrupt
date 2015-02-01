@@ -37,7 +37,7 @@ THE SOFTWARE.
 #define PCINT_PORT0_ENABLED
 #define PCINT_PORT1_ENABLED
 #define PCINT_PORT2_ENABLED
-// ISR 3 not used in this lib: http://www.nongnu.org/avr-libc/user-manual/group__avr__interrupts.html
+// ISR 3 not implemented in this library
 //#define PCINT_PORT3_ENABLED
 
 //================================================================================
@@ -49,7 +49,7 @@ THE SOFTWARE.
 #define PCINT_PORT1_DISABLED
 #endif
 
-// ISR 3 not used in this lib: http://www.nongnu.org/avr-libc/user-manual/group__avr__interrupts.html
+// ISR 3 not implemented in this library
 #define PCINT_PORT3_DISABLED
 
 // disabling ports is stronger than enabling
@@ -219,13 +219,6 @@ THE SOFTWARE.
 
 #define PIN_TO_PCINT_20 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_21 NOT_AN_INTERRUPT
-
-
-// creates a strong alias of a custom function to a user defined PCINT and function
-#define PinChangeInterruptStrongAlias(identifier, n) EXTERNC void pcint_callback_ptr_ ## n (void) __attribute__ ((alias (#identifier)))
-
-void call_all_callbacks();
-
 
 //================================================================================
 // PinChangeInterrupt

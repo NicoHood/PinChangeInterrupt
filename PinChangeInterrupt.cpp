@@ -167,20 +167,3 @@ ISR(PCINT3_vect) {
 	PCintPort(3);
 }
 #endif
-
-/*
-// number of items in an array
-#define NUMITEMS(arg) ((unsigned int) (sizeof (arg) / sizeof (arg [0])))
-
-// calls all functions (for testing)
-void call_all_callbacks(void) {
-int i;
-for (i = 0; i < NUMITEMS(pcint_callback_arr); ++i) {
-#ifndef __AVR
-pcint_callback_arr[i]();
-#else
-((callback)pgm_read_word(pcint_callback_arr + i))();
-#endif
-}
-}
-*/
