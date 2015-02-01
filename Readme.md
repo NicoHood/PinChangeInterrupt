@@ -4,24 +4,25 @@ PinChangeInterrupt Library 1.1
 ![Header Picture](header.jpg)
 
 New PinChangeInterrupt with a very resource friendly implementation.
+PinChangeInterrupts are a bit slower than normal Pin Interrupts because of the pin change comparison
+but this library tries to reduce this disadvantage to a minimum, even with an user friendly API.
 Compared with the normal Interrupts it is even more compact and all available PCINTs can be used.
-PinChangeInterrupts are a bit slower than normal Interrupts because of the pin change comparison
-but this library tries to reduce this disadvantage to a minimum, even with user friendly API.
-
 
 **Features:**
-* PinChangeInterrupt for many pins
-* Usable on every standard Arduino and Attiny as well
+* PinChangeInterrupt for a lot of pins
 * Rising, Falling or Change detection for every pin separately
+* Usable on every standard Arduino and Attiny as well
 * Uses less ram & flash than normal Interrupts
-* Implementation in fast&compact C
+* Implementation is fast and compact
 * Ports can be manually deactivated in the .h file
 
-**The following pins are usable for PinChangeInterrupt on normal Arduinos:**
-* On Arduino Uno you can use any pin for PinChangeInterrupt.
+**The following pins are usable for PinChangeInterrupt:**
+* Arduino Uno: you can use all pins for PinChangeInterrupt.
 * Arduino Mega: 10, 11, 12, 13, 14, 15, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64), A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
 * Arduino Leonardo: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
-* With HoodLoader2 you can use pin 1-7 and some other pins which are normally not connected.
+* HoodLoader2: you can use all (broken out 1-7) pins for PinChangeInterrupt.
+* Attiny 24/44/84: you can use all pins for PinChangeInterrupt.
+* Attiny 25/45/85: you can use all pins for PinChangeInterrupt.
 
 **[Comment for feedback on my blog.](www.nicohood.de)**
 
@@ -31,17 +32,21 @@ Installation/How to use
 Download the zip, extract and remove the "-master" of the folder.
 Install the library [as described here](http://arduino.cc/en/pmwiki.php?n=Guide/Libraries).
 
+As normal user you might wonder what I am talking about, maybe you should read how PinChangeInterrupts work.
+Its really important to understand what your are using.
+
 ### Basic example
 The basic example shows you how the library and its syntax work.
 
 You can attach your pins with the attach function and the digitalPinToPinChangeInterrupt(p) definition.
 Make sure your attached pin is actually a PinChangeInterrupt as listed above.
+
 Keep in mind that on Arduino Mega the definition excludes some pins like 14 (TX3) and 15 (RX3).
 You can still use them by manually passing attachPinChangeInterrupt(PCINT10, CHANGE);
 
-PinChangeInterrupts are always executed after each other. Make sure that the functions are short and have no Serial prints in it.
-Lower pins on a port are executed faster. This means PCINT is faster than PCINT7. PCINT8 is on another port (port 1) and faster than PCINT15 for example.
-As normal user you might wonder what I am talking about, maybe you should read how PinChangeInterrupts work. Its really important to understand what your are using.
+PinChangeInterrupts are always executed after each other. Make sure that the functions are short and have no Serial prints nor delay in it.
+Lower pin numbers on a port are executed faster. This means PCINT0 is faster than PCINT7. PCINT8 is on another port (port 1) is faster than PCINT15 for example.
+
 PinChangeInterrupts trigger for pin changes on a whole port so we have to check the difference between the last interrupt.
 That's why we also have in general a **delay between the interrupt call and the actual function execution**.
 
@@ -55,7 +60,7 @@ interrupt pins or don't have them at all (HoodLoader2). The PinChangeInterrupt l
 
 
 More projects + contact can be found here:
-http://nicohood.wordpress.com/
+www.nicohood.de
 
 How it works
 ============

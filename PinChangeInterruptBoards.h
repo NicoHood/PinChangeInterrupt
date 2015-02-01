@@ -1,3 +1,26 @@
+/*
+Copyright (c) 2014-2015 NicoHood
+See the readme for credit to other people.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
 #ifndef PINCHANGEINTERRUPTBOARDS_H
 #define PINCHANGEINTERRUPTBOARDS_H
 
@@ -5,9 +28,13 @@
 // Board Definitions
 //================================================================================
 
-// Microcontroller specific definitions
-// digital pin -> pcint number definitions
-// even if MISO etc are not PCINTs we have to map them to the pin and then refuse to a NOT_AN_INTERRUPT
+/*
+Microcontroller specific definitions
+
+digital pin -> pcint number definitions
+Even if A0, MISO etc are not PCINTs we have to map them to the pin number
+and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
+*/
 
 #if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
 // some pins are not useable, we wont check this, since it doesnt matter as long as the user doesn't try to attach the individual PCINTs
@@ -37,8 +64,8 @@
 #define PIN_TO_PCINT_17 11
 #define PIN_TO_PCINT_18 12
 #define PIN_TO_PCINT_19 13
-//#define PIN_TO_PCINT_20 NC
-//#define PIN_TO_PCINT_21 NC
+//#define PIN_TO_PCINT_20 NOT_AN_INTERRUPT
+//#define PIN_TO_PCINT_21 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_A0 PIN_TO_PCINT_14
 #define PIN_TO_PCINT_A1 PIN_TO_PCINT_15
 #define PIN_TO_PCINT_A2 PIN_TO_PCINT_16
@@ -53,9 +80,6 @@
 #define PIN_TO_PCINT_SCK PIN_TO_PCINT_13
 #define PIN_TO_PCINT_SDA PIN_TO_PCINT_18
 #define PIN_TO_PCINT_SCL PIN_TO_PCINT_19
-
-#define PIN_TO_PCINT_20 NOT_AN_INTERRUPT
-#define PIN_TO_PCINT_21 NOT_AN_INTERRUPT
 
 #elif defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega640__)
 #define EXTERNAL_NUM_PINCHANGEINTERRUPT 24
@@ -84,6 +108,318 @@
 
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU yet.
+#endif
+
+/*
+// not defined pins will result in an error
+for (int i = 0; i < 100; i++) {
+Serial.print("#ifndef PIN_TO_PCINT_");
+Serial.println(i);
+Serial.print("#define PIN_TO_PCINT_");
+Serial.print(i);
+Serial.println(" NOT_AN_INTERRUPT");
+Serial.println("#endif");
+}
+*/
+#ifndef PIN_TO_PCINT_0
+#define PIN_TO_PCINT_0 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_1
+#define PIN_TO_PCINT_1 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_2
+#define PIN_TO_PCINT_2 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_3
+#define PIN_TO_PCINT_3 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_4
+#define PIN_TO_PCINT_4 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_5
+#define PIN_TO_PCINT_5 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_6
+#define PIN_TO_PCINT_6 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_7
+#define PIN_TO_PCINT_7 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_8
+#define PIN_TO_PCINT_8 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_9
+#define PIN_TO_PCINT_9 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_10
+#define PIN_TO_PCINT_10 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_11
+#define PIN_TO_PCINT_11 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_12
+#define PIN_TO_PCINT_12 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_13
+#define PIN_TO_PCINT_13 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_14
+#define PIN_TO_PCINT_14 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_15
+#define PIN_TO_PCINT_15 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_16
+#define PIN_TO_PCINT_16 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_17
+#define PIN_TO_PCINT_17 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_18
+#define PIN_TO_PCINT_18 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_19
+#define PIN_TO_PCINT_19 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_20
+#define PIN_TO_PCINT_20 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_21
+#define PIN_TO_PCINT_21 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_22
+#define PIN_TO_PCINT_22 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_23
+#define PIN_TO_PCINT_23 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_24
+#define PIN_TO_PCINT_24 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_25
+#define PIN_TO_PCINT_25 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_26
+#define PIN_TO_PCINT_26 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_27
+#define PIN_TO_PCINT_27 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_28
+#define PIN_TO_PCINT_28 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_29
+#define PIN_TO_PCINT_29 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_30
+#define PIN_TO_PCINT_30 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_31
+#define PIN_TO_PCINT_31 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_32
+#define PIN_TO_PCINT_32 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_33
+#define PIN_TO_PCINT_33 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_34
+#define PIN_TO_PCINT_34 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_35
+#define PIN_TO_PCINT_35 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_36
+#define PIN_TO_PCINT_36 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_37
+#define PIN_TO_PCINT_37 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_38
+#define PIN_TO_PCINT_38 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_39
+#define PIN_TO_PCINT_39 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_40
+#define PIN_TO_PCINT_40 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_41
+#define PIN_TO_PCINT_41 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_42
+#define PIN_TO_PCINT_42 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_43
+#define PIN_TO_PCINT_43 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_44
+#define PIN_TO_PCINT_44 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_45
+#define PIN_TO_PCINT_45 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_46
+#define PIN_TO_PCINT_46 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_47
+#define PIN_TO_PCINT_47 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_48
+#define PIN_TO_PCINT_48 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_49
+#define PIN_TO_PCINT_49 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_50
+#define PIN_TO_PCINT_50 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_51
+#define PIN_TO_PCINT_51 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_52
+#define PIN_TO_PCINT_52 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_53
+#define PIN_TO_PCINT_53 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_54
+#define PIN_TO_PCINT_54 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_55
+#define PIN_TO_PCINT_55 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_56
+#define PIN_TO_PCINT_56 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_57
+#define PIN_TO_PCINT_57 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_58
+#define PIN_TO_PCINT_58 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_59
+#define PIN_TO_PCINT_59 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_60
+#define PIN_TO_PCINT_60 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_61
+#define PIN_TO_PCINT_61 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_62
+#define PIN_TO_PCINT_62 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_63
+#define PIN_TO_PCINT_63 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_64
+#define PIN_TO_PCINT_64 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_65
+#define PIN_TO_PCINT_65 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_66
+#define PIN_TO_PCINT_66 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_67
+#define PIN_TO_PCINT_67 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_68
+#define PIN_TO_PCINT_68 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_69
+#define PIN_TO_PCINT_69 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_70
+#define PIN_TO_PCINT_70 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_71
+#define PIN_TO_PCINT_71 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_72
+#define PIN_TO_PCINT_72 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_73
+#define PIN_TO_PCINT_73 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_74
+#define PIN_TO_PCINT_74 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_75
+#define PIN_TO_PCINT_75 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_76
+#define PIN_TO_PCINT_76 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_77
+#define PIN_TO_PCINT_77 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_78
+#define PIN_TO_PCINT_78 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_79
+#define PIN_TO_PCINT_79 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_80
+#define PIN_TO_PCINT_80 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_81
+#define PIN_TO_PCINT_81 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_82
+#define PIN_TO_PCINT_82 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_83
+#define PIN_TO_PCINT_83 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_84
+#define PIN_TO_PCINT_84 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_85
+#define PIN_TO_PCINT_85 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_86
+#define PIN_TO_PCINT_86 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_87
+#define PIN_TO_PCINT_87 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_88
+#define PIN_TO_PCINT_88 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_89
+#define PIN_TO_PCINT_89 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_90
+#define PIN_TO_PCINT_90 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_91
+#define PIN_TO_PCINT_91 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_92
+#define PIN_TO_PCINT_92 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_93
+#define PIN_TO_PCINT_93 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_94
+#define PIN_TO_PCINT_94 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_95
+#define PIN_TO_PCINT_95 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_96
+#define PIN_TO_PCINT_96 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_97
+#define PIN_TO_PCINT_97 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_98
+#define PIN_TO_PCINT_98 NOT_AN_INTERRUPT
+#endif
+#ifndef PIN_TO_PCINT_99
+#define PIN_TO_PCINT_99 NOT_AN_INTERRUPT
 #endif
 
 #endif // include guard
