@@ -3,6 +3,8 @@ PinChangeInterrupt Library 1.2
 
 ![Header Picture](header.jpg)
 
+
+
 New PinChangeInterrupt with a very resource friendly implementation.
 PinChangeInterrupts are a bit slower than normal Pin Interrupts because of the pin change comparison
 but this library tries to reduce this disadvantage to a minimum, even with an user friendly API.
@@ -16,13 +18,15 @@ Compared with the normal Interrupts it is even more compact and all available PC
 * Implementation is fast and compact
 * Ports can be manually deactivated in the .h file
 
-**The following pins are usable for PinChangeInterrupt:**
-* Arduino Uno: you can use all pins for PinChangeInterrupt.
-* Arduino Mega: 10, 11, 12, 13, 14, 15, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64), A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
-* Arduino Leonardo: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
-* HoodLoader2: you can use all (broken out 1-7) pins for PinChangeInterrupt.
-* Attiny 24/44/84: you can use all pins for PinChangeInterrupt.
-* Attiny 25/45/85: you can use all pins for PinChangeInterrupt.
+| Board              | Usable PCINT pins                                                            |
+| -------------------|------------------------------------------------------------------------------|
+| Uno (328)          | All pins are usable                                                          |
+| Mega (2560)        | 10, 11, 12, 13, 14, 15, 50, 51, 52, 53,                                      |
+|                    | A8 (62), A9 (63), A10 (64), A11 (65), A12 (66), A13 (67), A14 (68), A15 (69) |
+| Leonardo (32u4)    | 8 (A8), 9 (A9), 10 (A10), 11, 14 (MISO), 15 (SCK), 16 (MOSI)                 |
+| HoodLoader2 (16u2) | All (broken out 1-7) pins are usable                                         |
+| Attiny 24/44/84    | All pins are usable                                                          |
+| Attiny 25/45/85    | All pins are usable                                                          |
 
 **[Comment for feedback on my blog.](http://www.nicohood.de)**
 
