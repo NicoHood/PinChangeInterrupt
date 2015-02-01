@@ -52,7 +52,7 @@ That's why we also have in general a **delay between the interrupt call and the 
 
 ### IRLremote example
 
-To test the IRLremote example install the IRLremote:
+To test the IRLremote example install the IRLremote and test the example provided with this library:
 https://github.com/NicoHood/IRLremote
 
 This demonstrates how to use the PinChangeInterrupt library together with the IRLremote library. This can be useful if you are running out if normal
