@@ -40,8 +40,11 @@ THE SOFTWARE.
 // ISR 3 not implemented in this library
 //#define PCINT_PORT3_ENABLED
 
+// inline functions to speed things up if you use 2 or more ports (no improvement for a single port)
+#define PCINT_INLINE __attribute__((always_inline))
+
 //================================================================================
-// Disable Definitions
+// Settings Helper Definitions
 //================================================================================
 
 // on HoodLoader2 Arduino boards only PB (port0) is broken out, save this flash
@@ -64,6 +67,11 @@ THE SOFTWARE.
 #endif
 #if defined(PCINT_PORT3_DISABLED)
 #undef PCINT_PORT3_ENABLED
+#endif
+
+// dont use inline by default
+#ifndef PCINT_INLINE
+#define PCINT_INLINE
 #endif
 
 //================================================================================

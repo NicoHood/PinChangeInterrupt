@@ -115,7 +115,7 @@ uint8_t fallingPorts[PCINT_ENABLED_PORTS] = { 0 };
 uint8_t risingPorts[PCINT_ENABLED_PORTS] = { 0 };
 
 // pcint interrupt handler function
-static inline void PCintPort(uint8_t port) {
+static inline PCINT_INLINE void PCintPort(uint8_t port){
 	// get the new and old pin states for port
 	uint8_t newPort = pinChangeInterruptPortToInput(port);
 
@@ -126,7 +126,9 @@ static inline void PCintPort(uint8_t port) {
 	uint8_t falling = change & oldPorts[arrayPos];
 
 	// check which pins are triggered, compared with the settings
-	uint8_t trigger = (rising & risingPorts[arrayPos]) | (falling & fallingPorts[arrayPos]);
+	uint8_t risingTrigger = rising & risingPorts[arrayPos];
+	uint8_t fallingTrigger = falling & fallingPorts[arrayPos];
+	uint8_t trigger = risingTrigger | fallingTrigger;
 
 	// save the new state for next comparison
 	oldPorts[arrayPos] = newPort;

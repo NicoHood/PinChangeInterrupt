@@ -90,6 +90,12 @@ at the code if you are interested. You should also know that AVRs with 4 PCINT p
 none of the 'standard' MCU's has 4 PCINT ports. Another advantage is that we use the actual hardware numbers of the PCINTs and no pin numbers which we had to convert again.
 That saves us flash and the pin mapping is done by a definition from pin -> pcint, not vice versa. Due to the inline this mapping is also very small.
 
+### Some benchmarks here:
+The speed of an ISR depends on the number of user function set and on what PCINT they are nested.
+For example a PCINT0(best case) is faster than a PCINT7 (worst case). It takes about 11,5 uS to execute and end the worst case function.
+The time from the ISR to the user function itself is about 9,5uS. Best case is 7,1uS and 5.3uS.
+If we inline the function it takes 3,5uS and 2,4 uS (best case) 7,4 and 6,3 (worst case).
+
 That's it! I hope you like the library. I tried to make it as simple and small as possible. Keep in mind that PCINTs are not useful for every project but in most cases
 the new PinChangeInterrupts may help you a lot.
 
