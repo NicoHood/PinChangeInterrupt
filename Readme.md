@@ -1,4 +1,4 @@
-PinChangeInterrupt Library 1.1
+PinChangeInterrupt Library 1.2
 ==============================
 
 ![Header Picture](header.jpg)
@@ -24,7 +24,7 @@ Compared with the normal Interrupts it is even more compact and all available PC
 * Attiny 24/44/84: you can use all pins for PinChangeInterrupt.
 * Attiny 25/45/85: you can use all pins for PinChangeInterrupt.
 
-**[Comment for feedback on my blog.](www.nicohood.de)**
+**[Comment for feedback on my blog.](http://www.nicohood.de)**
 
 Installation/How to use
 =======================
@@ -114,7 +114,7 @@ Licence and Copyright
 If you use this library for any cool project let me know!
 
 ```
-Copyright (c) 2014 NicoHood
+Copyright (c) 2014-2015 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
