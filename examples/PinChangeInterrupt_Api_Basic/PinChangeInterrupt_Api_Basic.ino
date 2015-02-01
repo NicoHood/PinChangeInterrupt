@@ -14,10 +14,13 @@
  Dont use Serial or delay inside the interrupt!
  Keep in mind that this PCINT is not compatible with SoftSerial (at the moment).
 
- On Arduino Uno you can use any pin for PinChangeInterrupt.
- On Arduino Mega you can use 10, 11, 12, 13, 14, 15, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64), A11 (65), A12 (66), A13 (67), A14 (68), A15 (69).
- On Arduino Leonardo you can use 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI).
- With HoodLoader2 you can use pin 1-7 and some other pins which are normally not connected.
+ The following pins are usable for PinChangeInterrupt:
+ Arduino Uno: you can use all pins for PinChangeInterrupt.
+ Arduino Mega: 10, 11, 12, 13, 14, 15, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64), A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
+ Arduino Leonardo: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
+ HoodLoader2: you can use all (broken out 1-7) pins for PinChangeInterrupt.
+ Attiny 24/44/84: you can use all pins for PinChangeInterrupt.
+ Attiny 25/45/85: you can use all pins for PinChangeInterrupt.
  */
 
 #include "PinChangeInterrupt.h"
