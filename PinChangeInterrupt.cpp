@@ -128,6 +128,9 @@ static inline void PCintPort(uint8_t port) {
 	// check which pins are triggered, compared with the settings
 	uint8_t trigger = (rising & risingPorts[arrayPos]) | (falling & fallingPorts[arrayPos]);
 
+	// save the new state for next comparison
+	oldPorts[arrayPos] = newPort;
+
 	// execute all functions that should be triggered
 	uint8_t i = 0;
 	while (trigger) {
@@ -138,9 +141,6 @@ static inline void PCintPort(uint8_t port) {
 		trigger >>= 1;
 		i++;
 	}
-	//PinChangeInterruptEvent2(4)();
-	// save the new state for next comparison
-	oldPorts[arrayPos] = newPort;
 }
 
 // interrupt handlers
