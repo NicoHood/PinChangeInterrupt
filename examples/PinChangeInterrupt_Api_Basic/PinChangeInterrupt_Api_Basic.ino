@@ -10,6 +10,7 @@
  The led will change its state if pin 14 changes.
 
  PCINT is useful if you are running out of normal INTs or if you are using HoodLoader2.
+ PCINT has some delay because of the pin determination overhead.
  Dont use Serial or delay inside the interrupt!
  Keep in mind that this PCINT is not compatible with SoftSerial (at the moment).
 
