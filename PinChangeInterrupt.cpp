@@ -36,47 +36,52 @@ extern "C" {
 }
 
 // create all weak functions which are all (if not used) alias of the pcint_null_callback above
-#define PCINT_WEAK_ALIAS(n) void pcint_callback_ptr_ ## n () __attribute__ ((weak, alias ("pcint_null_callback")))
-
-PCINT_WEAK_ALIAS(0);
-PCINT_WEAK_ALIAS(1);
-PCINT_WEAK_ALIAS(2);
-PCINT_WEAK_ALIAS(3);
-PCINT_WEAK_ALIAS(4);
-PCINT_WEAK_ALIAS(5);
-PCINT_WEAK_ALIAS(6);
-PCINT_WEAK_ALIAS(7);
-PCINT_WEAK_ALIAS(8);
-PCINT_WEAK_ALIAS(9);
-PCINT_WEAK_ALIAS(10);
-PCINT_WEAK_ALIAS(11);
-PCINT_WEAK_ALIAS(12);
-PCINT_WEAK_ALIAS(13);
-PCINT_WEAK_ALIAS(14);
-PCINT_WEAK_ALIAS(15);
-PCINT_WEAK_ALIAS(16);
-PCINT_WEAK_ALIAS(17);
-PCINT_WEAK_ALIAS(18);
-PCINT_WEAK_ALIAS(19);
-PCINT_WEAK_ALIAS(20);
-PCINT_WEAK_ALIAS(21);
-PCINT_WEAK_ALIAS(22);
-PCINT_WEAK_ALIAS(23);
+/*
+for (int i = 0; i < 24; i++) {
+Serial.print("void pcint_callback_ptr_");
+Serial.print(i);
+Serial.println("() __attribute__((weak, alias(\"pcint_null_callback\")));");
+}
+*/
+void pcint_callback_ptr_0() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_1() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_2() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_3() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_4() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_5() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_6() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_7() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_8() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_9() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_10() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_11() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_12() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_13() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_14() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_15() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_16() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_17() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_18() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_19() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_20() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_21() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_22() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_23() __attribute__((weak, alias("pcint_null_callback")));
 
 //================================================================================
 // Interrupt Handlers
 //================================================================================
 
 // variables to save the last port states and the interrupt settings
-uint8_t oldPorts[PCINT_ENABLED_PORTS] = { 0 };
-uint8_t fallingPorts[PCINT_ENABLED_PORTS] = { 0 };
-uint8_t risingPorts[PCINT_ENABLED_PORTS] = { 0 };
+uint8_t oldPorts[PCINT_NUM_USED_PORTS] = { 0 };
+uint8_t fallingPorts[PCINT_NUM_USED_PORTS] = { 0 };
+uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 
 
-#if defined(PCINT0_vect) && defined(PCINT_PORT0_ENABLED)
+#if (PCINT_USE_PORT0 == true)
 ISR(PCINT0_vect) {
 	// get the new and old pin states for port
-	uint8_t newPort = PCINT_INPUT0;
+	uint8_t newPort = PCINT_INPUT_PORT0;
 
 	// compare with the old value to detect a rising or falling
 	uint8_t arrayPos = PCINT_ARRAY_POS(0);
@@ -96,30 +101,46 @@ ISR(PCINT0_vect) {
 	// This way we can exclude a single function
 	// and the calling is also much faster
 	// We may also reorder the pins for different priority
+#if (PCINT_USE_PCINT0 == true)
 	if (trigger & (1 << 0))
 		pcint_callback_ptr_0();
+#endif
+#if (PCINT_USE_PCINT1 == true)
 	if (trigger & (1 << 1))
 		pcint_callback_ptr_1();
+#endif
+#if (PCINT_USE_PCINT2 == true)
 	if (trigger & (1 << 2))
 		pcint_callback_ptr_2();
+#endif
+#if (PCINT_USE_PCINT3 == true)
 	if (trigger & (1 << 3))
 		pcint_callback_ptr_3();
+#endif
+#if (PCINT_USE_PCINT4 == true)
 	if (trigger & (1 << 4))
 		pcint_callback_ptr_4();
+#endif
+#if (PCINT_USE_PCINT5 == true)
 	if (trigger & (1 << 5))
 		pcint_callback_ptr_5();
+#endif
+#if (PCINT_USE_PCINT6 == true)
 	if (trigger & (1 << 6))
 		pcint_callback_ptr_6();
+#endif
+#if (PCINT_USE_PCINT7 == true)
 	if (trigger & (1 << 7))
 		pcint_callback_ptr_7();
+#endif
 }
 #endif
 
 
-#if defined(PCINT1_vect) && defined(PCINT_PORT1_ENABLED)
+#if (PCINT_USE_PORT1 == true)
 ISR(PCINT1_vect) {
 	// get the new and old pin states for port
-	uint8_t newPort = PCINT_INPUT1;
+	uint8_t newPort = PCINT_INPUT_PORT1;
 
 	// compare with the old value to detect a rising or falling
 	uint8_t arrayPos = PCINT_ARRAY_POS(1);
@@ -139,30 +160,46 @@ ISR(PCINT1_vect) {
 	// This way we can exclude a single function
 	// and the calling is also much faster
 	// We may also reorder the pins for different priority
+#if (PCINT_USE_PCINT8 == true)
 	if (trigger & (1 << 0))
 		pcint_callback_ptr_8();
+#endif
+#if (PCINT_USE_PCINT9 == true)
 	if (trigger & (1 << 1))
 		pcint_callback_ptr_9();
+#endif
+#if (PCINT_USE_PCINT10 == true)
 	if (trigger & (1 << 2))
 		pcint_callback_ptr_10();
+#endif
+#if (PCINT_USE_PCINT11 == true)
 	if (trigger & (1 << 3))
 		pcint_callback_ptr_11();
+#endif
+#if (PCINT_USE_PCINT12 == true)
 	if (trigger & (1 << 4))
 		pcint_callback_ptr_12();
+#endif
+#if (PCINT_USE_PCINT13 == true)
 	if (trigger & (1 << 5))
 		pcint_callback_ptr_13();
+#endif
+#if (PCINT_USE_PCINT14 == true)
 	if (trigger & (1 << 6))
 		pcint_callback_ptr_14();
+#endif
+#if (PCINT_USE_PCINT15 == true)
 	if (trigger & (1 << 7))
 		pcint_callback_ptr_15();
+#endif
 }
 #endif
 
 
-#if defined(PCINT2_vect) && defined(PCINT_PORT2_ENABLED)
+#if (PCINT_USE_PORT2 == true)
 ISR(PCINT2_vect) {
 	// get the new and old pin states for port
-	uint8_t newPort = PCINT_INPUT2;
+	uint8_t newPort = PCINT_INPUT_PORT2;
 
 	// compare with the old value to detect a rising or falling
 	uint8_t arrayPos = PCINT_ARRAY_POS(2);
@@ -182,35 +219,43 @@ ISR(PCINT2_vect) {
 	// This way we can exclude a single function
 	// and the calling is also much faster
 	// We may also reorder the pins for different priority
+#if (PCINT_USE_PCINT16 == true)
 	if (trigger & (1 << 0))
 		pcint_callback_ptr_16();
+#endif
+#if (PCINT_USE_PCINT17 == true)
 	if (trigger & (1 << 1))
 		pcint_callback_ptr_17();
+#endif
+#if (PCINT_USE_PCINT18 == true)
 	if (trigger & (1 << 2))
 		pcint_callback_ptr_18();
+#endif
+#if (PCINT_USE_PCINT19 == true)
 	if (trigger & (1 << 3))
 		pcint_callback_ptr_19();
+#endif
+#if (PCINT_USE_PCINT20 == true)
 	if (trigger & (1 << 4))
 		pcint_callback_ptr_20();
+#endif
+#if (PCINT_USE_PCINT21 == true)
 	if (trigger & (1 << 5))
 		pcint_callback_ptr_21();
+#endif
+#if (PCINT_USE_PCINT22 == true)
 	if (trigger & (1 << 6))
 		pcint_callback_ptr_22();
+#endif
+#if (PCINT_USE_PCINT23 == true)
 	if (trigger & (1 << 7))
 		pcint_callback_ptr_23();
+#endif
 }
 #endif
 
-
-#if defined(PCINT3_vect) && defined(PCINT_PORT3_ENABLED)
-ISR(PCINT3_vect) {
-	// not supported
-}
-#endif
-
-
+// asm output (nothing to optimize here)
 /*
-// asm output
 ISR(PCINT0_vect) {
 push r1
 push r0

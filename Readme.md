@@ -108,6 +108,8 @@ Version History
 * Improved interrupt function calls
 * Changed the digitalPinToPinChangeInterrupt(p) macro
 * Fixed attach/detach array position when ports are deactivated
+* Improved manual PCINT deactivation by user
+* Improved definitions for different boards
 
 1.1 Release (06.12.2014)
 * Added port deactivation

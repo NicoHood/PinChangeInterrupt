@@ -31,128 +31,66 @@ THE SOFTWARE.
 // Settings
 //================================================================================
 
-// Settings to de/activate ports
-// This will save you flash and ram because the arrays are managed dynamically with the definitions below.
-// Make sure you still have all needed ports activated. Each deactivated port saves 3 bytes ram.
-#define PCINT_PORT0_ENABLED
-#define PCINT_PORT1_ENABLED
-#define PCINT_PORT2_ENABLED
+/* Settings to de/activate ports/pins
+This will save you flash and ram because the arrays
+are managed dynamically with the definitions below.
+Make sure you still have all needed ports activated.
+Each deactivated port saves 3 bytes of ram.
+If you deactivate the whole port,
+you dont need to deactivate the pins.
+Same for the port if you deactivate all 8 pins.
+You dont have to deactivate pins/ports that dont exist.
+That is done by the macros. */
 
-#define PCINT_ENABLE_PCINT_0
-#define PCINT_ENABLE_PCINT_1
-#define PCINT_ENABLE_PCINT_2
-#define PCINT_ENABLE_PCINT_3
-#define PCINT_ENABLE_PCINT_4
-#define PCINT_ENABLE_PCINT_5
-#define PCINT_ENABLE_PCINT_6
-#define PCINT_ENABLE_PCINT_7
-#define PCINT_ENABLE_PCINT_8
-#define PCINT_ENABLE_PCINT_9
-#define PCINT_ENABLE_PCINT_10
-#define PCINT_ENABLE_PCINT_11
-#define PCINT_ENABLE_PCINT_12
-#define PCINT_ENABLE_PCINT_13
-#define PCINT_ENABLE_PCINT_14
-#define PCINT_ENABLE_PCINT_15
-#define PCINT_ENABLE_PCINT_16
-#define PCINT_ENABLE_PCINT_17
-#define PCINT_ENABLE_PCINT_18
-#define PCINT_ENABLE_PCINT_19
-#define PCINT_ENABLE_PCINT_20
-#define PCINT_ENABLE_PCINT_21
-#define PCINT_ENABLE_PCINT_22
-#define PCINT_ENABLE_PCINT_23
+#define PCINT_ENABLE_PORT0
+#define PCINT_ENABLE_PORT1
+#define PCINT_ENABLE_PORT2
+
+#define PCINT_ENABLE_PCINT0
+#define PCINT_ENABLE_PCINT1
+#define PCINT_ENABLE_PCINT2
+#define PCINT_ENABLE_PCINT3
+#define PCINT_ENABLE_PCINT4
+#define PCINT_ENABLE_PCINT5
+#define PCINT_ENABLE_PCINT6
+#define PCINT_ENABLE_PCINT7
+#define PCINT_ENABLE_PCINT8
+#define PCINT_ENABLE_PCINT9
+#define PCINT_ENABLE_PCINT10
+#define PCINT_ENABLE_PCINT11
+#define PCINT_ENABLE_PCINT12
+#define PCINT_ENABLE_PCINT13
+#define PCINT_ENABLE_PCINT14
+#define PCINT_ENABLE_PCINT15
+#define PCINT_ENABLE_PCINT16
+#define PCINT_ENABLE_PCINT17
+#define PCINT_ENABLE_PCINT18
+#define PCINT_ENABLE_PCINT19
+#define PCINT_ENABLE_PCINT20
+#define PCINT_ENABLE_PCINT21
+#define PCINT_ENABLE_PCINT22
+#define PCINT_ENABLE_PCINT23
 
 //================================================================================
-// Board Definitions
+// General Helper Definitions and Mappings
 //================================================================================
 
-/*
-Board definitions are seperated to get an better overview.
-
-These values are defined here:
-EXTERNAL_NUM_PINCHANGEINTERRUPT
-PCINT_INPUT0-2
-PIN_TO_PCINT_0-23
-*/
+// Board definitions are seperated to get an better overview.
 #include "PinChangeInterruptBoards.h"
 
-//================================================================================
-// Settings Helper Definitions
-//================================================================================
-
-// on HoodLoader2 Arduino boards only PB (port0) is broken out, save this flash
-#if defined(ARDUINO_HOODLOADER2)
-#define PCINT_PORT1_DISABLED
-#endif
-
-// ISR 3 not implemented in this library
-#ifdef PCINT_PORT3_ENABLED
-#error ISR 3 not implemented in this library
-#endif
-
-// disabling ports is stronger than enabling
-#if defined(PCINT_PORT0_DISABLED)
-#undef PCINT_PORT0_ENABLED
-#endif
-#if defined(PCINT_PORT1_DISABLED)
-#undef PCINT_PORT1_ENABLED
-#endif
-#if defined(PCINT_PORT2_DISABLED)
-#undef PCINT_PORT2_ENABLED
-#endif
-
-// add fakes if ports are not used
-#ifndef PCINT_INPUT0
-#define PCINT_INPUT0 0
-#endif
-#ifndef PCINT_INPUT1
-#define PCINT_INPUT1 0
-#endif
-#ifndef PCINT_INPUT2
-#define PCINT_INPUT2 0
-#endif
-
-
-//================================================================================
-// General Definitions and Mappings
-//================================================================================
-
-// if ports are enabled and physically available add them together so we can calculate some fancy stuff below
-#if defined(PCINT0_vect) && defined(PCINT_PORT0_ENABLED)
-#define PCINT_PORT0 1
-#else
-#define PCINT_PORT0 0
-#endif
-#if defined(PCINT1_vect) && defined(PCINT_PORT1_ENABLED)
-#define PCINT_PORT1 1
-#else
-#define PCINT_PORT1 0
-#endif
-#if defined(PCINT2_vect) && defined(PCINT_PORT2_ENABLED)
-#define PCINT_PORT2 1
-#else
-#define PCINT_PORT2 0
-#endif
-
-// calculate the number of ports used
-#define PCINT_ENABLED_PORTS (PCINT_PORT0 + PCINT_PORT1 + PCINT_PORT2)
-#if (PCINT_ENABLED_PORTS == 0)
+#if !PCINT_NUM_USED_PORTS
 #error Please enable at least one PCINT port!
 #endif
 
 // map the port to the array position, depending on what ports are activated. this is only usable with port 0-2, not 3
-#define PCINT_ARRAY_POS(p) ((PCINT_ENABLED_PORTS == 3) ? p : (PCINT_ENABLED_PORTS == 1) ? 0 : \
-/*(PCINT_ENABLED_PORTS == 2)*/ (PCINT_PORT2 == 0) ? p : (PCINT_PORT0 == 0) ? (p - 1) : \
-/*(PCINT_PORT1 == 0)*/ ((p >> 1) & 0x01))
+#define PCINT_ARRAY_POS(p) ((PCINT_NUM_USED_PORTS == 3) ? p : (PCINT_NUM_USED_PORTS == 1) ? 0 : \
+/*(PCINT_NUM_USED_PORTS == 2)*/ (PCINT_USE_PORT2 == 0) ? p : (PCINT_USE_PORT0 == 0) ? (p - 1) : \
+/*(PCINT_USE_PORT1 == 0)*/ ((p >> 1) & 0x01))
 
 // only check enabled + physically available ports. Always choose the port if its the last one that's possible with the current configuration
-#define pinChangeInterruptPortToInput(p) (((PCINT_PORT0 == 1) && ((p == 0) || (PCINT_ENABLED_PORTS == 1))) ?  PCINT_INPUT0 :\
-	((PCINT_PORT1 == 1) && ((p == 1) || (PCINT_PORT2 == 0))) ?  PCINT_INPUT1 :\
-	((PCINT_PORT2 == 1) /*&& ((p == 2) || (PCINT_ENABLED_PORTS == 1))*/) ?  PCINT_INPUT2 : 0)
-
-// define maximum number of PCINT ports (1-3)
-#define PCINT_PORTS (((EXTERNAL_NUM_PINCHANGEINTERRUPT - 1) / 8) + 1)
+#define pinChangeInterruptPortToInput(p) (((PCINT_USE_PORT0 == 1) && ((p == 0) || (PCINT_NUM_USED_PORTS == 1))) ?  PCINT_INPUT_PORT0 :\
+	((PCINT_USE_PORT1 == 1) && ((p == 1) || (PCINT_USE_PORT2 == 0))) ?  PCINT_INPUT_PORT1 :\
+	((PCINT_USE_PORT2 == 1) /*&& ((p == 2) || (PCINT_NUM_USED_PORTS == 1))*/) ?  PCINT_INPUT_PORT2 : 0)
 
 // missing 1.0.6 definition workaround
 #ifndef NOT_AN_INTERRUPT
@@ -179,24 +117,26 @@ PIN_TO_PCINT_0-23
 //================================================================================
 
 // variables to save the last port states and the interrupt settings
-extern uint8_t oldPorts[PCINT_ENABLED_PORTS];
-extern uint8_t fallingPorts[PCINT_ENABLED_PORTS];
-extern uint8_t risingPorts[PCINT_ENABLED_PORTS];
+extern uint8_t oldPorts[PCINT_NUM_USED_PORTS];
+extern uint8_t fallingPorts[PCINT_NUM_USED_PORTS];
+extern uint8_t risingPorts[PCINT_NUM_USED_PORTS];
 
 inline void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
 
+	//TODO rework this check
 	// check if pcint is a valid pcint, exclude deactivated ports
-	if (!(pcintNum < EXTERNAL_NUM_PINCHANGEINTERRUPT))
+	if (!(pcintNum < (PCINT_NUM_PORTS * 8)))
 		return;
-#if defined(PCINT0_vect) && !defined(PCINT_PORT0_ENABLED)
+	// only do the check if they are physically available
+#if (PCINT_HAS_PORT0 == true) && (PCINT_USE_PORT0 == false)
 	if (pcintPort == 0) return;
 #endif
-#if defined(PCINT1_vect) && !defined(PCINT_PORT1_ENABLED)
+#if (PCINT_HAS_PORT1 == true) && (PCINT_USE_PORT1 == false)
 	if (pcintPort == 1) return;
 #endif
-#if defined(PCINT2_vect) && !defined(PCINT_PORT2_ENABLED)
+#if (PCINT_HAS_PORT2 == true) && (PCINT_USE_PORT2 == false)
 	if (pcintPort == 2) return;
 #endif
 
@@ -213,7 +153,7 @@ inline void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode)
 	// update the old state to the actual state
 	oldPorts[arrayPos] = *portInputRegister(digitalPinToPort(pcintNum));
 
-	// pin change mask registers decide which pins are enabled as triggers
+	// pin change mask registers decide which pins are ENABLE as triggers
 	*(&PCMSK0 + pcintPort) |= pcintMask;
 
 	// PCICR: Pin Change Interrupt Control Register - enables interrupt vectors
@@ -225,15 +165,16 @@ inline void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	uint8_t pcintPort = pcintNum / 8;
 
 	// check if pcint is a valid pcint, exclude deactivated ports
-	if (!(pcintNum < EXTERNAL_NUM_PINCHANGEINTERRUPT))
+	if (!(pcintNum < (PCINT_NUM_PORTS * 8)))
 		return;
-#if defined(PCINT0_vect) && !defined(PCINT_PORT0_ENABLED)
+	// only do the check if they are physically available
+#if (PCINT_HAS_PORT0 == true) && (PCINT_USE_PORT0 == false)
 	if (pcintPort == 0) return;
 #endif
-#if defined(PCINT1_vect) && !defined(PCINT_PORT1_ENABLED)
+#if (PCINT_HAS_PORT1 == true) && (PCINT_USE_PORT1 == false)
 	if (pcintPort == 1) return;
 #endif
-#if defined(PCINT2_vect) && !defined(PCINT_PORT2_ENABLED)
+#if (PCINT_HAS_PORT2 == true) && (PCINT_USE_PORT2 == false)
 	if (pcintPort == 2) return;
 #endif
 
@@ -254,4 +195,3 @@ inline void detachPinChangeInterrupt(const uint8_t pcintNum) {
 }
 
 #endif // include guard
-
