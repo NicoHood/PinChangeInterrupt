@@ -71,6 +71,24 @@ That is done by the macros. */
 #define PCINT_ENABLE_PCINT22
 #define PCINT_ENABLE_PCINT23
 
+/* Reordering interrupt callbacks Arduino Uno example
+(already included by default)
+Port0 has SPI on higher pins, ordering is fine
+Port1 has I2C on higher pins, ordering is fine
+Port2 has USART and Pin Interrupt on lower pins,
+move the priority down
+Its more likely the user will use pin 4-7
+*/
+//#define PCINT_CALLBACK_PORT2 \
+//PCINT_CALLBACK(4, 20); \
+//PCINT_CALLBACK(5, 21); \
+//PCINT_CALLBACK(6, 22); \
+//PCINT_CALLBACK(7, 23); \
+//PCINT_CALLBACK(0, 16); /* USART RX */ \
+//PCINT_CALLBACK(1, 17); /* USART TX */ \
+//PCINT_CALLBACK(2, 18); /* Pin Interrupt */ \
+//PCINT_CALLBACK(3, 19); /* Pin Interrupt */
+
 //================================================================================
 // General Helper Definitions and Mappings
 //================================================================================
@@ -91,6 +109,14 @@ That is done by the macros. */
 #define pinChangeInterruptPortToInput(p) (((PCINT_USE_PORT0 == 1) && ((p == 0) || (PCINT_NUM_USED_PORTS == 1))) ?  PCINT_INPUT_PORT0 :\
 	((PCINT_USE_PORT1 == 1) && ((p == 1) || (PCINT_USE_PORT2 == 0))) ?  PCINT_INPUT_PORT1 :\
 	((PCINT_USE_PORT2 == 1) /*&& ((p == 2) || (PCINT_NUM_USED_PORTS == 1))*/) ?  PCINT_INPUT_PORT2 : 0)
+
+// generates the callback for easier reordering
+#define PCINT_MACRO_BRACKETS ()
+#define PCINT_MACRO_TRUE == true)
+#define PCINT_CALLBACK(bit, pcint) \
+if (PCINT_USE_PCINT ## pcint PCINT_MACRO_TRUE \
+if (trigger & (1 << bit)) \
+pcint_callback_ptr_ ## pcint PCINT_MACRO_BRACKETS
 
 // missing 1.0.6 definition workaround
 #ifndef NOT_AN_INTERRUPT

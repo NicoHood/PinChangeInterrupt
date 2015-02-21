@@ -101,37 +101,15 @@ ISR(PCINT0_vect) {
 	// This way we can exclude a single function
 	// and the calling is also much faster
 	// We may also reorder the pins for different priority
-#if (PCINT_USE_PCINT0 == true)
-	if (trigger & (1 << 0))
-		pcint_callback_ptr_0();
-#endif
-#if (PCINT_USE_PCINT1 == true)
-	if (trigger & (1 << 1))
-		pcint_callback_ptr_1();
-#endif
-#if (PCINT_USE_PCINT2 == true)
-	if (trigger & (1 << 2))
-		pcint_callback_ptr_2();
-#endif
-#if (PCINT_USE_PCINT3 == true)
-	if (trigger & (1 << 3))
-		pcint_callback_ptr_3();
-#endif
-#if (PCINT_USE_PCINT4 == true)
-	if (trigger & (1 << 4))
-		pcint_callback_ptr_4();
-#endif
-#if (PCINT_USE_PCINT5 == true)
-	if (trigger & (1 << 5))
-		pcint_callback_ptr_5();
-#endif
-#if (PCINT_USE_PCINT6 == true)
-	if (trigger & (1 << 6))
-		pcint_callback_ptr_6();
-#endif
-#if (PCINT_USE_PCINT7 == true)
-	if (trigger & (1 << 7))
-		pcint_callback_ptr_7();
+#if !defined(PCINT_CALLBACK_PORT0)
+	PCINT_CALLBACK(0, 0);
+	PCINT_CALLBACK(1, 1);
+	PCINT_CALLBACK(2, 2);
+	PCINT_CALLBACK(3, 3);
+	PCINT_CALLBACK(4, 4);
+	PCINT_CALLBACK(5, 5);
+	PCINT_CALLBACK(6, 6);
+	PCINT_CALLBACK(7, 7);
 #endif
 }
 #endif
@@ -160,37 +138,15 @@ ISR(PCINT1_vect) {
 	// This way we can exclude a single function
 	// and the calling is also much faster
 	// We may also reorder the pins for different priority
-#if (PCINT_USE_PCINT8 == true)
-	if (trigger & (1 << 0))
-		pcint_callback_ptr_8();
-#endif
-#if (PCINT_USE_PCINT9 == true)
-	if (trigger & (1 << 1))
-		pcint_callback_ptr_9();
-#endif
-#if (PCINT_USE_PCINT10 == true)
-	if (trigger & (1 << 2))
-		pcint_callback_ptr_10();
-#endif
-#if (PCINT_USE_PCINT11 == true)
-	if (trigger & (1 << 3))
-		pcint_callback_ptr_11();
-#endif
-#if (PCINT_USE_PCINT12 == true)
-	if (trigger & (1 << 4))
-		pcint_callback_ptr_12();
-#endif
-#if (PCINT_USE_PCINT13 == true)
-	if (trigger & (1 << 5))
-		pcint_callback_ptr_13();
-#endif
-#if (PCINT_USE_PCINT14 == true)
-	if (trigger & (1 << 6))
-		pcint_callback_ptr_14();
-#endif
-#if (PCINT_USE_PCINT15 == true)
-	if (trigger & (1 << 7))
-		pcint_callback_ptr_15();
+#if !defined(PCINT_CALLBACK_PORT1)
+	PCINT_CALLBACK(0, 8);
+	PCINT_CALLBACK(1, 9);
+	PCINT_CALLBACK(2, 10);
+	PCINT_CALLBACK(3, 11);
+	PCINT_CALLBACK(4, 12);
+	PCINT_CALLBACK(5, 13);
+	PCINT_CALLBACK(6, 14);
+	PCINT_CALLBACK(7, 15);
 #endif
 }
 #endif
@@ -219,37 +175,15 @@ ISR(PCINT2_vect) {
 	// This way we can exclude a single function
 	// and the calling is also much faster
 	// We may also reorder the pins for different priority
-#if (PCINT_USE_PCINT16 == true)
-	if (trigger & (1 << 0))
-		pcint_callback_ptr_16();
-#endif
-#if (PCINT_USE_PCINT17 == true)
-	if (trigger & (1 << 1))
-		pcint_callback_ptr_17();
-#endif
-#if (PCINT_USE_PCINT18 == true)
-	if (trigger & (1 << 2))
-		pcint_callback_ptr_18();
-#endif
-#if (PCINT_USE_PCINT19 == true)
-	if (trigger & (1 << 3))
-		pcint_callback_ptr_19();
-#endif
-#if (PCINT_USE_PCINT20 == true)
-	if (trigger & (1 << 4))
-		pcint_callback_ptr_20();
-#endif
-#if (PCINT_USE_PCINT21 == true)
-	if (trigger & (1 << 5))
-		pcint_callback_ptr_21();
-#endif
-#if (PCINT_USE_PCINT22 == true)
-	if (trigger & (1 << 6))
-		pcint_callback_ptr_22();
-#endif
-#if (PCINT_USE_PCINT23 == true)
-	if (trigger & (1 << 7))
-		pcint_callback_ptr_23();
+#if !defined(PCINT_CALLBACK_PORT2)
+	PCINT_CALLBACK(0, 16);
+	PCINT_CALLBACK(1, 17);
+	PCINT_CALLBACK(2, 18);
+	PCINT_CALLBACK(3, 19);
+	PCINT_CALLBACK(4, 20);
+	PCINT_CALLBACK(5, 21);
+	PCINT_CALLBACK(6, 22);
+	PCINT_CALLBACK(7, 23);
 #endif
 }
 #endif

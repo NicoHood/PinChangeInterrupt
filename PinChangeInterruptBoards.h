@@ -41,6 +41,25 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 #define PCINT_INPUT_PORT1 PINC
 #define PCINT_INPUT_PORT2 PIND
 
+/* Reordering interrupt callbacks
+Port0 has SPI on higher pins, ordering is fine
+Port1 has I2C on higher pins, ordering is fine
+Port2 has USART and Pin Interrupt on lower pins,
+move the priority down
+Its more likely the user will use pin 4-7
+*/
+#if !defined(PCINT_CALLBACK_PORT2)
+#define PCINT_CALLBACK_PORT2 \
+PCINT_CALLBACK(4, 20); \
+PCINT_CALLBACK(5, 21); \
+PCINT_CALLBACK(6, 22); \
+PCINT_CALLBACK(7, 23); \
+PCINT_CALLBACK(0, 16); /* USART RX */ \
+PCINT_CALLBACK(1, 17); /* USART TX */ \
+PCINT_CALLBACK(2, 18); /* Pin Interrupt */ \
+PCINT_CALLBACK(3, 19); /* Pin Interrupt */
+#endif
+
 #define PCINT_HAS_PCINT0 true
 #define PCINT_HAS_PCINT1 true
 #define PCINT_HAS_PCINT2 true
