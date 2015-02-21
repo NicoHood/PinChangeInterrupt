@@ -39,9 +39,34 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 #if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
 // some pins are not useable, we wont check this, since it doesnt matter as long as the user doesn't try to attach the individual PCINTs
 #define EXTERNAL_NUM_PINCHANGEINTERRUPT 24 // 4 not available, see below
-#define PCINT_INPUT0 PINB //(PINB & 0x3F) // 6, 7 Crystal
-#define PCINT_INPUT1 PINC //(PINC & 0x3F) // 14 Reset, 15 NC
+#define PCINT_INPUT0 PINB
+#define PCINT_INPUT1 PINC
 #define PCINT_INPUT2 PIND
+
+#define PCINT_HAS_PCINT_0
+#define PCINT_HAS_PCINT_1
+#define PCINT_HAS_PCINT_2
+#define PCINT_HAS_PCINT_3
+#define PCINT_HAS_PCINT_4
+#define PCINT_HAS_PCINT_5
+//#define PCINT_HAS_PCINT_6 // crystal
+//#define PCINT_HAS_PCINT_7 // crystal
+#define PCINT_HAS_PCINT_8
+#define PCINT_HAS_PCINT_9
+#define PCINT_HAS_PCINT_10
+#define PCINT_HAS_PCINT_11
+#define PCINT_HAS_PCINT_12
+#define PCINT_HAS_PCINT_13
+//#define PCINT_HAS_PCINT_14 // reset
+//#define PCINT_HAS_PCINT_15 // NC
+#define PCINT_HAS_PCINT_16
+#define PCINT_HAS_PCINT_17
+#define PCINT_HAS_PCINT_18
+#define PCINT_HAS_PCINT_19
+#define PCINT_HAS_PCINT_20
+#define PCINT_HAS_PCINT_21
+#define PCINT_HAS_PCINT_22
+#define PCINT_HAS_PCINT_23
 
 // Arduino Uno
 #define PIN_TO_PCINT_0 16

@@ -37,34 +37,31 @@ THE SOFTWARE.
 #define PCINT_PORT0_ENABLED
 #define PCINT_PORT1_ENABLED
 #define PCINT_PORT2_ENABLED
-// ISR 3 not implemented in this library
-//#define PCINT_PORT3_ENABLED
 
-//================================================================================
-// Settings Helper Definitions
-//================================================================================
-
-// on HoodLoader2 Arduino boards only PB (port0) is broken out, save this flash
-#if defined(ARDUINO_HOODLOADER2)
-#define PCINT_PORT1_DISABLED
-#endif
-
-// ISR 3 not implemented in this library
-#define PCINT_PORT3_DISABLED
-
-// disabling ports is stronger than enabling
-#if defined(PCINT_PORT0_DISABLED)
-#undef PCINT_PORT0_ENABLED
-#endif
-#if defined(PCINT_PORT1_DISABLED)
-#undef PCINT_PORT1_ENABLED
-#endif
-#if defined(PCINT_PORT2_DISABLED)
-#undef PCINT_PORT2_ENABLED
-#endif
-#if defined(PCINT_PORT3_DISABLED)
-#undef PCINT_PORT3_ENABLED
-#endif
+#define PCINT_ENABLE_PCINT_0
+#define PCINT_ENABLE_PCINT_1
+#define PCINT_ENABLE_PCINT_2
+#define PCINT_ENABLE_PCINT_3
+#define PCINT_ENABLE_PCINT_4
+#define PCINT_ENABLE_PCINT_5
+#define PCINT_ENABLE_PCINT_6
+#define PCINT_ENABLE_PCINT_7
+#define PCINT_ENABLE_PCINT_8
+#define PCINT_ENABLE_PCINT_9
+#define PCINT_ENABLE_PCINT_10
+#define PCINT_ENABLE_PCINT_11
+#define PCINT_ENABLE_PCINT_12
+#define PCINT_ENABLE_PCINT_13
+#define PCINT_ENABLE_PCINT_14
+#define PCINT_ENABLE_PCINT_15
+#define PCINT_ENABLE_PCINT_16
+#define PCINT_ENABLE_PCINT_17
+#define PCINT_ENABLE_PCINT_18
+#define PCINT_ENABLE_PCINT_19
+#define PCINT_ENABLE_PCINT_20
+#define PCINT_ENABLE_PCINT_21
+#define PCINT_ENABLE_PCINT_22
+#define PCINT_ENABLE_PCINT_23
 
 //================================================================================
 // Board Definitions
@@ -81,8 +78,29 @@ PIN_TO_PCINT_0-23
 #include "PinChangeInterruptBoards.h"
 
 //================================================================================
-// General Definitions and Mappings
+// Settings Helper Definitions
 //================================================================================
+
+// on HoodLoader2 Arduino boards only PB (port0) is broken out, save this flash
+#if defined(ARDUINO_HOODLOADER2)
+#define PCINT_PORT1_DISABLED
+#endif
+
+// ISR 3 not implemented in this library
+#ifdef PCINT_PORT3_ENABLED
+#error ISR 3 not implemented in this library
+#endif
+
+// disabling ports is stronger than enabling
+#if defined(PCINT_PORT0_DISABLED)
+#undef PCINT_PORT0_ENABLED
+#endif
+#if defined(PCINT_PORT1_DISABLED)
+#undef PCINT_PORT1_ENABLED
+#endif
+#if defined(PCINT_PORT2_DISABLED)
+#undef PCINT_PORT2_ENABLED
+#endif
 
 // add fakes if ports are not used
 #ifndef PCINT_INPUT0
@@ -94,9 +112,11 @@ PIN_TO_PCINT_0-23
 #ifndef PCINT_INPUT2
 #define PCINT_INPUT2 0
 #endif
-#ifndef PCINT_INPUT3
-#define PCINT_INPUT3 0
-#endif
+
+
+//================================================================================
+// General Definitions and Mappings
+//================================================================================
 
 // if ports are enabled and physically available add them together so we can calculate some fancy stuff below
 #if defined(PCINT0_vect) && defined(PCINT_PORT0_ENABLED)
@@ -114,16 +134,9 @@ PIN_TO_PCINT_0-23
 #else
 #define PCINT_PORT2 0
 #endif
-#if defined(PCINT3_vect) && defined(PCINT_PORT3_ENABLED)
-// you have to change the PCINT_ARRAY_POS(p) and pinChangeInterruptPortToInput(p) definition if you want to use port3
-#error Please do not enable PCINT port3, it is not supported! If you still try to remove this error the library wont work.
-#define PCINT_PORT3 1
-#else
-#define PCINT_PORT3 0
-#endif
 
 // calculate the number of ports used
-#define PCINT_ENABLED_PORTS (PCINT_PORT0 + PCINT_PORT1 + PCINT_PORT2 + PCINT_PORT3)
+#define PCINT_ENABLED_PORTS (PCINT_PORT0 + PCINT_PORT1 + PCINT_PORT2)
 #if (PCINT_ENABLED_PORTS == 0)
 #error Please enable at least one PCINT port!
 #endif
