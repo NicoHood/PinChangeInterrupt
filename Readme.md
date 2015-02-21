@@ -92,9 +92,10 @@ That saves us flash and the pin mapping is done by a definition from pin -> pcin
 
 ### Some benchmarks here:
 The speed of an ISR depends on the number of user function set and on what PCINT they are nested.
-For example a PCINT0(best case) is faster than a PCINT7 (worst case). It takes about 11,5 uS to execute and end the worst case function.
-The time from the ISR to the user function itself is about 9,5uS. Best case is 7,1uS and 5.3uS.
-If we inline the function it takes 3,5uS and 2,4 uS (best case) 7,4 and 6,3 (worst case).
+For example a PCINT0(best case) is faster than a PCINT7 (worst case). We can reorder the pins in the definition.
+An ISR takes about 2,5uS if no function is called and 4uS if a single function is called.
+Depending on the order of the pins and the number of activated functions it is a value between 3 and 4uS to execute.
+All timings are measured with 16mhz. I've also posted an assembly output in the source. Its not optimize able any further.
 
 That's it! I hope you like the library. I tried to make it as simple and small as possible. Keep in mind that PCINTs are not useful for every project but in most cases
 the new PinChangeInterrupts may help you a lot.
@@ -103,9 +104,10 @@ Version History
 ===============
 ```
 1.2 Release (xx.02.2015)
-* Added Progmem pointers
+* Added weak interrupt function
 * Improved interrupt function calls
 * Changed the digitalPinToPinChangeInterrupt(p) macro
+* Fixed attach/detach array position when ports are deactivated
 
 1.1 Release (06.12.2014)
 * Added port deactivation

@@ -40,9 +40,6 @@ THE SOFTWARE.
 // ISR 3 not implemented in this library
 //#define PCINT_PORT3_ENABLED
 
-// inline functions to speed things up if you use 2 or more ports (no improvement for a single port)
-#define PCINT_INLINE __attribute__((always_inline))
-
 //================================================================================
 // Settings Helper Definitions
 //================================================================================
@@ -67,11 +64,6 @@ THE SOFTWARE.
 #endif
 #if defined(PCINT_PORT3_DISABLED)
 #undef PCINT_PORT3_ENABLED
-#endif
-
-// dont use inline by default
-#ifndef PCINT_INLINE
-#define PCINT_INLINE
 #endif
 
 //================================================================================
@@ -179,9 +171,8 @@ extern uint8_t fallingPorts[PCINT_ENABLED_PORTS];
 extern uint8_t risingPorts[PCINT_ENABLED_PORTS];
 
 inline void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
-	// get PCINT registers and bitmask
+	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
-	uint8_t pcintMask = (1 << (pcintNum % 8));
 
 	// check if pcint is a valid pcint, exclude deactivated ports
 	if (!(pcintNum < EXTERNAL_NUM_PINCHANGEINTERRUPT))
@@ -196,14 +187,18 @@ inline void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode)
 	if (pcintPort == 2) return;
 #endif
 
+	// get bitmask and array position
+	uint8_t pcintMask = (1 << (pcintNum % 8));
+	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
+
 	// save settings related to mode and registers
 	if (mode == CHANGE || mode == RISING)
-		risingPorts[pcintPort] |= pcintMask;
+		risingPorts[arrayPos] |= pcintMask;
 	if (mode == CHANGE || mode == FALLING)
-		fallingPorts[pcintPort] |= pcintMask;
+		fallingPorts[arrayPos] |= pcintMask;
 
 	// update the old state to the actual state
-	oldPorts[pcintPort] = *portInputRegister(digitalPinToPort(pcintNum));
+	oldPorts[arrayPos] = *portInputRegister(digitalPinToPort(pcintNum));
 
 	// pin change mask registers decide which pins are enabled as triggers
 	*(&PCMSK0 + pcintPort) |= pcintMask;
@@ -213,9 +208,8 @@ inline void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode)
 }
 
 inline void detachPinChangeInterrupt(const uint8_t pcintNum) {
-	// get PCINT registers and bitmask
+	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
-	uint8_t pcintMask = (1 << (pcintNum % 8));
 
 	// check if pcint is a valid pcint, exclude deactivated ports
 	if (!(pcintNum < EXTERNAL_NUM_PINCHANGEINTERRUPT))
@@ -230,9 +224,13 @@ inline void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	if (pcintPort == 2) return;
 #endif
 
+	// get bitmask and array position
+	uint8_t pcintMask = (1 << (pcintNum % 8));
+	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
+
 	// delete setting
-	risingPorts[pcintPort] &= ~pcintMask;
-	fallingPorts[pcintPort] &= ~pcintMask;
+	risingPorts[arrayPos] &= ~pcintMask;
+	fallingPorts[arrayPos] &= ~pcintMask;
 
 	// disable the mask.
 	*(&PCMSK0 + pcintPort) &= ~pcintMask;
