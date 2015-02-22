@@ -40,33 +40,33 @@ extern "C" {
 for (int i = 0; i < 24; i++) {
 Serial.print("void pcint_callback_ptr_");
 Serial.print(i);
-Serial.println("() __attribute__((weak, alias(\"pcint_null_callback\")));");
+Serial.println("(void) __attribute__((weak, alias(\"pcint_null_callback\")));");
 }
 */
-void pcint_callback_ptr_0() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_1() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_2() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_3() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_4() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_5() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_6() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_7() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_8() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_9() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_10() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_11() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_12() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_13() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_14() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_15() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_16() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_17() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_18() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_19() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_20() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_21() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_22() __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_23() __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_0(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_1(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_2(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_3(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_4(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_5(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_6(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_7(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_8(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_9(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_10(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_11(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_12(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_13(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_14(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_15(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_16(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_17(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_18(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_19(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_20(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_21(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_22(void) __attribute__((weak, alias("pcint_null_callback")));
+void pcint_callback_ptr_23(void) __attribute__((weak, alias("pcint_null_callback")));
 
 //================================================================================
 // Interrupt Handlers
@@ -110,6 +110,8 @@ ISR(PCINT0_vect) {
 	PCINT_CALLBACK(5, 5);
 	PCINT_CALLBACK(6, 6);
 	PCINT_CALLBACK(7, 7);
+#else
+	PCINT_CALLBACK_PORT0
 #endif
 }
 #endif
@@ -147,6 +149,8 @@ ISR(PCINT1_vect) {
 	PCINT_CALLBACK(5, 13);
 	PCINT_CALLBACK(6, 14);
 	PCINT_CALLBACK(7, 15);
+#else
+	PCINT_CALLBACK_PORT1
 #endif
 }
 #endif
@@ -184,6 +188,8 @@ ISR(PCINT2_vect) {
 	PCINT_CALLBACK(5, 21);
 	PCINT_CALLBACK(6, 22);
 	PCINT_CALLBACK(7, 23);
+#else
+	PCINT_CALLBACK_PORT2
 #endif
 }
 #endif

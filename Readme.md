@@ -110,6 +110,9 @@ Version History
 * Fixed attach/detach array position when ports are deactivated
 * Improved manual PCINT deactivation by user
 * Improved definitions for different boards
+* HoodLoader2 definition fixes
+* Improved speed
+* Improved specific boards
 
 1.1 Release (06.12.2014)
 * Added port deactivation

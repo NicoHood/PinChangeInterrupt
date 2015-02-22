@@ -25,6 +25,113 @@ THE SOFTWARE.
 #define PINCHANGEINTERRUPTBOARDS_H
 
 //================================================================================
+// Helper Macros
+//================================================================================
+
+/* Disable all pins on a port, if port is deactivated
+We could then check every pin -> pcint definition
+But that'd be a mess and doesnt help
+Users who deactivate stuff should know
+what the are doing. */
+/*
+for (int port = 0; port < 3; port++) {
+Serial.print("#if !defined(PCINT_ENABLE_PORT");
+Serial.print(port);
+Serial.println(")");
+for (int i = 0; i < 8; i++) {
+Serial.print("#if defined(PCINT_ENABLE_PCINT");
+Serial.print(port * 8 + i);
+Serial.println(")");
+Serial.print("#undef PCINT_ENABLE_PCINT");
+Serial.println(port * 8 + i);
+Serial.println("#endif");
+}
+Serial.println("#endif");
+Serial.println();
+}
+*/
+#if !defined(PCINT_ENABLE_PORT0)
+#if defined(PCINT_ENABLE_PCINT0)
+#undef PCINT_ENABLE_PCINT0
+#endif
+#if defined(PCINT_ENABLE_PCINT1)
+#undef PCINT_ENABLE_PCINT1
+#endif
+#if defined(PCINT_ENABLE_PCINT2)
+#undef PCINT_ENABLE_PCINT2
+#endif
+#if defined(PCINT_ENABLE_PCINT3)
+#undef PCINT_ENABLE_PCINT3
+#endif
+#if defined(PCINT_ENABLE_PCINT4)
+#undef PCINT_ENABLE_PCINT4
+#endif
+#if defined(PCINT_ENABLE_PCINT5)
+#undef PCINT_ENABLE_PCINT5
+#endif
+#if defined(PCINT_ENABLE_PCINT6)
+#undef PCINT_ENABLE_PCINT6
+#endif
+#if defined(PCINT_ENABLE_PCINT7)
+#undef PCINT_ENABLE_PCINT7
+#endif
+#endif
+
+#if !defined(PCINT_ENABLE_PORT1)
+#if defined(PCINT_ENABLE_PCINT8)
+#undef PCINT_ENABLE_PCINT8
+#endif
+#if defined(PCINT_ENABLE_PCINT9)
+#undef PCINT_ENABLE_PCINT9
+#endif
+#if defined(PCINT_ENABLE_PCINT10)
+#undef PCINT_ENABLE_PCINT10
+#endif
+#if defined(PCINT_ENABLE_PCINT11)
+#undef PCINT_ENABLE_PCINT11
+#endif
+#if defined(PCINT_ENABLE_PCINT12)
+#undef PCINT_ENABLE_PCINT12
+#endif
+#if defined(PCINT_ENABLE_PCINT13)
+#undef PCINT_ENABLE_PCINT13
+#endif
+#if defined(PCINT_ENABLE_PCINT14)
+#undef PCINT_ENABLE_PCINT14
+#endif
+#if defined(PCINT_ENABLE_PCINT15)
+#undef PCINT_ENABLE_PCINT15
+#endif
+#endif
+
+#if !defined(PCINT_ENABLE_PORT2)
+#if defined(PCINT_ENABLE_PCINT16)
+#undef PCINT_ENABLE_PCINT16
+#endif
+#if defined(PCINT_ENABLE_PCINT17)
+#undef PCINT_ENABLE_PCINT17
+#endif
+#if defined(PCINT_ENABLE_PCINT18)
+#undef PCINT_ENABLE_PCINT18
+#endif
+#if defined(PCINT_ENABLE_PCINT19)
+#undef PCINT_ENABLE_PCINT19
+#endif
+#if defined(PCINT_ENABLE_PCINT20)
+#undef PCINT_ENABLE_PCINT20
+#endif
+#if defined(PCINT_ENABLE_PCINT21)
+#undef PCINT_ENABLE_PCINT21
+#endif
+#if defined(PCINT_ENABLE_PCINT22)
+#undef PCINT_ENABLE_PCINT22
+#endif
+#if defined(PCINT_ENABLE_PCINT23)
+#undef PCINT_ENABLE_PCINT23
+#endif
+#endif
+
+//================================================================================
 // Board Definitions
 //================================================================================
 
@@ -41,40 +148,21 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 #define PCINT_INPUT_PORT1 PINC
 #define PCINT_INPUT_PORT2 PIND
 
-/* Reordering interrupt callbacks
-Port0 has SPI on higher pins, ordering is fine
-Port1 has I2C on higher pins, ordering is fine
-Port2 has USART and Pin Interrupt on lower pins,
-move the priority down
-Its more likely the user will use pin 4-7
-*/
-#if !defined(PCINT_CALLBACK_PORT2)
-#define PCINT_CALLBACK_PORT2 \
-PCINT_CALLBACK(4, 20); \
-PCINT_CALLBACK(5, 21); \
-PCINT_CALLBACK(6, 22); \
-PCINT_CALLBACK(7, 23); \
-PCINT_CALLBACK(0, 16); /* USART RX */ \
-PCINT_CALLBACK(1, 17); /* USART TX */ \
-PCINT_CALLBACK(2, 18); /* Pin Interrupt */ \
-PCINT_CALLBACK(3, 19); /* Pin Interrupt */
-#endif
-
 #define PCINT_HAS_PCINT0 true
 #define PCINT_HAS_PCINT1 true
 #define PCINT_HAS_PCINT2 true
 #define PCINT_HAS_PCINT3 true
 #define PCINT_HAS_PCINT4 true
 #define PCINT_HAS_PCINT5 true
-#define PCINT_HAS_PCINT6 false // crystal
-#define PCINT_HAS_PCINT7 false // crystal
+#define PCINT_HAS_PCINT6 true // crystal
+#define PCINT_HAS_PCINT7 true // crystal
 #define PCINT_HAS_PCINT8 true
 #define PCINT_HAS_PCINT9 true
 #define PCINT_HAS_PCINT10 true
 #define PCINT_HAS_PCINT11 true
 #define PCINT_HAS_PCINT12 true
 #define PCINT_HAS_PCINT13 true
-#define PCINT_HAS_PCINT14 false // reset
+#define PCINT_HAS_PCINT14 true // reset
 #define PCINT_HAS_PCINT15 false // NC
 #define PCINT_HAS_PCINT16 true
 #define PCINT_HAS_PCINT17 true
@@ -126,13 +214,50 @@ PCINT_CALLBACK(3, 19); /* Pin Interrupt */
 
 #elif defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega640__)
 #define PCINT_INPUT_PORT0 PINB
-//TODO
-#if defined(PCINT_ENABLE_PCINT16)
-#define PCINT_INPUT_PORT1 ((PINE & (1 << 0)) | ((PINJ & 0x7F) << 1))
-#else
-#define PCINT_INPUT_PORT1 ((PINJ & 0x7F) << 1) //TODO
-#endif
 #define PCINT_INPUT_PORT2 PINK
+
+#if defined(PCINT_ENABLE_PCINT16)
+#if defined(PCINT_ENABLE_PCINT17) || defined(PCINT_ENABLE_PCINT18) \
+|| defined(PCINT_ENABLE_PCINT19) || defined(PCINT_ENABLE_PCINT20) \
+|| defined(PCINT_ENABLE_PCINT21) || defined(PCINT_ENABLE_PCINT22) \
+|| defined(PCINT_ENABLE_PCINT23)
+// PortE and PortJ selected
+#define PCINT_INPUT_PORT1 ((PINE & (1 << 0)) | (PINJ << 1))
+#else
+// PortE only selected
+#define PCINT_INPUT_PORT1 PINE
+#endif
+#else
+// PortJ only selected
+// we still have to do the shift because the attach
+// function is not designed for this optimization
+#define PCINT_INPUT_PORT1 (PINJ << 1)
+#endif
+
+#define PCINT_HAS_PCINT0 true
+#define PCINT_HAS_PCINT1 true
+#define PCINT_HAS_PCINT2 true
+#define PCINT_HAS_PCINT3 true
+#define PCINT_HAS_PCINT4 true
+#define PCINT_HAS_PCINT5 true
+#define PCINT_HAS_PCINT6 true
+#define PCINT_HAS_PCINT7 true
+#define PCINT_HAS_PCINT8 true
+#define PCINT_HAS_PCINT9 true
+#define PCINT_HAS_PCINT10 true
+#define PCINT_HAS_PCINT11 true // NC on normal mega
+#define PCINT_HAS_PCINT12 true // NC on normal mega
+#define PCINT_HAS_PCINT13 true // NC on normal mega
+#define PCINT_HAS_PCINT14 true // NC on normal mega
+#define PCINT_HAS_PCINT15 true // NC on normal mega
+#define PCINT_HAS_PCINT16 true
+#define PCINT_HAS_PCINT17 true
+#define PCINT_HAS_PCINT18 true
+#define PCINT_HAS_PCINT19 true
+#define PCINT_HAS_PCINT20 true
+#define PCINT_HAS_PCINT21 true
+#define PCINT_HAS_PCINT22 true
+#define PCINT_HAS_PCINT23 true
 
 // Arduino Mega/Mega2560
 #define PIN_TO_PCINT_0 8
@@ -231,6 +356,15 @@ PCINT_CALLBACK(3, 19); /* Pin Interrupt */
 #elif defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
 #define PCINT_INPUT_PORT0 PINB
 
+#define PCINT_HAS_PCINT0 true // LED, but should work on Teensy2
+#define PCINT_HAS_PCINT1 true
+#define PCINT_HAS_PCINT2 true
+#define PCINT_HAS_PCINT3 true
+#define PCINT_HAS_PCINT4 true
+#define PCINT_HAS_PCINT5 true
+#define PCINT_HAS_PCINT6 true
+#define PCINT_HAS_PCINT7 true
+
 // Arduino Leonardo/Micro
 #define PIN_TO_PCINT_0 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_1 NOT_AN_INTERRUPT
@@ -283,20 +417,13 @@ PCINT_CALLBACK(3, 19); /* Pin Interrupt */
 
 
 #elif defined(__AVR_AT90USB82__) || defined(__AVR_AT90USB162__) || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega8U2__)
-
-// on HoodLoader2 Arduino boards only PB (port0) is broken out, save this flash
-#if defined(ARDUINO_HOODLOADER2) && defined(PCINT_ENABLE_PORT1)
-#undef PCINT_ENABLE_PORT1
-#endif
-
 // u2 Series has crappy pin mappings for port 1
 #define PCINT_INPUT_PORT0 PINB
 #define PCINT_INPUT_PORT1 (((PINC >> 6) & (1 << 0)) | ((PINC >> 4) & (1 << 1)) | ((PINC >> 2) & (1 << 2)) | ((PINC << 1) & (1 << 3)) | ((PIND >> 1) & (1 << 4)))
 
 // u2 Series/HoodLoader2
-#ifndef HOODLOADER2 // On Arduino boards only pins 0-7 are broken out
+// On Arduino boards only pins 0-7 are broken out
 #define PIN_TO_PCINT_0 0 // NC
-#endif
 #define PIN_TO_PCINT_1 1
 #define PIN_TO_PCINT_2 2
 #define PIN_TO_PCINT_3 3
@@ -305,20 +432,16 @@ PCINT_CALLBACK(3, 19); /* Pin Interrupt */
 #define PIN_TO_PCINT_6 6
 #define PIN_TO_PCINT_7 7
 #define PIN_TO_PCINT_8 NOT_AN_INTERRUPT
-#ifndef HOODLOADER2 // On Arduino boards only pins 0-7 are broken out
 #define PIN_TO_PCINT_9 8 // NC
 #define PIN_TO_PCINT_10 9 // NC
 #define PIN_TO_PCINT_11 10 // NC
 #define PIN_TO_PCINT_12 11 // NC
-#endif
 #define PIN_TO_PCINT_13 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_14 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_15 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_16 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_17 NOT_AN_INTERRUPT
-#ifndef HOODLOADER2 // On Arduino boards only pins 0-7 are broken out
 #define PIN_TO_PCINT_18 12 // LED
-#endif
 #define PIN_TO_PCINT_19 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_20 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_SS PIN_TO_PCINT_0
@@ -327,11 +450,34 @@ PCINT_CALLBACK(3, 19); /* Pin Interrupt */
 #define PIN_TO_PCINT_SCK PIN_TO_PCINT_1
 
 #elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#define PCINT_INPUT_PORT0 PINB // (PINB & 0x3F)
+#define PCINT_INPUT_PORT0 PINB
+
+/* Attiny 25/45/85 only has a very few pins
+activate all by default
+The order is also okay. */
+#define PCINT_HAS_PCINT0 true
+#define PCINT_HAS_PCINT1 true
+#define PCINT_HAS_PCINT2 true // Pin Interrupt 0
+#define PCINT_HAS_PCINT3 true // crystal
+#define PCINT_HAS_PCINT4 true // crystal
+#define PCINT_HAS_PCINT5 true // reset
 
 #elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
 #define PCINT_INPUT_PORT0 PINA
-#define PCINT_INPUT_PORT1 PINB // (PINB & 0x0F)
+#define PCINT_INPUT_PORT1 PINB
+
+#define PCINT_HAS_PCINT0 true
+#define PCINT_HAS_PCINT1 true
+#define PCINT_HAS_PCINT2 true
+#define PCINT_HAS_PCINT3 true
+#define PCINT_HAS_PCINT4 true
+#define PCINT_HAS_PCINT5 true
+#define PCINT_HAS_PCINT6 true
+#define PCINT_HAS_PCINT7 true
+#define PCINT_HAS_PCINT8 true // crystal
+#define PCINT_HAS_PCINT9 true // crystal
+#define PCINT_HAS_PCINT10 true // Pin Interrupt 0
+#define PCINT_HAS_PCINT11 true // reset
 
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.

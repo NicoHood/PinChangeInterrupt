@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "Arduino.h"
 
 //================================================================================
-// Settings
+// General Settings
 //================================================================================
 
 /* Settings to de/activate ports/pins
@@ -71,23 +71,136 @@ That is done by the macros. */
 #define PCINT_ENABLE_PCINT22
 #define PCINT_ENABLE_PCINT23
 
-/* Reordering interrupt callbacks Arduino Uno example
-(already included by default)
+//================================================================================
+// Suggested Settings
+//================================================================================
+
+// Arduino Uno (328)
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
+/* Reordering interrupt callbacks priority
 Port0 has SPI on higher pins, ordering is fine
 Port1 has I2C on higher pins, ordering is fine
 Port2 has USART and Pin Interrupt on lower pins,
 move the priority down
 Its more likely the user will use pin 4-7
 */
-//#define PCINT_CALLBACK_PORT2 \
-//PCINT_CALLBACK(4, 20); \
-//PCINT_CALLBACK(5, 21); \
-//PCINT_CALLBACK(6, 22); \
-//PCINT_CALLBACK(7, 23); \
-//PCINT_CALLBACK(0, 16); /* USART RX */ \
-//PCINT_CALLBACK(1, 17); /* USART TX */ \
-//PCINT_CALLBACK(2, 18); /* Pin Interrupt */ \
-//PCINT_CALLBACK(3, 19); /* Pin Interrupt */
+#if !defined(PCINT_CALLBACK_PORT2)
+#define PCINT_CALLBACK_PORT2 \
+PCINT_CALLBACK(4, 20); \
+PCINT_CALLBACK(5, 21); \
+PCINT_CALLBACK(6, 22); \
+PCINT_CALLBACK(7, 23); \
+PCINT_CALLBACK(0, 16); /* USART RX */ \
+PCINT_CALLBACK(1, 17); /* USART TX */ \
+PCINT_CALLBACK(2, 18); /* Pin Interrupt 0 */ \
+PCINT_CALLBACK(3, 19); /* Pin Interrupt 1 */
+#endif
+
+// deactivate crystal and reset pins by default
+#if defined(PCINT_ENABLE_PCINT6)
+#undef PCINT_ENABLE_PCINT6 // crystal
+#endif
+#if defined(PCINT_ENABLE_PCINT7)
+#undef PCINT_ENABLE_PCINT7 // crystal
+#endif
+#if defined(PCINT_ENABLE_PCINT14)
+#undef PCINT_ENABLE_PCINT14 // reset
+#endif
+#endif
+
+// Arduino Mega (2560)
+#if defined(ARDUINO_AVR_MEGA2560) || defined(ARDUINO_AVR_MEGA)
+/* Port1 is structured a bit more complicated
+Also only 3 pins are connected on standard boards
+Seeeduino Mega has these pins optional!
+Disabling Port1 gives more speed and uses less flash
+Pins: 0(RX0), 14(TX3), 15(RX3) */
+#if defined(PCINT_ENABLE_PORT1)
+#undef PCINT_ENABLE_PORT1 // better performence
+#endif
+
+/* Reordering interrupt callbacks priority
+Port2 has SPI on lower pins, move the priority down
+Its more likely the user will use pin 10-13
+Port1 by default deactivated, ordering is fine
+Port2 only has ADCs, ordering is fine
+*/
+#if !defined(PCINT_CALLBACK_PORT0)
+#define PCINT_CALLBACK_PORT0 \
+PCINT_CALLBACK(4, 4); \
+PCINT_CALLBACK(5, 5); \
+PCINT_CALLBACK(6, 6); \
+PCINT_CALLBACK(7, 7); \
+PCINT_CALLBACK(0, 0); /* SPI SS */ \
+PCINT_CALLBACK(1, 1); /* SPI SCK */ \
+PCINT_CALLBACK(2, 2); /* SPI MISO */ \
+PCINT_CALLBACK(3, 3); /* SPI MOSI */
+#endif
+#endif
+
+// Arduino Leonardo/Micro (32u4)
+#if defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
+/* Reordering interrupt callbacks priority
+Port0 has SPI on lower pins, move the priority down
+Its more likely the user will use pin 8-11 */
+#if !defined(PCINT_CALLBACK_PORT0)
+#define PCINT_CALLBACK_PORT0 \
+PCINT_CALLBACK(4, 4); \
+PCINT_CALLBACK(5, 5); \
+PCINT_CALLBACK(6, 6); \
+PCINT_CALLBACK(7, 7); \
+PCINT_CALLBACK(0, 0); /* SPI SS / RX LED */ \
+PCINT_CALLBACK(1, 1); /* SPI SCK */ \
+PCINT_CALLBACK(2, 2); /* SPI MISO */ \
+PCINT_CALLBACK(3, 3); /* SPI MOSI */
+#endif
+
+// RX LED on normal leonardo/micro
+#if defined(PCINT_ENABLE_PCINT0) && (defined(ARDUINO_AVR_LEONARDO) || defined(ARDUINO_AVR_MICRO))
+#undef PCINT_ENABLE_PCINT0
+#endif
+#endif
+
+// Hoodloader2 (u2 Series)
+#if defined(__AVR_AT90USB82__) || defined(__AVR_AT90USB162__) || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega8U2__) 
+#if defined(ARDUINO_HOODLOADER2)
+// on HoodLoader2 Arduino boards only PB1-7 (port0) is broken out, save this flash
+#if defined(PCINT_ENABLE_PORT1)
+#undef PCINT_ENABLE_PORT1
+#endif
+
+// SS (PB0) is not connected on normal Arduino boards
+#if defined(PCINT_ENABLE_PCINT0)
+#undef PCINT_ENABLE_PCINT0
+#endif
+
+/* Reordering interrupt callbacks priority
+Port0 has SPI on lower pins, move the priority down
+Its more likely the user will use PB4-7
+Pretend the User has not soldered the 4 Pinheader
+so only do this for non Arduino boards. */
+#else
+#if !defined(PCINT_CALLBACK_PORT0)
+#define PCINT_CALLBACK_PORT0 \
+PCINT_CALLBACK(4, 4); \
+PCINT_CALLBACK(5, 5); \
+PCINT_CALLBACK(6, 6); \
+PCINT_CALLBACK(7, 7); \
+PCINT_CALLBACK(0, 0); /* SPI SS */ \
+PCINT_CALLBACK(1, 1); /* SPI SCK */ \
+PCINT_CALLBACK(2, 2); /* SPI MISO */ \
+PCINT_CALLBACK(3, 3); /* SPI MOSI */
+#endif
+#endif
+#endif
+
+#if defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
+// Port1 is connected to reset, crystal and Pin Interrupt 0
+// deactivate it by default
+#if defined(PCINT_ENABLE_PCINT1)
+#undef PCINT_ENABLE_PCINT1
+#endif
+#endif
 
 //================================================================================
 // General Helper Definitions and Mappings
