@@ -462,6 +462,23 @@ The order is also okay. */
 #define PCINT_HAS_PCINT4 true // crystal
 #define PCINT_HAS_PCINT5 true // reset
 
+#define PIN_TO_PCINT_0 0
+#define PIN_TO_PCINT_1 1
+#define PIN_TO_PCINT_2 2
+#define PIN_TO_PCINT_3 3
+#define PIN_TO_PCINT_4 4
+#define PIN_TO_PCINT_5 5
+#define PIN_TO_PCINT_A0 PIN_TO_PCINT_5
+#define PIN_TO_PCINT_A1 PIN_TO_PCINT_2
+#define PIN_TO_PCINT_A2 PIN_TO_PCINT_4
+#define PIN_TO_PCINT_A3 PIN_TO_PCINT_3
+// no SS pin available
+#define PIN_TO_PCINT_MOSI PIN_TO_PCINT_0
+#define PIN_TO_PCINT_MISO PIN_TO_PCINT_1
+#define PIN_TO_PCINT_SCK PIN_TO_PCINT_2
+#define PIN_TO_PCINT_SDA PIN_TO_PCINT_0
+#define PIN_TO_PCINT_SCL PIN_TO_PCINT_2
+
 #elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
 #define PCINT_INPUT_PORT0 PINA
 #define PCINT_INPUT_PORT1 PINB
@@ -478,6 +495,32 @@ The order is also okay. */
 #define PCINT_HAS_PCINT9 true // crystal
 #define PCINT_HAS_PCINT10 true // Pin Interrupt 0
 #define PCINT_HAS_PCINT11 true // reset
+
+#define PIN_TO_PCINT_0 0
+#define PIN_TO_PCINT_1 1
+#define PIN_TO_PCINT_2 2
+#define PIN_TO_PCINT_3 3
+#define PIN_TO_PCINT_4 4
+#define PIN_TO_PCINT_5 5
+#define PIN_TO_PCINT_6 6
+#define PIN_TO_PCINT_7 7
+#define PIN_TO_PCINT_8 10
+#define PIN_TO_PCINT_9 9
+#define PIN_TO_PCINT_10 8
+#define PIN_TO_PCINT_A0 PIN_TO_PCINT_0
+#define PIN_TO_PCINT_A1 PIN_TO_PCINT_1
+#define PIN_TO_PCINT_A2 PIN_TO_PCINT_2
+#define PIN_TO_PCINT_A3 PIN_TO_PCINT_3
+#define PIN_TO_PCINT_A4 PIN_TO_PCINT_4
+#define PIN_TO_PCINT_A5 PIN_TO_PCINT_5
+#define PIN_TO_PCINT_A6 PIN_TO_PCINT_6
+#define PIN_TO_PCINT_A7 PIN_TO_PCINT_7
+// no SS pin available
+#define PIN_TO_PCINT_MOSI PIN_TO_PCINT_6
+#define PIN_TO_PCINT_MISO PIN_TO_PCINT_5
+#define PIN_TO_PCINT_SCK PIN_TO_PCINT_4
+#define PIN_TO_PCINT_SDA PIN_TO_PCINT_6
+#define PIN_TO_PCINT_SCL PIN_TO_PCINT_4
 
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.
