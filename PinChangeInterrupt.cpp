@@ -69,14 +69,92 @@ void pcint_callback_ptr_22(void) __attribute__((weak, alias("pcint_null_callback
 void pcint_callback_ptr_23(void) __attribute__((weak, alias("pcint_null_callback")));
 
 //================================================================================
-// Interrupt Handlers
+// PinChangeInterrupt User Functions
 //================================================================================
 
 // variables to save the last port states and the interrupt settings
-uint8_t oldPorts[PCINT_NUM_USED_PORTS] = { 0 };
-uint8_t fallingPorts[PCINT_NUM_USED_PORTS] = { 0 };
-uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
+static uint8_t oldPorts[PCINT_NUM_USED_PORTS] = { 0 };
+static uint8_t fallingPorts[PCINT_NUM_USED_PORTS] = { 0 };
+static uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 
+void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
+	// get PCINT registers
+	uint8_t pcintPort = pcintNum / 8;
+
+	// check if pcint is a valid pcint, exclude deactivated ports
+	if (pcintPort == 0){
+		if (PCINT_USE_PORT0 == false)
+			return;
+	}
+	else if (pcintPort == 1){
+		if (PCINT_USE_PORT1 == false)
+			return;
+	}
+	else if (pcintPort == 2){
+		if (PCINT_USE_PORT2 == false)
+			return;
+	}
+	else return;
+
+	// get bitmask and array position
+	uint8_t pcintMask = (1 << (pcintNum % 8));
+	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
+
+	// save settings related to mode and registers
+	if (mode == CHANGE || mode == RISING)
+		risingPorts[arrayPos] |= pcintMask;
+	if (mode == CHANGE || mode == FALLING)
+		fallingPorts[arrayPos] |= pcintMask;
+
+	// update the old state to the actual state
+	oldPorts[arrayPos] = *portInputRegister(digitalPinToPort(pcintNum));
+
+	// pin change mask registers decide which pins are ENABLE as triggers
+	*(&PCMSK0 + pcintPort) |= pcintMask;
+
+	// PCICR: Pin Change Interrupt Control Register - enables interrupt vectors
+	PCICR |= (1 << pcintPort);
+}
+
+void detachPinChangeInterrupt(const uint8_t pcintNum) {
+	// get PCINT registers
+	uint8_t pcintPort = pcintNum / 8;
+
+	// check if pcint is a valid pcint, exclude deactivated ports
+	if (pcintPort == 0){
+		if (PCINT_USE_PORT0 == false)
+			return;
+	}
+	else if (pcintPort == 1){
+		if (PCINT_USE_PORT1 == false)
+			return;
+	}
+	else if (pcintPort == 2){
+		if (PCINT_USE_PORT2 == false)
+			return;
+	}
+	else return;
+
+	// get bitmask and array position
+	uint8_t pcintMask = (1 << (pcintNum % 8));
+	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
+
+	// delete setting
+	risingPorts[arrayPos] &= ~pcintMask;
+	fallingPorts[arrayPos] &= ~pcintMask;
+
+	// disable the mask.
+	*(&PCMSK0 + pcintPort) &= ~pcintMask;
+
+	// if that's the last one, disable the interrupt.
+	if (*(&PCMSK0 + pcintPort) == 0)
+		PCICR &= ~(1 << pcintPort);
+}
+
+
+//================================================================================
+// Interrupt Handlers
+//================================================================================
 
 #if (PCINT_USE_PORT0 == true)
 ISR(PCINT0_vect) {

@@ -113,6 +113,7 @@ Version History
 * HoodLoader2 definition fixes
 * Improved speed
 * Improved specific boards
+* Moved attach function to .cpp file
 
 1.1 Release (06.12.2014)
 * Added port deactivation
