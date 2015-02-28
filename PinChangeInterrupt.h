@@ -213,6 +213,10 @@ PCINT_CALLBACK(3, 3); /* SPI MOSI */
 #error Please enable at least one PCINT port!
 #endif
 
+// typedef for our callback function pointers
+//TODO remove?
+typedef void(*callback)(void);
+
 // map the port to the array position, depending on what ports are activated. this is only usable with port 0-2, not 3
 #define PCINT_ARRAY_POS(p) ((PCINT_NUM_USED_PORTS == 3) ? p : (PCINT_NUM_USED_PORTS == 1) ? 0 : \
 /*(PCINT_NUM_USED_PORTS == 2)*/ (PCINT_USE_PORT2 == 0) ? p : (PCINT_USE_PORT0 == 0) ? (p - 1) : \
@@ -256,7 +260,59 @@ pcint_callback_ptr_ ## pcint PCINT_MACRO_BRACKETS
 // Function Prototypes
 //================================================================================
 
+void pcint_callback_ptr_0(void);
+void pcint_callback_ptr_1(void);
+void pcint_callback_ptr_2(void);
+void pcint_callback_ptr_3(void);
+void pcint_callback_ptr_4(void);
+void pcint_callback_ptr_5(void);
+void pcint_callback_ptr_6(void);
+void pcint_callback_ptr_7(void);
+void pcint_callback_ptr_8(void);
+void pcint_callback_ptr_9(void);
+void pcint_callback_ptr_10(void);
+void pcint_callback_ptr_11(void);
+void pcint_callback_ptr_12(void);
+void pcint_callback_ptr_13(void);
+void pcint_callback_ptr_14(void);
+void pcint_callback_ptr_15(void);
+void pcint_callback_ptr_16(void);
+void pcint_callback_ptr_17(void);
+void pcint_callback_ptr_18(void);
+void pcint_callback_ptr_19(void);
+void pcint_callback_ptr_20(void);
+void pcint_callback_ptr_21(void);
+void pcint_callback_ptr_22(void);
+void pcint_callback_ptr_23(void);
+
+extern uint8_t oldPorts[PCINT_NUM_USED_PORTS];
+extern uint8_t fallingPorts[PCINT_NUM_USED_PORTS];
+extern uint8_t risingPorts[PCINT_NUM_USED_PORTS];
+
 void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode);
+void attachPinChangeInterrupt0(void);
+void attachPinChangeInterrupt1(void);
+void attachPinChangeInterrupt2(void);
 void detachPinChangeInterrupt(const uint8_t pcintNum);
+
+static void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode) __attribute__((always_inline));
+void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode) {
+	// check if pcint is a valid pcint, exclude deactivated ports
+	// call the fake functions to compile the .cpp files with the ISR
+	uint8_t pcintPort = pcintNum / 8;
+	if (pcintPort == 0){
+		if (PCINT_USE_PORT0 == true)
+			attachPinChangeInterrupt0();
+	}
+	else if (pcintPort == 1){
+		if (PCINT_USE_PORT1 == true)
+			attachPinChangeInterrupt1();
+	}
+	else if (pcintPort == 2){
+		if (PCINT_USE_PORT2 == true)
+			attachPinChangeInterrupt2();
+	}
+	attachPinChangeInterrupt(pcintNum, mode);
+}
 
 #endif // include guard

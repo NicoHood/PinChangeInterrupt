@@ -16,8 +16,8 @@ Compared with the normal Interrupts it is even more compact and all available PC
 * Implementation is fast and compact
 * Ports can be manually deactivated in the .h file
 
+**Supported pins for PinChangeInterrupt:**
 ```
- The following pins are usable for PinChangeInterrupt:
  Arduino Uno: All pins are usable  
  Arduino Mega: 10, 11, 12, 13, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64),
                A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
@@ -113,6 +113,7 @@ Version History
 * Improved speed
 * Improved specific boards
 * Moved attach function to .cpp file
+* Updated examples
 
 1.1 Release (06.12.2014)
 * Added port deactivation

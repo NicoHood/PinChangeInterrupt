@@ -27,9 +27,6 @@ THE SOFTWARE.
 // Weak Callbacks
 //================================================================================
 
-// typedef for our callback function pointers
-typedef void(*callback)(void);
-
 // useless function for weak implemented/not used functions, extern c needed for the alias
 extern "C" {
 	static void pcint_null_callback(void) {	}
@@ -73,9 +70,9 @@ void pcint_callback_ptr_23(void) __attribute__((weak, alias("pcint_null_callback
 //================================================================================
 
 // variables to save the last port states and the interrupt settings
-static uint8_t oldPorts[PCINT_NUM_USED_PORTS] = { 0 };
-static uint8_t fallingPorts[PCINT_NUM_USED_PORTS] = { 0 };
-static uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
+uint8_t oldPorts[PCINT_NUM_USED_PORTS] = { 0 };
+uint8_t fallingPorts[PCINT_NUM_USED_PORTS] = { 0 };
+uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 
 void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	// get PCINT registers
@@ -151,126 +148,6 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 		PCICR &= ~(1 << pcintPort);
 }
 
-
-//================================================================================
-// Interrupt Handlers
-//================================================================================
-
-#if (PCINT_USE_PORT0 == true)
-ISR(PCINT0_vect) {
-	// get the new and old pin states for port
-	uint8_t newPort = PCINT_INPUT_PORT0;
-
-	// compare with the old value to detect a rising or falling
-	uint8_t arrayPos = PCINT_ARRAY_POS(0);
-	uint8_t change = newPort ^ oldPorts[arrayPos];
-	uint8_t rising = change & newPort;
-	uint8_t falling = change & oldPorts[arrayPos];
-
-	// check which pins are triggered, compared with the settings
-	uint8_t risingTrigger = rising & risingPorts[arrayPos];
-	uint8_t fallingTrigger = falling & fallingPorts[arrayPos];
-	uint8_t trigger = risingTrigger | fallingTrigger;
-
-	// save the new state for next comparison
-	oldPorts[arrayPos] = newPort;
-
-	// Execute all functions that should be triggered
-	// This way we can exclude a single function
-	// and the calling is also much faster
-	// We may also reorder the pins for different priority
-#if !defined(PCINT_CALLBACK_PORT0)
-	PCINT_CALLBACK(0, 0);
-	PCINT_CALLBACK(1, 1);
-	PCINT_CALLBACK(2, 2);
-	PCINT_CALLBACK(3, 3);
-	PCINT_CALLBACK(4, 4);
-	PCINT_CALLBACK(5, 5);
-	PCINT_CALLBACK(6, 6);
-	PCINT_CALLBACK(7, 7);
-#else
-	PCINT_CALLBACK_PORT0
-#endif
-}
-#endif
-
-
-#if (PCINT_USE_PORT1 == true)
-ISR(PCINT1_vect) {
-	// get the new and old pin states for port
-	uint8_t newPort = PCINT_INPUT_PORT1;
-
-	// compare with the old value to detect a rising or falling
-	uint8_t arrayPos = PCINT_ARRAY_POS(1);
-	uint8_t change = newPort ^ oldPorts[arrayPos];
-	uint8_t rising = change & newPort;
-	uint8_t falling = change & oldPorts[arrayPos];
-
-	// check which pins are triggered, compared with the settings
-	uint8_t risingTrigger = rising & risingPorts[arrayPos];
-	uint8_t fallingTrigger = falling & fallingPorts[arrayPos];
-	uint8_t trigger = risingTrigger | fallingTrigger;
-
-	// save the new state for next comparison
-	oldPorts[arrayPos] = newPort;
-
-	// Execute all functions that should be triggered
-	// This way we can exclude a single function
-	// and the calling is also much faster
-	// We may also reorder the pins for different priority
-#if !defined(PCINT_CALLBACK_PORT1)
-	PCINT_CALLBACK(0, 8);
-	PCINT_CALLBACK(1, 9);
-	PCINT_CALLBACK(2, 10);
-	PCINT_CALLBACK(3, 11);
-	PCINT_CALLBACK(4, 12);
-	PCINT_CALLBACK(5, 13);
-	PCINT_CALLBACK(6, 14);
-	PCINT_CALLBACK(7, 15);
-#else
-	PCINT_CALLBACK_PORT1
-#endif
-}
-#endif
-
-
-#if (PCINT_USE_PORT2 == true)
-ISR(PCINT2_vect) {
-	// get the new and old pin states for port
-	uint8_t newPort = PCINT_INPUT_PORT2;
-
-	// compare with the old value to detect a rising or falling
-	uint8_t arrayPos = PCINT_ARRAY_POS(2);
-	uint8_t change = newPort ^ oldPorts[arrayPos];
-	uint8_t rising = change & newPort;
-	uint8_t falling = change & oldPorts[arrayPos];
-
-	// check which pins are triggered, compared with the settings
-	uint8_t risingTrigger = rising & risingPorts[arrayPos];
-	uint8_t fallingTrigger = falling & fallingPorts[arrayPos];
-	uint8_t trigger = risingTrigger | fallingTrigger;
-
-	// save the new state for next comparison
-	oldPorts[arrayPos] = newPort;
-
-	// Execute all functions that should be triggered
-	// This way we can exclude a single function
-	// and the calling is also much faster
-	// We may also reorder the pins for different priority
-#if !defined(PCINT_CALLBACK_PORT2)
-	PCINT_CALLBACK(0, 16);
-	PCINT_CALLBACK(1, 17);
-	PCINT_CALLBACK(2, 18);
-	PCINT_CALLBACK(3, 19);
-	PCINT_CALLBACK(4, 20);
-	PCINT_CALLBACK(5, 21);
-	PCINT_CALLBACK(6, 22);
-	PCINT_CALLBACK(7, 23);
-#else
-	PCINT_CALLBACK_PORT2
-#endif
-}
-#endif
 
 // asm output (nothing to optimize here)
 /*
