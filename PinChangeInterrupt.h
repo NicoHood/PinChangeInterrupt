@@ -207,7 +207,9 @@ PCINT_CALLBACK(3, 3); /* SPI MOSI */
 //================================================================================
 
 // Board definitions are seperated to get an better overview.
+// The order and position of the inclusion is important!
 #include "PinChangeInterruptBoards.h"
+#include "PinChangeInterruptPins.h"
 
 #if !PCINT_NUM_USED_PORTS
 #error Please enable at least one PCINT port!
