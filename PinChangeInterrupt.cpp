@@ -23,6 +23,20 @@ THE SOFTWARE.
 
 #include "PinChangeInterrupt.h"
 
+// manually include cpp files here to save flash if only 1 ISR is present
+// or if the user knows he just wants to compile all of them.
+#if defined(PCINT_ALINKAGE)
+#if defined(PCINT_COMPILE_ISR0)
+#include "PinChangeInterrupt0.cpp"
+#endif
+#if defined(PCINT_COMPILE_ISR1)
+#include "PinChangeInterrupt1.cpp"
+#endif
+#if defined(PCINT_COMPILE_ISR2)
+#include "PinChangeInterrupt2.cpp"
+#endif
+#endif
+
 //================================================================================
 // Weak Callbacks
 //================================================================================
@@ -74,7 +88,7 @@ uint8_t oldPorts[PCINT_NUM_USED_PORTS] = { 0 };
 uint8_t fallingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 
-void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
+void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
 
