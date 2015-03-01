@@ -41,31 +41,6 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 #define PCINT_INPUT_PORT1 PINC
 #define PCINT_INPUT_PORT2 PIND
 
-#define PCINT_HAS_PCINT0 true
-#define PCINT_HAS_PCINT1 true
-#define PCINT_HAS_PCINT2 true
-#define PCINT_HAS_PCINT3 true
-#define PCINT_HAS_PCINT4 true
-#define PCINT_HAS_PCINT5 true
-#define PCINT_HAS_PCINT6 true // crystal
-#define PCINT_HAS_PCINT7 true // crystal
-#define PCINT_HAS_PCINT8 true
-#define PCINT_HAS_PCINT9 true
-#define PCINT_HAS_PCINT10 true
-#define PCINT_HAS_PCINT11 true
-#define PCINT_HAS_PCINT12 true
-#define PCINT_HAS_PCINT13 true
-#define PCINT_HAS_PCINT14 true // reset
-#define PCINT_HAS_PCINT15 false // NC
-#define PCINT_HAS_PCINT16 true
-#define PCINT_HAS_PCINT17 true
-#define PCINT_HAS_PCINT18 true
-#define PCINT_HAS_PCINT19 true
-#define PCINT_HAS_PCINT20 true
-#define PCINT_HAS_PCINT21 true
-#define PCINT_HAS_PCINT22 true
-#define PCINT_HAS_PCINT23 true
-
 // Arduino Uno
 #define PIN_TO_PCINT_0 16
 #define PIN_TO_PCINT_1 17
@@ -126,31 +101,6 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 // function is not designed for this optimization
 #define PCINT_INPUT_PORT1 (PINJ << 1)
 #endif
-
-#define PCINT_HAS_PCINT0 true
-#define PCINT_HAS_PCINT1 true
-#define PCINT_HAS_PCINT2 true
-#define PCINT_HAS_PCINT3 true
-#define PCINT_HAS_PCINT4 true
-#define PCINT_HAS_PCINT5 true
-#define PCINT_HAS_PCINT6 true
-#define PCINT_HAS_PCINT7 true
-#define PCINT_HAS_PCINT8 true
-#define PCINT_HAS_PCINT9 true
-#define PCINT_HAS_PCINT10 true
-#define PCINT_HAS_PCINT11 true // NC on normal mega
-#define PCINT_HAS_PCINT12 true // NC on normal mega
-#define PCINT_HAS_PCINT13 true // NC on normal mega
-#define PCINT_HAS_PCINT14 true // NC on normal mega
-#define PCINT_HAS_PCINT15 true // NC on normal mega
-#define PCINT_HAS_PCINT16 true
-#define PCINT_HAS_PCINT17 true
-#define PCINT_HAS_PCINT18 true
-#define PCINT_HAS_PCINT19 true
-#define PCINT_HAS_PCINT20 true
-#define PCINT_HAS_PCINT21 true
-#define PCINT_HAS_PCINT22 true
-#define PCINT_HAS_PCINT23 true
 
 // Arduino Mega/Mega2560
 #define PIN_TO_PCINT_0 8
@@ -249,15 +199,6 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 #elif defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
 #define PCINT_INPUT_PORT0 PINB
 
-#define PCINT_HAS_PCINT0 true // LED, but should work on Teensy2
-#define PCINT_HAS_PCINT1 true
-#define PCINT_HAS_PCINT2 true
-#define PCINT_HAS_PCINT3 true
-#define PCINT_HAS_PCINT4 true
-#define PCINT_HAS_PCINT5 true
-#define PCINT_HAS_PCINT6 true
-#define PCINT_HAS_PCINT7 true
-
 // Arduino Leonardo/Micro
 #define PIN_TO_PCINT_0 NOT_AN_INTERRUPT
 #define PIN_TO_PCINT_1 NOT_AN_INTERRUPT
@@ -345,16 +286,6 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 #elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
 #define PCINT_INPUT_PORT0 PINB
 
-/* Attiny 25/45/85 only has a very few pins
-activate all by default
-The order is also okay. */
-#define PCINT_HAS_PCINT0 true
-#define PCINT_HAS_PCINT1 true
-#define PCINT_HAS_PCINT2 true // Pin Interrupt 0
-#define PCINT_HAS_PCINT3 true // crystal
-#define PCINT_HAS_PCINT4 true // crystal
-#define PCINT_HAS_PCINT5 true // reset
-
 #define PIN_TO_PCINT_0 0
 #define PIN_TO_PCINT_1 1
 #define PIN_TO_PCINT_2 2
@@ -375,19 +306,6 @@ The order is also okay. */
 #elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
 #define PCINT_INPUT_PORT0 PINA
 #define PCINT_INPUT_PORT1 PINB
-
-#define PCINT_HAS_PCINT0 true
-#define PCINT_HAS_PCINT1 true
-#define PCINT_HAS_PCINT2 true
-#define PCINT_HAS_PCINT3 true
-#define PCINT_HAS_PCINT4 true
-#define PCINT_HAS_PCINT5 true
-#define PCINT_HAS_PCINT6 true
-#define PCINT_HAS_PCINT7 true
-#define PCINT_HAS_PCINT8 true // crystal
-#define PCINT_HAS_PCINT9 true // crystal
-#define PCINT_HAS_PCINT10 true // Pin Interrupt 0
-#define PCINT_HAS_PCINT11 true // reset
 
 #define PIN_TO_PCINT_0 0
 #define PIN_TO_PCINT_1 1

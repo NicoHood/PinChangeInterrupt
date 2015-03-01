@@ -148,86 +148,138 @@ Serial.println();
 
 /*
 for (int i = 0; i < 24; i++) {
-Serial.print("#ifndef PCINT_HAS_PCINT");
+Serial.print("#ifdef PCINT");
 Serial.println(i);
+Serial.print("#define PCINT_HAS_PCINT");
+Serial.print(i);
+Serial.println(" true");
+Serial.println("#else");
 Serial.print("#define PCINT_HAS_PCINT");
 Serial.print(i);
 Serial.println(" false");
 Serial.println("#endif");
 }
 */
-#ifndef PCINT_HAS_PCINT0
+#ifdef PCINT0
+#define PCINT_HAS_PCINT0 true
+#else
 #define PCINT_HAS_PCINT0 false
 #endif
-#ifndef PCINT_HAS_PCINT1
+#ifdef PCINT1
+#define PCINT_HAS_PCINT1 true
+#else
 #define PCINT_HAS_PCINT1 false
 #endif
-#ifndef PCINT_HAS_PCINT2
+#ifdef PCINT2
+#define PCINT_HAS_PCINT2 true
+#else
 #define PCINT_HAS_PCINT2 false
 #endif
-#ifndef PCINT_HAS_PCINT3
+#ifdef PCINT3
+#define PCINT_HAS_PCINT3 true
+#else
 #define PCINT_HAS_PCINT3 false
 #endif
-#ifndef PCINT_HAS_PCINT4
+#ifdef PCINT4
+#define PCINT_HAS_PCINT4 true
+#else
 #define PCINT_HAS_PCINT4 false
 #endif
-#ifndef PCINT_HAS_PCINT5
+#ifdef PCINT5
+#define PCINT_HAS_PCINT5 true
+#else
 #define PCINT_HAS_PCINT5 false
 #endif
-#ifndef PCINT_HAS_PCINT6
+#ifdef PCINT6
+#define PCINT_HAS_PCINT6 true
+#else
 #define PCINT_HAS_PCINT6 false
 #endif
-#ifndef PCINT_HAS_PCINT7
+#ifdef PCINT7
+#define PCINT_HAS_PCINT7 true
+#else
 #define PCINT_HAS_PCINT7 false
 #endif
-#ifndef PCINT_HAS_PCINT8
+#ifdef PCINT8
+#define PCINT_HAS_PCINT8 true
+#else
 #define PCINT_HAS_PCINT8 false
 #endif
-#ifndef PCINT_HAS_PCINT9
+#ifdef PCINT9
+#define PCINT_HAS_PCINT9 true
+#else
 #define PCINT_HAS_PCINT9 false
 #endif
-#ifndef PCINT_HAS_PCINT10
+#ifdef PCINT10
+#define PCINT_HAS_PCINT10 true
+#else
 #define PCINT_HAS_PCINT10 false
 #endif
-#ifndef PCINT_HAS_PCINT11
+#ifdef PCINT11
+#define PCINT_HAS_PCINT11 true
+#else
 #define PCINT_HAS_PCINT11 false
 #endif
-#ifndef PCINT_HAS_PCINT12
+#ifdef PCINT12
+#define PCINT_HAS_PCINT12 true
+#else
 #define PCINT_HAS_PCINT12 false
 #endif
-#ifndef PCINT_HAS_PCINT13
+#ifdef PCINT13
+#define PCINT_HAS_PCINT13 true
+#else
 #define PCINT_HAS_PCINT13 false
 #endif
-#ifndef PCINT_HAS_PCINT14
+#ifdef PCINT14
+#define PCINT_HAS_PCINT14 true
+#else
 #define PCINT_HAS_PCINT14 false
 #endif
-#ifndef PCINT_HAS_PCINT15
+#ifdef PCINT15
+#define PCINT_HAS_PCINT15 true
+#else
 #define PCINT_HAS_PCINT15 false
 #endif
-#ifndef PCINT_HAS_PCINT16
+#ifdef PCINT16
+#define PCINT_HAS_PCINT16 true
+#else
 #define PCINT_HAS_PCINT16 false
 #endif
-#ifndef PCINT_HAS_PCINT17
+#ifdef PCINT17
+#define PCINT_HAS_PCINT17 true
+#else
 #define PCINT_HAS_PCINT17 false
 #endif
-#ifndef PCINT_HAS_PCINT18
+#ifdef PCINT18
+#define PCINT_HAS_PCINT18 true
+#else
 #define PCINT_HAS_PCINT18 false
 #endif
-#ifndef PCINT_HAS_PCINT19
+#ifdef PCINT19
+#define PCINT_HAS_PCINT19 true
+#else
 #define PCINT_HAS_PCINT19 false
 #endif
-#ifndef PCINT_HAS_PCINT20
+#ifdef PCINT20
+#define PCINT_HAS_PCINT20 true
+#else
 #define PCINT_HAS_PCINT20 false
 #endif
-#ifndef PCINT_HAS_PCINT21
+#ifdef PCINT21
+#define PCINT_HAS_PCINT21 true
+#else
 #define PCINT_HAS_PCINT21 false
 #endif
-#ifndef PCINT_HAS_PCINT22
+#ifdef PCINT22
+#define PCINT_HAS_PCINT22 true
+#else
 #define PCINT_HAS_PCINT22 false
 #endif
-#ifndef PCINT_HAS_PCINT23
+#ifdef PCINT23
+#define PCINT_HAS_PCINT23 true
+#else
 #define PCINT_HAS_PCINT23 false
-#endif// count numbers of available pins on each port/*for (int port = 0; port < 3; port++) {
+#endif// count numbers of available pins on each port/*for (int port = 0; port < 3; port++) {
 Serial.print("#define PCINT_NUM_PINS_PORT");
 Serial.print(port);
 Serial.println(" ( \\");

@@ -194,6 +194,10 @@ PCINT_CALLBACK(3, 3); /* SPI MOSI */
 #endif
 #endif
 
+/* Attiny 25/45/85 only has a very few pins
+activate all by default
+The order is also okay. */
+
 #if defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
 // Port1 is connected to reset, crystal and Pin Interrupt 0
 // deactivate it by default
