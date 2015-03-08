@@ -26,6 +26,36 @@ Compared with the normal Interrupts it is even more compact and all available PC
  Attiny 24/44/84: All pins are usable  
  Attiny 25/45/85: All pins are usable 
  ```
+ 
+
+| PCINT |   Uno    |   Mega   | Leonardo |   16u2    | Attiny x4 | Attiny x5 |
+| ----- | -------- | -------- | -------- | --------- | --------- | --------- |
+|     0 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0* (PB0) |  0 (PB0)  |  0 (PB0)  |
+|     1 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
+|     2 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
+|     3 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
+|     4 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
+|     5 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
+|     6 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
+|     7 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
+|     8 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|     9 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    10 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    11 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    12 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    13 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    14 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    15 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    16 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    17 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    18 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    19 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    20 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    21 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    22 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    23 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+
+Pins with * are deactivated/not broken out by default
 
 **[Comment for feedback on my blog.](http://www.nicohood.de)**
 
