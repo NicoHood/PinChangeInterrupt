@@ -27,11 +27,12 @@ THE SOFTWARE.
 // Interrupt Handler
 //================================================================================
 
+#if (PCINT_USE_PORT2 == true)
+
 void attachPinChangeInterrupt2(void) {
-	// fake function to make the IDE include this file
+	// fake function to make the IDE link this file
 }
 
-#if (PCINT_USE_PORT2 == true)
 ISR(PCINT2_vect) {
 	// get the new and old pin states for port
 	uint8_t newPort = PCINT_INPUT_PORT2;
@@ -67,4 +68,73 @@ ISR(PCINT2_vect) {
 	PCINT_CALLBACK_PORT2
 #endif
 }
+
+#if defined(PCINT_API)
+
+/*
+for (int i = 0; i < 24; i++) {
+Serial.print("#if (PCINT_USE_PCINT");
+Serial.print(i);
+Serial.println(" == true)");
+Serial.print("volatile callback callbackPCINT");
+Serial.print(i);
+Serial.println(" = pcint_null_callback;");
+Serial.print("void pcint_callback_ptr_");
+Serial.print(i);
+Serial.println("(void){");
+Serial.print("	callbackPCINT");
+Serial.print(i);
+Serial.println("();");
+Serial.println("}");
+Serial.println("#endif");
+}*/#if (PCINT_USE_PCINT16 == true)
+volatile callback callbackPCINT16 = pcint_null_callback;
+void pcint_callback_ptr_16(void){
+	callbackPCINT16();
+}
 #endif
+#if (PCINT_USE_PCINT17 == true)
+volatile callback callbackPCINT17 = pcint_null_callback;
+void pcint_callback_ptr_17(void){
+	callbackPCINT17();
+}
+#endif
+#if (PCINT_USE_PCINT18 == true)
+volatile callback callbackPCINT18 = pcint_null_callback;
+void pcint_callback_ptr_18(void){
+	callbackPCINT18();
+}
+#endif
+#if (PCINT_USE_PCINT19 == true)
+volatile callback callbackPCINT19 = pcint_null_callback;
+void pcint_callback_ptr_19(void){
+	callbackPCINT19();
+}
+#endif
+#if (PCINT_USE_PCINT20 == true)
+volatile callback callbackPCINT20 = pcint_null_callback;
+void pcint_callback_ptr_20(void){
+	callbackPCINT20();
+}
+#endif
+#if (PCINT_USE_PCINT21 == true)
+volatile callback callbackPCINT21 = pcint_null_callback;
+void pcint_callback_ptr_21(void){
+	callbackPCINT21();
+}
+#endif
+#if (PCINT_USE_PCINT22 == true)
+volatile callback callbackPCINT22 = pcint_null_callback;
+void pcint_callback_ptr_22(void){
+	callbackPCINT22();
+}
+#endif
+#if (PCINT_USE_PCINT23 == true)
+volatile callback callbackPCINT23 = pcint_null_callback;
+void pcint_callback_ptr_23(void){
+	callbackPCINT23();
+}
+#endif
+#endif // PCINT_API
+
+#endif // PCINT_USE_PORT2

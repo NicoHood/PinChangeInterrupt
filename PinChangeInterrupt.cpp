@@ -24,17 +24,11 @@ THE SOFTWARE.
 #include "PinChangeInterrupt.h"
 
 // manually include cpp files here to save flash if only 1 ISR is present
-// or if the user knows he just wants to compile all of them.
-#if defined(PCINT_ALINKAGE)
-#if defined(PCINT_COMPILE_ISR0)
+// or if the user knows he just wants to compile all enabled ports.
+#if defined(PCINT_ALINKAGE) && defined(PCINT_COMPILE_ENABLED_ISR)
 #include "PinChangeInterrupt0.cpp"
-#endif
-#if defined(PCINT_COMPILE_ISR1)
 #include "PinChangeInterrupt1.cpp"
-#endif
-#if defined(PCINT_COMPILE_ISR2)
 #include "PinChangeInterrupt2.cpp"
-#endif
 #endif
 
 //================================================================================
@@ -43,7 +37,9 @@ THE SOFTWARE.
 
 // useless function for weak implemented/not used functions, extern c needed for the alias
 extern "C" {
-	static void pcint_null_callback(void) {	}
+	void pcint_null_callback(void) {
+		// useless
+	}
 }
 
 // create all weak functions which are all (if not used) alias of the pcint_null_callback above
@@ -92,21 +88,6 @@ void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode) 
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
 
-	// check if pcint is a valid pcint, exclude deactivated ports
-	if (pcintPort == 0){
-		if (PCINT_USE_PORT0 == false)
-			return;
-	}
-	else if (pcintPort == 1){
-		if (PCINT_USE_PORT1 == false)
-			return;
-	}
-	else if (pcintPort == 2){
-		if (PCINT_USE_PORT2 == false)
-			return;
-	}
-	else return;
-
 	// get bitmask and array position
 	uint8_t pcintMask = (1 << (pcintNum % 8));
 	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
@@ -127,24 +108,9 @@ void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode) 
 	PCICR |= (1 << pcintPort);
 }
 
-void detachPinChangeInterrupt(const uint8_t pcintNum) {
+void detachPinChangeInterruptHelper(const uint8_t pcintNum) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
-
-	// check if pcint is a valid pcint, exclude deactivated ports
-	if (pcintPort == 0){
-		if (PCINT_USE_PORT0 == false)
-			return;
-	}
-	else if (pcintPort == 1){
-		if (PCINT_USE_PORT1 == false)
-			return;
-	}
-	else if (pcintPort == 2){
-		if (PCINT_USE_PORT2 == false)
-			return;
-	}
-	else return;
 
 	// get bitmask and array position
 	uint8_t pcintMask = (1 << (pcintNum % 8));
