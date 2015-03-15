@@ -79,7 +79,7 @@ Serial.println(" == true)");
 Serial.print("volatile callback callbackPCINT");
 Serial.print(i);
 Serial.println(" = pcint_null_callback;");
-Serial.print("void pcint_callback_ptr_");
+Serial.print("void PinChangeInterruptEventPCINT");
 Serial.print(i);
 Serial.println("(void){");
 Serial.print("	callbackPCINT");
@@ -89,49 +89,49 @@ Serial.println("}");
 Serial.println("#endif");
 }*/#if (PCINT_USE_PCINT0 == true)
 volatile callback callbackPCINT0 = pcint_null_callback;
-void pcint_callback_ptr_0(void){
+void PinChangeInterruptEventPCINT0(void){
 	callbackPCINT0();
 }
 #endif
 #if (PCINT_USE_PCINT1 == true)
 volatile callback callbackPCINT1 = pcint_null_callback;
-void pcint_callback_ptr_1(void){
+void PinChangeInterruptEventPCINT1(void){
 	callbackPCINT1();
 }
 #endif
 #if (PCINT_USE_PCINT2 == true)
 volatile callback callbackPCINT2 = pcint_null_callback;
-void pcint_callback_ptr_2(void){
+void PinChangeInterruptEventPCINT2(void){
 	callbackPCINT2();
 }
 #endif
 #if (PCINT_USE_PCINT3 == true)
 volatile callback callbackPCINT3 = pcint_null_callback;
-void pcint_callback_ptr_3(void){
+void PinChangeInterruptEventPCINT3(void){
 	callbackPCINT3();
 }
 #endif
 #if (PCINT_USE_PCINT4 == true)
 volatile callback callbackPCINT4 = pcint_null_callback;
-void pcint_callback_ptr_4(void){
+void PinChangeInterruptEventPCINT4(void){
 	callbackPCINT4();
 }
 #endif
 #if (PCINT_USE_PCINT5 == true)
 volatile callback callbackPCINT5 = pcint_null_callback;
-void pcint_callback_ptr_5(void){
+void PinChangeInterruptEventPCINT5(void){
 	callbackPCINT5();
 }
 #endif
 #if (PCINT_USE_PCINT6 == true)
 volatile callback callbackPCINT6 = pcint_null_callback;
-void pcint_callback_ptr_6(void){
+void PinChangeInterruptEventPCINT6(void){
 	callbackPCINT6();
 }
 #endif
 #if (PCINT_USE_PCINT7 == true)
 volatile callback callbackPCINT7 = pcint_null_callback;
-void pcint_callback_ptr_7(void){
+void PinChangeInterruptEventPCINT7(void){
 	callbackPCINT7();
 }
 #endif

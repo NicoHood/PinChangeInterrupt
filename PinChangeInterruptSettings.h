@@ -69,12 +69,12 @@ That is done by the macros. */
 #define PCINT_ENABLE_PCINT22
 #define PCINT_ENABLE_PCINT23
 
+// use API with function pointers (better optimized with .a linkage)
+#define PCINT_API
+
 // is the library compiled via .a file?
 // see readme for more information
 #define PCINT_ALINKAGE
-
-// use API with function pointers (better optimized with .a linkage)
-#define PCINT_API
 
 // force compile all enabled port ISRs (with .a linkage)
 //#define PCINT_COMPILE_ENABLED_ISR

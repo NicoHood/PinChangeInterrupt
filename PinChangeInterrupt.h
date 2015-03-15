@@ -74,7 +74,7 @@ extern "C" {
 #define PCINT_CALLBACK(bit, pcint) \
 if (PCINT_USE_PCINT ## pcint PCINT_MACRO_TRUE \
 if (trigger & (1 << bit)) \
-pcint_callback_ptr_ ## pcint PCINT_MACRO_BRACKETS
+PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 
 // missing 1.0.6 definition workaround
 #ifndef NOT_AN_INTERRUPT
@@ -86,7 +86,7 @@ pcint_callback_ptr_ ## pcint PCINT_MACRO_BRACKETS
 //================================================================================
 
 // definition used by the user to create his custom PCINT functions
-#define PinChangeInterruptEvent_Wrapper(n) pcint_callback_ptr_ ## n
+#define PinChangeInterruptEvent_Wrapper(n) PinChangeInterruptEventPCINT ## n
 #define PinChangeInterruptEvent(n) PinChangeInterruptEvent_Wrapper(n)
 
 // convert a normal pin to its PCINT number (0 - max 23), used by the user
@@ -100,30 +100,30 @@ pcint_callback_ptr_ ## pcint PCINT_MACRO_BRACKETS
 // Function Prototypes + Variables
 //================================================================================
 
-void pcint_callback_ptr_0(void);
-void pcint_callback_ptr_1(void);
-void pcint_callback_ptr_2(void);
-void pcint_callback_ptr_3(void);
-void pcint_callback_ptr_4(void);
-void pcint_callback_ptr_5(void);
-void pcint_callback_ptr_6(void);
-void pcint_callback_ptr_7(void);
-void pcint_callback_ptr_8(void);
-void pcint_callback_ptr_9(void);
-void pcint_callback_ptr_10(void);
-void pcint_callback_ptr_11(void);
-void pcint_callback_ptr_12(void);
-void pcint_callback_ptr_13(void);
-void pcint_callback_ptr_14(void);
-void pcint_callback_ptr_15(void);
-void pcint_callback_ptr_16(void);
-void pcint_callback_ptr_17(void);
-void pcint_callback_ptr_18(void);
-void pcint_callback_ptr_19(void);
-void pcint_callback_ptr_20(void);
-void pcint_callback_ptr_21(void);
-void pcint_callback_ptr_22(void);
-void pcint_callback_ptr_23(void);
+void PinChangeInterruptEventPCINT0(void);
+void PinChangeInterruptEventPCINT1(void);
+void PinChangeInterruptEventPCINT2(void);
+void PinChangeInterruptEventPCINT3(void);
+void PinChangeInterruptEventPCINT4(void);
+void PinChangeInterruptEventPCINT5(void);
+void PinChangeInterruptEventPCINT6(void);
+void PinChangeInterruptEventPCINT7(void);
+void PinChangeInterruptEventPCINT8(void);
+void PinChangeInterruptEventPCINT9(void);
+void PinChangeInterruptEventPCINT10(void);
+void PinChangeInterruptEventPCINT11(void);
+void PinChangeInterruptEventPCINT12(void);
+void PinChangeInterruptEventPCINT13(void);
+void PinChangeInterruptEventPCINT14(void);
+void PinChangeInterruptEventPCINT15(void);
+void PinChangeInterruptEventPCINT16(void);
+void PinChangeInterruptEventPCINT17(void);
+void PinChangeInterruptEventPCINT18(void);
+void PinChangeInterruptEventPCINT19(void);
+void PinChangeInterruptEventPCINT20(void);
+void PinChangeInterruptEventPCINT21(void);
+void PinChangeInterruptEventPCINT22(void);
+void PinChangeInterruptEventPCINT23(void);
 
 extern uint8_t oldPorts[PCINT_NUM_USED_PORTS];
 extern uint8_t fallingPorts[PCINT_NUM_USED_PORTS];

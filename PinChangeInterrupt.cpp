@@ -45,35 +45,35 @@ extern "C" {
 // create all weak functions which are all (if not used) alias of the pcint_null_callback above
 /*
 for (int i = 0; i < 24; i++) {
-Serial.print("void pcint_callback_ptr_");
+Serial.print("void PinChangeInterruptEventPCINT");
 Serial.print(i);
 Serial.println("(void) __attribute__((weak, alias(\"pcint_null_callback\")));");
 }
 */
-void pcint_callback_ptr_0(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_1(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_2(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_3(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_4(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_5(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_6(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_7(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_8(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_9(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_10(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_11(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_12(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_13(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_14(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_15(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_16(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_17(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_18(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_19(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_20(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_21(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_22(void) __attribute__((weak, alias("pcint_null_callback")));
-void pcint_callback_ptr_23(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT0(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT1(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT2(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT3(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT4(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT5(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT6(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT7(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT8(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT9(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT10(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT11(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT12(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT13(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT14(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT15(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT16(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT17(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT18(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT19(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT20(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT21(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT22(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT23(void) __attribute__((weak, alias("pcint_null_callback")));
 
 //================================================================================
 // PinChangeInterrupt User Functions
@@ -172,21 +172,21 @@ sts 0x011E, r24
 
 // Execute all functions that should be triggered
 sbrc r28, 0
-call 0x37c ; 0x37c <_Z20pcint_callback_ptr_0v>
+call 0x37c ; 0x37c <_Z20PinChangeInterruptEventPCINT0v>
 sbrc r28, 1
-call 0x37c ; 0x37c <_Z20pcint_callback_ptr_0v>
+call 0x37c ; 0x37c <_Z20PinChangeInterruptEventPCINT0v>
 sbrc r28, 2
-call 0x318 ; 0x318 <_Z20pcint_callback_ptr_2v>
+call 0x318 ; 0x318 <_Z20PinChangeInterruptEventPCINT2v>
 sbrc r28, 3
-call 0x340 ; 0x340 <_Z20pcint_callback_ptr_3v>
+call 0x340 ; 0x340 <_Z20PinChangeInterruptEventPCINT3v>
 sbrc r28, 4
-call 0x37c ; 0x37c <_Z20pcint_callback_ptr_0v>
+call 0x37c ; 0x37c <_Z20PinChangeInterruptEventPCINT0v>
 sbrc r28, 5
-call 0x37c ; 0x37c <_Z20pcint_callback_ptr_0v>
+call 0x37c ; 0x37c <_Z20PinChangeInterruptEventPCINT0v>
 sbrc r28, 6
-call 0x37c ; 0x37c <_Z20pcint_callback_ptr_0v>
+call 0x37c ; 0x37c <_Z20PinChangeInterruptEventPCINT0v>
 sbrc r28, 7
-call 0x37c ; 0x37c <_Z20pcint_callback_ptr_0v>
+call 0x37c ; 0x37c <_Z20PinChangeInterruptEventPCINT0v>
 
 pop r31
 pop r30
