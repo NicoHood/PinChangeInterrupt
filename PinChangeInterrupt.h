@@ -134,7 +134,7 @@ extern uint8_t risingPorts[PCINT_NUM_USED_PORTS];
 // Attach Function (partly inlined)
 //================================================================================
 
-void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode);
+void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit, const uint8_t mode);
 void attachPinChangeInterrupt0(void);
 void attachPinChangeInterrupt1(void);
 void attachPinChangeInterrupt2(void);
@@ -249,7 +249,6 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 #endif // PCINT_API
 
 	// check if pcint is a valid pcint, exclude deactivated ports
-	// call the fake functions to compile the .cpp files with the ISR
 	uint8_t pcintPort = pcintNum / 8;
 	uint8_t pcintBit = pcintNum % 8;
 
@@ -386,18 +385,19 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	else return;
 
 	// call the actual hardware attach function
-	attachPinChangeInterruptHelper(pcintNum, mode);
+	attachPinChangeInterruptHelper(pcintPort, pcintBit, mode);
 }
 //================================================================================
 // Detach Function (partly inlined)
 //================================================================================
 
-void detachPinChangeInterruptHelper(const uint8_t pcintNum);
+void detachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit);
 static void detachPinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
 
 void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
+	uint8_t pcintBit = pcintNum % 8;
 
 	// check if pcint is a valid pcint, exclude deactivated ports
 	if (pcintPort == 0){
@@ -415,7 +415,7 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	else return;
 
 	// call the actual hardware detach function
-	detachPinChangeInterruptHelper(pcintNum);
+	detachPinChangeInterruptHelper(pcintPort, pcintBit);
 }
 
 #endif // include guard

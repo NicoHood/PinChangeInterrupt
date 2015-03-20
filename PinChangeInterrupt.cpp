@@ -86,12 +86,9 @@ uint8_t oldPorts[PCINT_NUM_USED_PORTS] = { 0 };
 uint8_t fallingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 
-void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode) {
-	// get PCINT registers
-	uint8_t pcintPort = pcintNum / 8;
-
+void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit, const uint8_t mode) {
 	// get bitmask and array position
-	uint8_t pcintMask = (1 << (pcintNum % 8));
+	uint8_t pcintMask = (1 << pcintBit);
 	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
 
 	// save settings related to mode and registers
@@ -101,7 +98,7 @@ void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode) 
 		fallingPorts[arrayPos] |= pcintMask;
 
 	// update the old state to the actual state
-	oldPorts[arrayPos] = *portInputRegister(digitalPinToPort(pcintNum));
+	oldPorts[arrayPos] = *portInputRegister(pcintPort);
 
 	// pin change mask registers decide which pins are ENABLE as triggers
 	*(&PCMSK0 + pcintPort) |= pcintMask;
@@ -110,12 +107,9 @@ void attachPinChangeInterruptHelper(const uint8_t pcintNum, const uint8_t mode) 
 	PCICR |= (1 << pcintPort);
 }
 
-void detachPinChangeInterruptHelper(const uint8_t pcintNum) {
-	// get PCINT registers
-	uint8_t pcintPort = pcintNum / 8;
-
+void detachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit) {
 	// get bitmask and array position
-	uint8_t pcintMask = (1 << (pcintNum % 8));
+	uint8_t pcintMask = (1 << pcintBit);
 	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
 
 	// delete setting
