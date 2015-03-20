@@ -14,7 +14,9 @@ Compared with the normal Interrupts it is even more compact and all available PC
 * Usable on every standard Arduino and Attiny as well
 * Uses less ram & flash than normal Interrupts
 * Implementation is fast and compact
-* Ports can be manually deactivated in the .h file
+* Ports/Pins can be manually deactivated in the .h file
+* API and LowLevel option
+* .a linkage optimization
 
 **Supported pins for PinChangeInterrupt:**
 ```
@@ -55,79 +57,76 @@ Compared with the normal Interrupts it is even more compact and all available PC
 |    22 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
 |    23 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
 
-Pins with * are deactivated/not broken out by default
+Pins with * are deactivated/not broken out by default.
+You may activate them in the setting file (advanced).
 
 **[Comment for feedback on my blog.](http://www.nicohood.de)**
 
-Installation/How to use
-=======================
+Installation
+============
 
 Download the zip, extract and remove the "-master" of the folder.
 Install the library [as described here](http://arduino.cc/en/pmwiki.php?n=Guide/Libraries).
 
-As normal user you might wonder what I am talking about, maybe you should read how PinChangeInterrupts work.
-Its really important to understand what your are using.
+#####Optional Installation
+To get even more optimization you can move the library to the Arduino core folder instead.
+Then the library is linked different (through .a file) and better optimized if you use less ports.
+Place all files into https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/cores/arduino instead.
 
-### Basic example
-The basic example shows you how the library and its syntax work.
+How to use
+==========
 
-You can attach your pins with the attach function and the digitalPinToPinChangeInterrupt(p) definition.
-Make sure your attached pin is actually a PinChangeInterrupt as listed above.
+It is important that you know at least the basic difference between **PinInterrupts** and **PinChangeInterrupts**.
+I will explain the basics of PinChangeInterrupts (PCINTs) based on an Arduino Uno.
 
-Keep in mind that on Arduino Mega the definition excludes some pins like 14 (TX3) and 15 (RX3).
-You can still use them by manually passing attachPinChangeInterrupt(PCINT10, CHANGE);
+On a standard Arduino Pin 2 and 3 have **PinInterrupts**. Those are exclusively for each single pin and can detect RISING, FALLING and CHANGE.
 
-PinChangeInterrupts are always executed after each other. Make sure that the functions are short and have no Serial prints nor delay in it.
-Lower pin numbers on a port are executed faster. This means PCINT0 is faster than PCINT7. PCINT8 is on another port (port 1) is faster than PCINT15 for example.
+PinChangeInterrupts instead are used for a whole port (they should have better named them PortChangeInterrupts) and can only detect CHANGE.
+Each pin row (0-7, 8-13, A0-A5) represents a port. If an Interrupt occurs on one of the pins of this port
+it is still unclear what pin caused this interrupt. Therefore this library saves the state of all pins per port and compares the state.
+This way we can also see if it was a RISING or FALLING edge instead of only knowing the pin has changed.
+A PinChangeInterrupt will only be triggered for the attached pins per port. Meaning if your input on pin 6 is changing a lot
+but only a PCINT for pin 7 is set it will not disturb your program.
 
-PinChangeInterrupts trigger for pin changes on a whole port so we have to check the difference between the last interrupt.
-That's why we also have in general a **delay between the interrupt call and the actual function execution**.
+You should know that PinChangeInterrupts are slower and not that reliable because of that detection overhead if you need very precise interrupts (ISR).
+But since it is never good to add long ISRs that should be fine. You have the same issues on normal **PinInterrupts** if your ISR takes too long.
+The library is coded to get maximum speed and minimum code size. The low level without the API takes 4uS to enter the interrupt function in the worst case
+which is pretty good and might be even better than the **PinInterrupt** code from the official Arduino core.
 
-### IRLremote example
+#####Examples
+To see how the code works just check the Led and TickTock example.
+The LowLevel example is for advanced users with more optimization and more direct access.
+The HowItWorks example shows the basic PinChangeInterrupt setup and decoding routine, similar to the library.
+See the notes in the examples about more details.
 
-To test the IRLremote example install the IRLremote and test the example provided with this library:
+An useful example of the PinChangeInterrupt library can be found here:
 https://github.com/NicoHood/IRLremote
 
-This demonstrates how to use the PinChangeInterrupt library together with the IRLremote library. This can be useful if you are running out if normal
-interrupt pins or don't have them at all (HoodLoader2). The PinChangeInterrupt library is also smaller than the normal Interrupt library, just a tiny bit slower.
+#####Information about this library itself (advanced):
+If a PinChangeInterrupt occurs it will determine the triggered pin(s).
+The library uses weak callback functions that are called for the triggered pins(s).
+This way we can easily skip not triggered pins (I looked at the assembler) and also implement a fast LowLevel version.
+
+Also the order of the function execution is (normally) ordered from the lower pin number to the higher.
+Meaning pin 8 will be checked faster as pin 13. Talking about micro seconds here! You can change the order in the settings.
+For example by default pin 0-3 have a low priority order than pin 4-7. Because they are used for Serial and normal PinChangeInterrupts.
+I don't expect anyone to use those pins at all with PCINT but at least the priority is lowered compared to the other pins.
+
+The API takes those functions and just overwrites all of them and call the function pointers of the attached functions instead.
+This way the function can be changed at runtime and its also easier to integrate into other libraries.
+The function pointers take a bit flash though.
+
+You can get better performance and less code size if you deactivate the not used pins/ports manually.
+This way only the needed pins get compiled and the code is optimized by the preprocessor.
+For a bit more comfortable/automatic optimization you can [install the library into the core]()
+to get use of the .a linkage. This way only the used ports get compiled.
+So if you only use pins on a single port (eg 8-13) then only this port get compiled. This only works with the core installation.
 
 
-More projects + contact can be found here:
-www.nicohood.de
-
-How it works
-============
-
-Coding a PCINT library is kind of tricky. At least if you want to keep flash and ram size low, as I always try to do ;)
-There are two main challenges: compare the old values with the new values as fast as you can but still be able to get a RISING, FALLING, CHANGE for every port
-and somehow start the function the user wants to use.
-
-The first challenge about the comparison is solved this way: we always compare a whole port at once. This saves us a lot of cpu cycles and also ram.
-We only need 1 byte for the old port state, the rising and the falling setting each. CHANGE is interpreted as rising or falling, so both settings are set to 1.
-The rest is a bit of clever bit calculation to get the triggers for the whole port.
-
-The hardest challenge was to find a way to start the user functions. Should we save a function pointer array with up to 24 entries? That would cost 48 bytes of ram,
-some overhead for 24 functions of which the user might use 1-3. It took me some time to realize a different solution. What if we put the function pointers into PROGEMEM?
-They point by default to a useless function and are all implemented weak. Meaning you can overwrite them if you want to.
-The user now only has to implement a strong function in his .ino file. The problem here is the digitalPin -> PCINT conversion which is done with some tricky macros.
-The downside is that the user pin can only be passed as a #define not with a const int because of that macro. And it takes a bit more work in the lib to define the pins for all boards.
-But if you want to we could simply switch the pointers to ram and be more flexible.
-
-On top of that is a logic of #defines which dynamically enable and disable not used ports - selected by the user or as limit by the chip itself.
-It automatically uses only the ram for the available and enabled ports and also only checks them. Its a bit tricky and hard to explain, you should just have a look
-at the code if you are interested. You should also know that AVRs with 4 PCINT ports (0-3) are not compatible yet because this would need a huge change to the definitions and
-none of the 'standard' MCU's has 4 PCINT ports. Another advantage is that we use the actual hardware numbers of the PCINTs and no pin numbers which we had to convert again.
-That saves us flash and the pin mapping is done by a definition from pin -> pcint, not vice versa. Due to the inline this mapping is also very small.
-
-### Some benchmarks here:
-The speed of an ISR depends on the number of user function set and on what PCINT they are nested.
-For example a PCINT0(best case) is faster than a PCINT7 (worst case). We can reorder the pins in the definition.
-An ISR takes about 2,5uS if no function is called and 4uS if a single function is called.
-Depending on the order of the pins and the number of activated functions it is a value between 3 and 4uS to execute.
-All timings are measured with 16mhz. I've also posted an assembly output in the source. Its not optimize able any further.
-
-That's it! I hope you like the library. I tried to make it as simple and small as possible. Keep in mind that PCINTs are not useful for every project but in most cases
+That's it! I hope you like the library. I tried to make it as simple and small as possible.
+Keep in mind that PCINTs are not useful for every project but in most cases
 the new PinChangeInterrupts may help you a lot.
+
 
 Version History
 ===============
@@ -144,6 +143,7 @@ Version History
 * Improved specific boards
 * Moved attach function to .cpp file
 * Updated examples
+* Added API and LowLevel
 
 1.1 Release (06.12.2014)
 * Added port deactivation
