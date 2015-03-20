@@ -5,8 +5,8 @@
  PinChangeInterrupt_HowItWorks
  Shows how to manually setup a single PCINT function with a few helper functions.
 
- Connect a button/cable to pin 10 and ground.
- The led will change its state if pin 10 changes.
+ Connect a button/cable to pin 7 and ground.
+ The led will change its state if pin 7 changes.
 
  PCINT is useful if you are running out of normal INTs or if you are using HoodLoader2.
  PCINT has some delay because of the pin determination overhead.
@@ -27,7 +27,7 @@
 //================================================================================
 
 // see note above to choose the right pin (with a pin change interrupt!) for your Arduino board
-#define PCINT_PIN 10
+#define PCINT_PIN 7
 #define PCINT_MODE CHANGE
 #define PCINT_FUNCTION blinkLed
 
