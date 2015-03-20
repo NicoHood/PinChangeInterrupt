@@ -26,21 +26,15 @@ THE SOFTWARE.
 // manually include cpp files here to save flash if only 1 ISR is present
 // or if the user knows he just wants to compile all enabled ports.
 #if defined(PCINT_ALINKAGE) && defined(PCINT_COMPILE_ENABLED_ISR)
+#define PCINT_INCLUDE_FROM_CPP
 #include "PinChangeInterrupt0.cpp"
 #include "PinChangeInterrupt1.cpp"
 #include "PinChangeInterrupt2.cpp"
-#endif
+#else
 
 //================================================================================
 // Weak Callbacks
 //================================================================================
-
-// useless function for weak implemented/not used functions, extern c needed for the alias
-extern "C" {
-	void pcint_null_callback(void) {
-		// useless
-	}
-}
 
 // create all weak functions which are all (if not used) alias of the pcint_null_callback above
 /*
@@ -74,6 +68,14 @@ void PinChangeInterruptEventPCINT20(void) __attribute__((weak, alias("pcint_null
 void PinChangeInterruptEventPCINT21(void) __attribute__((weak, alias("pcint_null_callback")));
 void PinChangeInterruptEventPCINT22(void) __attribute__((weak, alias("pcint_null_callback")));
 void PinChangeInterruptEventPCINT23(void) __attribute__((weak, alias("pcint_null_callback")));
+#endif // PCINT_INCLUDE_FROM_CPP
+
+// useless function for weak implemented/not used functions, extern c needed for the alias
+extern "C" {
+	void pcint_null_callback(void) {
+		// useless
+	}
+}
 
 //================================================================================
 // PinChangeInterrupt User Functions

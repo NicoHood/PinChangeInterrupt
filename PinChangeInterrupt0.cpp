@@ -27,6 +27,10 @@ THE SOFTWARE.
 // Interrupt Handler
 //================================================================================
 
+// prevent compilation twice if included from the .cpp to force compile all ISRs
+#if defined(PCINT_ALINKAGE) && defined(PCINT_COMPILE_ENABLED_ISR) && defined(PCINT_INCLUDE_FROM_CPP) \
+	|| !defined(PCINT_ALINKAGE) || !defined(PCINT_COMPILE_ENABLED_ISR)
+
 #if (PCINT_USE_PORT0 == true)
 
 void attachPinChangeInterrupt0(void) {
@@ -139,3 +143,5 @@ void PinChangeInterruptEventPCINT7(void){
 #endif // PCINT_API
 
 #endif // PCINT_USE_PORT0
+
+#endif // PCINT_INCLUDE_FROM_CPP
