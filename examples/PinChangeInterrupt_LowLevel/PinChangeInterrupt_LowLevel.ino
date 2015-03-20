@@ -2,11 +2,22 @@
  Copyright (c) 2014 NicoHood
  See the readme for credit to other people.
 
- PinChangeInterrupt_TickTock
- Demonstrates how to use the library
+ PinChangeInterrupt_LowLevel
+ Demonstrates how to use the library without the API
 
- Connect a button/cable to pin 10/11 and ground.
+ Make sure to comment "//#define PCINT_API" in the settings file.
+
+ To maximize speed and size also uncomment all not used pins above.
+ Then you could also uncomment "#define PCINT_COMPILE_ENABLED_ISR"
+ to get away if the .a linkage overhead.
+
+ Notice the new digitalPinToPinChangeInterruptLowLevel(pin) makro (see ticktock).
+ You may also pass the PCINt number directly without this makro (see blink).
+ Strong overwritten callback functions are called when an interrupt occurs.
+
+ Connect a button/cable to pin 10/11/7 and ground (Uno).
  The value printed on the serial port will increase if pin 10 is rising and decrease if pin 11 is falling.
+ The Led state will change if the pin state does.
 
  PCINT is useful if you are running out of normal INTs or if you are using HoodLoader2.
  PCINT has some delay because of the pin determination overhead.
@@ -25,8 +36,15 @@
 #include "PinChangeInterrupt.h"
 
 // see note above to choose the right pin (with a pin change interrupt!) for your Arduino board
+// you have to use defines here, const int won't work
 #define pinTick 10
 #define pinTock 11
+#define interruptTick digitalPinToPinChangeInterruptLowLevel(pinTick)
+#define interruptTock digitalPinToPinChangeInterruptLowLevel(pinTock)
+
+// manually defined pcint number
+#define pinBlink 7
+#define interruptBlink PCINT23
 
 volatile long ticktocks = 0;
 
@@ -36,13 +54,16 @@ void setup()
   Serial.begin(115200);
   Serial.println(F("Startup"));
 
-  // set pins to input with a pullup
+  // set pin to input with a pullup, led to output
   pinMode(pinTick, INPUT_PULLUP);
   pinMode(pinTock, INPUT_PULLUP);
+  pinMode(pinBlink, INPUT_PULLUP);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // attach the new PinChangeInterrupts and enable event functions below
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick), tick, RISING);
-  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTock), tock, FALLING);
+  attachPinChangeInterrupt(interruptTick, RISING);
+  attachPinChangeInterrupt(interruptTock, FALLING);
+  attachPinChangeInterrupt(interruptBlink, CHANGE);
 }
 
 void loop() {
@@ -57,19 +78,24 @@ void loop() {
 
   // abort if we printed 100 times
   if (i >= 100) {
-    detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick));
-    detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTock));
+    detachPinChangeInterrupt(interruptTick);
+    detachPinChangeInterrupt(interruptTock);
   }
   else
     i++;
 }
 
-void tick(void) {
+void PinChangeInterruptEvent(interruptTick)(void) {
   // increase value
   ticktocks++;
 }
 
-void tock(void) {
+void PinChangeInterruptEvent(interruptTock)(void) {
   // decrease value
   ticktocks--;
+}
+
+void PinChangeInterruptEvent(interruptBlink)(void) {
+  // switch Led state
+  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
 }
