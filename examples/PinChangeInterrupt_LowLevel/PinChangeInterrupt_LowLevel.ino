@@ -44,7 +44,7 @@
 
 // manually defined pcint number
 #define pinBlink 7
-#define interruptBlink PCINT23
+#define interruptBlink 23
 
 volatile long ticktocks = 0;
 
