@@ -333,6 +333,15 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 #define PIN_TO_PCINT_SDA PIN_TO_PCINT_6
 #define PIN_TO_PCINT_SCL PIN_TO_PCINT_4
 
+#if defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__)
+#define PCINT_INPUT_PORT0 PINA
+#define PCINT_INPUT_PORT1 PINB
+#define PCINT_INPUT_PORT2 PINC
+#define PCINT_INPUT_PORT3 PIND // TODO PORT3 not supported yet
+
+// TODO pin mappings
+// https://github.com/JChristensen/mighty-1284p/blob/v1.0.6/variants/standard/pins_arduino.h
+
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.
 #endif
