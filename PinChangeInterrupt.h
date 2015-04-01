@@ -54,7 +54,7 @@ typedef void(*callback)(void);
 
 // useless function for weak implemented/not used functions, extern c needed for the alias
 extern "C" {
-	void pcint_null_callback(void);
+	void pcint_null_callback(void)  __attribute__((naked));
 }
 
 // map the port to the array position, depending on what ports are activated. this is only usable with port 0-2, not 3
@@ -135,9 +135,9 @@ extern uint8_t risingPorts[PCINT_NUM_USED_PORTS];
 //================================================================================
 
 void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit, const uint8_t mode);
-void attachPinChangeInterrupt0(void);
-void attachPinChangeInterrupt1(void);
-void attachPinChangeInterrupt2(void);
+void attachPinChangeInterrupt0(void)  __attribute__((naked));
+void attachPinChangeInterrupt1(void)  __attribute__((naked));
+void attachPinChangeInterrupt2(void)  __attribute__((naked));
 
 #if defined(PCINT_API)
 
