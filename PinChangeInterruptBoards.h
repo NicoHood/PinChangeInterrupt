@@ -333,7 +333,7 @@ and then refuse to a NOT_AN_INTERRUPT (definitions at the very end)
 #define PIN_TO_PCINT_SDA PIN_TO_PCINT_6
 #define PIN_TO_PCINT_SCL PIN_TO_PCINT_4
 
-#if defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__)
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__)
 #define PCINT_INPUT_PORT0 PINA
 #define PCINT_INPUT_PORT1 PINB
 #define PCINT_INPUT_PORT2 PINC
