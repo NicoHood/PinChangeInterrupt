@@ -30,32 +30,32 @@ Compared with the normal Interrupts it is even more compact and all available PC
  ```
  
 
-| PCINT |   Uno    |   Mega   | Leonardo |   16u2    | Attiny x4 | Attiny x5 |
-| ----- | -------- | -------- | -------- | --------- | --------- | --------- |
-|     0 |  8 (PB0) |  0 (PB0) |  0 (PB0) |  0* (PB0) |  0 (PB0)  |  0 (PB0)  |
-|     1 |  9 (PB1) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
-|     2 | 10 SS (PB2) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
-|     3 | 11 MISO (PB3) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
-|     4 | 12 MOSI (PB4) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
-|     5 | 13 SCK (PB5) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
-|     6 | XTAL1 (PB6) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
-|     7 | XTAL2 (PB7) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
-|     8 | A0 (PC0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|     9 | A1 (PC1) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    10 | A2 (PC2) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    11 | A3 (PC3) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    12 | A4 SDA (PC4) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    13 | A5 SDC (PC5) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    14 | RST (PC6) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    15 |  NC |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    16 |  0 RX (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    17 |  1 TX (PD1) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    18 |  2 INT0 (PD2) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    19 |  3 INT1 (PD3) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    20 |  4 (PD4) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    21 |  5 (PD5) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    22 |  6 (PD6) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    23 |  7 (PD7) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+| PCINT |      Uno       |     Mega      |   Leonardo    |   16u2    | Attiny x4 | Attiny x5 |
+| ----- | -------------- | ------------- | ------------- | --------- | --------- | --------- |
+|     0 |  8       (PB0) | 53 SS   (PB0) | NC SS   (PB0) |  0* (PB0) |  0 (PB0)  |  0 (PB0)  |
+|     1 |  9       (PB1) | 52 SCK  (PB1) |    SCK  (PB1) |  0  (PB0) |  0 (PB0)  |
+|     2 | 10 SS    (PB2) | 51 MOSI (PB2) |    MOSI (PB2) |  0  (PB0) |  0 (PB0)  |
+|     3 | 11 MISO  (PB3) | 50 MISO (PB3) |    MISO (PB3) |  0  (PB0) |  0 (PB0)  |
+|     4 | 12 MOSI  (PB4) | 10      (PB4) |  8/A8   (PB4) |  0 (PB0) | 0 (PB0) |
+|     5 | 13 SCK   (PB5) | 11      (PB5) |  9/A9   (PB5) |  0 (PB0) | 0 (PB0) |
+|     6 |    XTAL1 (PB6) | 12      (PB6) | 10/A10  (PB6) |  0 (PB0) | 0 (PB0) |
+|     7 |    XTAL2 (PB7) | 13      (PB7) | 11      (PB7) |  0 (PB0) | 0 (PB0) |
+|     8 | A0       (PC0) |  0 RX   (PE0) |               |  0 (PB0) | 0 (PB0) |
+|     9 | A1       (PC1) | 15 RX3  (PJ0) |               |  0 (PB0) | 0 (PB0) |
+|    10 | A2       (PC2) | 14 TX3  (PJ1) |               |  0 (PB0) | 0 (PB0) |
+|    11 | A3       (PC3) |     NC  (PJ2) |               |  0 (PB0) | 0 (PB0) |
+|    12 | A4 SDA   (PC4) |     NC  (PJ3) |               |  0 (PB0) | 0 (PB0) |
+|    13 | A5 SDC   (PC5) |     NC  (PJ4) |               |  0 (PB0) | 0 (PB0) |
+|    14 |    RST   (PC6) |     NC  (PJ5) |               |  0 (PB0) | 0 (PB0) |
+|    15 |    NC          |     NC  (PJ6) |               |  0 (PB0) | 0 (PB0) |
+|    16 |  0 RX    (PD0) | A8      (PK0) |               |  0 (PB0) | 0 (PB0) |
+|    17 |  1 TX    (PD1) | A9      (PK1) |               |  0 (PB0) | 0 (PB0) |
+|    18 |  2 INT0  (PD2) | A10     (PK2) |               |  0 (PB0) | 0 (PB0) |
+|    19 |  3 INT1  (PD3) | A11     (PK3) |               |  0 (PB0) | 0 (PB0) |
+|    20 |  4       (PD4) | A12     (PK4) |               |  0 (PB0) | 0 (PB0) |
+|    21 |  5       (PD5) | A13     (PK5) |               |  0 (PB0) | 0 (PB0) |
+|    22 |  6       (PD6) | A14     (PK6) |               |  0 (PB0) | 0 (PB0) |
+|    23 |  7       (PD7) | A15     (PK7) |               |  0 (PB0) | 0 (PB0) |
 
 Pins with * are deactivated/not broken out by default.
 You may activate them in the setting file (advanced).
