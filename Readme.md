@@ -32,30 +32,30 @@ Compared with the normal Interrupts it is even more compact and all available PC
 
 | PCINT |   Uno    |   Mega   | Leonardo |   16u2    | Attiny x4 | Attiny x5 |
 | ----- | -------- | -------- | -------- | --------- | --------- | --------- |
-|     0 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0* (PB0) |  0 (PB0)  |  0 (PB0)  |
-|     1 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
-|     2 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
-|     3 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
-|     4 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
-|     5 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
-|     6 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
-|     7 |  8 (PD0) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
-|     8 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|     9 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    10 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    11 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    12 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    13 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    14 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    15 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    16 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    17 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    18 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    19 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    20 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    21 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    22 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
-|    23 |  8 (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|     0 |  8 (PB0) |  0 (PB0) |  0 (PB0) |  0* (PB0) |  0 (PB0)  |  0 (PB0)  |
+|     1 |  9 (PB1) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
+|     2 | 10 SS (PB2) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
+|     3 | 11 MISO (PB3) |  0 (PB0) |  0 (PB0) |  0  (PB0) |  0 (PB0)  |
+|     4 | 12 MOSI (PB4) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
+|     5 | 13 SCK (PB5) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
+|     6 | XTAL1 (PB6) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
+|     7 | XTAL2 (PB7) |  0 (PB0) |  0 (PB0) |  0 (PB0) | 0 (PB0) |
+|     8 | A0 (PC0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|     9 | A1 (PC1) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    10 | A2 (PC2) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    11 | A3 (PC3) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    12 | A4 SDA (PC4) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    13 | A5 SDC (PC5) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    14 | RST (PC6) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    15 |  NC |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    16 |  0 RX (PD0) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    17 |  1 TX (PD1) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    18 |  2 INT0 (PD2) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    19 |  3 INT1 (PD3) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    20 |  4 (PD4) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    21 |  5 (PD5) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    22 |  6 (PD6) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
+|    23 |  7 (PD7) |  0 (PB0) |          |  0 (PB0) | 0 (PB0) |
 
 Pins with * are deactivated/not broken out by default.
 You may activate them in the setting file (advanced).
