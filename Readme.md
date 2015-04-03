@@ -81,7 +81,7 @@ PCINT0-7 is on Port0, PCINT8-15 on Port1, PCINT16-23 on Port2, PCINT24-31 on Por
 Not all MCUs have all Ports/Pins physically available.
 
 #####Official Arduinos
-
+```
 | PCINT |  Uno/Nano/Mini  |   Mega/2560    | Leonardo/Micro | HoodLoader2 (16u2)|
 | ----- | --------------- | -------------- | -------------- | -------------- |
 |     0 |  8       (PB0)  | 53 SS   (PB0)  |    SS   (PB0)* |  0 SS   (PB0)* |
@@ -108,9 +108,11 @@ Not all MCUs have all Ports/Pins physically available.
 |    21 |  5       (PD5)  | A13     (PK5)  |                |                |
 |    22 |  6       (PD6)  | A14     (PK6)  |                |                |
 |    23 |  7       (PD7)  | A15     (PK7)  |                |                |
+```
 
 #####Other Atmel MCUs
 
+```
 | PCINT |    Attiny x4    |   Attiny x5   | ATmega644P/1284P  |
 | ----- | --------------- | ------------- | ----------------- |
 |     0 |  0       (PA0)  | 0 MOSI  (PB0) | A0/D24      (PA0) |
@@ -145,7 +147,7 @@ Not all MCUs have all Ports/Pins physically available.
 |    29 |                 |               | 13 PWM      (PD5) |
 |    30 |                 |               | 14 PWM      (PD6) |
 |    31 |                 |               | 15 PWM      (PD7) |
-
+```
 
 #####Information about this library itself (advanced):
 If a PinChangeInterrupt occurs it will determine the triggered pin(s).
