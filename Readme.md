@@ -27,8 +27,9 @@ Compared with the normal Interrupts it is even more compact and all available PC
  HoodLoader2: All (broken out 1-7) pins are usable
  Attiny 24/44/84: All pins are usable  
  Attiny 25/45/85: All pins are usable 
+ ATmega644P/ATmega1284P: All pins are usable 
 ```
-See [PCINT pin table](TODO) at the bottom for more details.
+See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pcint-pin-table) at the bottom for more details.
 
 **[Comment for feedback on my blog.](http://www.nicohood.de)**
 
@@ -111,9 +112,9 @@ Not all MCUs have all Ports/Pins physically available.
 
 #####Other Atmel MCUs
 
-| PCINT |    Attiny x4    |   Attiny x5   |
-| ----- | --------------- | ------------- |
-|     0 |  0       (PA0)  | 0 MOSI  (PB0) |
+| PCINT |    Attiny x4    |   Attiny x5   | ATmega644P/1284P |
+| ----- | --------------- | ------------- | ---------------- |
+|     0 |  0       (PA0)  | 0 MOSI  (PB0) | TODO |
 |     1 |  1       (PA1)  | 1 MISO  (PB1) |
 |     2 |  2       (PA2)  | 2 SCK   (PB2) |
 |     3 |  3       (PA3)  | 3 XTAL1 (PB3) |
@@ -189,6 +190,7 @@ Version History
 * Moved attach function to .cpp file
 * Updated examples
 * Added API and LowLevel
+* Added Port3 support
 
 1.1 Release (06.12.2014)
 * Added port deactivation

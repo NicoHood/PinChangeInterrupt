@@ -49,26 +49,11 @@ THE SOFTWARE.
 #endif
 #endif
 
-// typedef for our callback function pointers
-typedef void(*callback)(void);
+//================================================================================
+// Makro Definitions
+//================================================================================
 
-// useless function for weak implemented/not used functions, extern c needed for the alias
-extern "C" {
-	void pcint_null_callback(void);
-}
-
-// map the port to the array position, depending on what ports are activated. this is only usable with port 0-2, not 3
-#define PCINT_ARRAY_POS(p) ((PCINT_NUM_USED_PORTS == 3) ? p : (PCINT_NUM_USED_PORTS == 1) ? 0 : \
-/*(PCINT_NUM_USED_PORTS == 2)*/ (PCINT_USE_PORT2 == 0) ? p : (PCINT_USE_PORT0 == 0) ? (p - 1) : \
-/*(PCINT_USE_PORT1 == 0)*/ ((p >> 1) & 0x01))
-
-// only check enabled + physically available ports. Always choose the port if its the last one that's possible with the current configuration
-// not used anymore TODO
-#define pinChangeInterruptPortToInput(p) (((PCINT_USE_PORT0 == 1) && ((p == 0) || (PCINT_NUM_USED_PORTS == 1))) ?  PCINT_INPUT_PORT0 :\
-	((PCINT_USE_PORT1 == 1) && ((p == 1) || (PCINT_USE_PORT2 == 0))) ?  PCINT_INPUT_PORT1 :\
-	((PCINT_USE_PORT2 == 1) /*&& ((p == 2) || (PCINT_NUM_USED_PORTS == 1))*/) ?  PCINT_INPUT_PORT2 : 0)
-
-// generates the callback for easier reordering
+// generates the callback for easier reordering in Settings
 #define PCINT_MACRO_BRACKETS ()
 #define PCINT_MACRO_TRUE == true)
 #define PCINT_CALLBACK(bit, pcint) \
@@ -76,30 +61,30 @@ if (PCINT_USE_PCINT ## pcint PCINT_MACRO_TRUE \
 if (trigger & (1 << bit)) \
 PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 
+// definition used by the user to create custom Low-Level PCINT Events
+#define PinChangeInterruptEvent_Wrapper(n) PinChangeInterruptEventPCINT ## n
+#define PinChangeInterruptEvent(n) PinChangeInterruptEvent_Wrapper(n)
+
 // missing 1.0.6 definition workaround
 #ifndef NOT_AN_INTERRUPT
 #define NOT_AN_INTERRUPT -1
 #endif
 
-//================================================================================
-// User Makro Definitions
-//================================================================================
-
-// definition used by the user to create his custom PCINT functions
-#define PinChangeInterruptEvent_Wrapper(n) PinChangeInterruptEventPCINT ## n
-#define PinChangeInterruptEvent(n) PinChangeInterruptEvent_Wrapper(n)
-
 // convert a normal pin to its PCINT number (0 - max 23), used by the user
 // calculates the pin by the Arduino definitions
 #define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * digitalPinToPCICRbit(p)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
 
-// makro version, to work with the event definition above.
-#define digitalPinToPinChangeInterruptWrapper(p) PIN_TO_PCINT_ ## p
-#define digitalPinToPinChangeInterruptLowLevel(p) digitalPinToPinChangeInterruptWrapper(p)
-
 //================================================================================
 // Function Prototypes + Variables
 //================================================================================
+
+// typedef for our callback function pointers
+typedef void(*callback)(void);
+
+// useless function for weak implemented/not used functions, extern c needed for the alias
+extern "C" {
+	void pcint_null_callback(void);
+}
 
 void PinChangeInterruptEventPCINT0(void);
 void PinChangeInterruptEventPCINT1(void);
@@ -125,10 +110,118 @@ void PinChangeInterruptEventPCINT20(void);
 void PinChangeInterruptEventPCINT21(void);
 void PinChangeInterruptEventPCINT22(void);
 void PinChangeInterruptEventPCINT23(void);
+void PinChangeInterruptEventPCINT24(void);
+void PinChangeInterruptEventPCINT25(void);
+void PinChangeInterruptEventPCINT26(void);
+void PinChangeInterruptEventPCINT27(void);
+void PinChangeInterruptEventPCINT28(void);
+void PinChangeInterruptEventPCINT29(void);
+void PinChangeInterruptEventPCINT30(void);
+void PinChangeInterruptEventPCINT31(void);
 
 extern uint8_t oldPorts[PCINT_NUM_USED_PORTS];
 extern uint8_t fallingPorts[PCINT_NUM_USED_PORTS];
 extern uint8_t risingPorts[PCINT_NUM_USED_PORTS];
+
+
+static inline uint8_t getArrayPosPCINT(uint8_t pcintPort)__attribute__((alway_inline));
+static inline uint8_t getArrayPosPCINT(uint8_t pcintPort){
+	/*
+	Maps the port to the array.
+	This is needed since you can deactivate ports
+	and the array will dynamically resize to save ram.
+
+	The function does not need that much flash since the if and else
+	are known at compile time, so the compiler removes all the complex logic.
+	The return is is the input if all pins are activated for example.
+	That's why the function is inline.
+	*/
+
+	if (PCINT_NUM_USED_PORTS == 1){
+		// only the first element is used for a single port
+		return 0;
+	}
+	else if (PCINT_NUM_USED_PORTS == PCINT_NUM_PORTS){
+		// use all ports and down remap the array position.
+		return pcintPort;
+	}
+	else if (PCINT_NUM_PORTS - PCINT_NUM_USED_PORTS == 1){
+		// one port is not used
+		if (PCINT_USE_PORT0 == 0){
+			// first port is not used, decrease all port numbers
+			return (pcintPort - 1);
+		}
+		else if (PCINT_HAS_PORT3 == 0){
+			// 3 ports (standard)
+			if (PCINT_USE_PORT2 == 0){
+				// last port not used, no mapping needed
+				return pcintPort;
+			}
+			else{
+				// worst case, port in the middle not used, remap
+				return ((pcintPort >> 1) & 0x01);
+				//if (pcintPort == 0) return 0;
+				//else return 1;
+			}
+		}
+		else{
+			// 4 ports (special case for a few AVRs)
+			if (PCINT_USE_PORT3 == 0){
+				// last port not used, no mapping needed
+				return pcintPort;
+			}
+			else{
+				// worst case, one of two ports in the middle not used, remap
+				if (PCINT_USE_PORT1 == 0){
+					// port1 not used, mapping needed
+					if (pcintPort == 0)
+						return 0;
+					else
+						return pcintPort - 1;
+				}
+				else if (PCINT_USE_PORT2 == 0){
+					// port2 not used, mapping needed
+					if (pcintPort == 3)
+						return 2;
+					else
+						return pcintPort;
+				}
+			}
+		}
+
+		// use all ports and down remap the array position.
+		return pcintPort;
+	}
+	else if (PCINT_NUM_PORTS - PCINT_NUM_USED_PORTS == 2){
+		if (PCINT_USE_PORT2 == 0 && PCINT_USE_PORT3 == 0){
+			// no need for mapping
+			return pcintPort;
+		}
+		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT3 == 0){
+			// 1 offset
+			return (pcintPort - 1);
+		}
+		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT1 == 0){
+			// 2 offset
+			return (pcintPort - 2);
+		}
+		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT2 == 0){
+			// 2 -> 1
+			return (pcintPort >>1);
+		}
+		else if (PCINT_USE_PORT1 == 0 && PCINT_USE_PORT2 == 0){
+			// 3 -> 1
+			return (pcintPort >> 1);
+		}
+		else if (PCINT_USE_PORT1 == 0 && PCINT_USE_PORT3 == 0){
+			// 3 -> 1, 1 -> 0
+			return (pcintPort >> 1);
+		}
+	}
+
+	// error
+	return 0;
+}
 
 //================================================================================
 // Attach Function (partly inlined)
@@ -138,11 +231,12 @@ void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 void attachPinChangeInterrupt0(void);
 void attachPinChangeInterrupt1(void);
 void attachPinChangeInterrupt2(void);
+void attachPinChangeInterrupt3(void);
 
 #if defined(PCINT_API)
 
 /*
-for (int i = 0; i < 24; i++) {
+for (int i = 0; i < 32; i++) {
 Serial.print("#if (PCINT_USE_PCINT");
 Serial.print(i);
 Serial.println(" == true)");
@@ -224,9 +318,32 @@ extern volatile callback callbackPCINT22;
 #if (PCINT_USE_PCINT23 == true)
 extern volatile callback callbackPCINT23;
 #endif
-
+#if (PCINT_USE_PCINT24 == true)
+extern volatile callback callbackPCINT24;
+#endif
+#if (PCINT_USE_PCINT25 == true)
+extern volatile callback callbackPCINT25;
+#endif
+#if (PCINT_USE_PCINT26 == true)
+extern volatile callback callbackPCINT26;
+#endif
+#if (PCINT_USE_PCINT27 == true)
+extern volatile callback callbackPCINT27;
+#endif
+#if (PCINT_USE_PCINT28 == true)
+extern volatile callback callbackPCINT28;
+#endif
+#if (PCINT_USE_PCINT29 == true)
+extern volatile callback callbackPCINT29;
+#endif
+#if (PCINT_USE_PCINT30 == true)
+extern volatile callback callbackPCINT30;
+#endif
+#if (PCINT_USE_PCINT31 == true)
+extern volatile callback callbackPCINT31;
+#endif
 /*
-for (int i = 0; i < 24; i++) {
+for (int i = 0; i < 32; i++) {
 Serial.print("#if (PCINT_USE_PCINT");
 Serial.print(i);
 Serial.println(" == true)");
@@ -382,6 +499,48 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 #endif
 #endif // PCINT_API
 	}
+
+	// port 3
+	else if (pcintPort == 3 && PCINT_USE_PORT3 == true){
+		// use fake functions to make the ISRs compile with .a linkage
+#if defined(PCINT_ALINKAGE) && !defined(PCINT_COMPILE_ENABLED_ISR)
+		attachPinChangeInterrupt3();
+#endif
+		//  attache the function pointers for the API
+#if defined(PCINT_API)
+#if (PCINT_USE_PCINT24 == true)
+		if (pcintNum == 24)
+			callbackPCINT24 = userFunc;
+#endif
+#if (PCINT_USE_PCINT25 == true)
+		if (pcintNum == 25)
+			callbackPCINT25 = userFunc;
+#endif
+#if (PCINT_USE_PCINT26 == true)
+		if (pcintNum == 26)
+			callbackPCINT26 = userFunc;
+#endif
+#if (PCINT_USE_PCINT27 == true)
+		if (pcintNum == 27)
+			callbackPCINT27 = userFunc;
+#endif
+#if (PCINT_USE_PCINT28 == true)
+		if (pcintNum == 28)
+			callbackPCINT28 = userFunc;
+#endif
+#if (PCINT_USE_PCINT29 == true)
+		if (pcintNum == 29)
+			callbackPCINT29 = userFunc;
+#endif
+#if (PCINT_USE_PCINT30 == true)
+		if (pcintNum == 30)
+			callbackPCINT30 = userFunc;
+#endif
+#if (PCINT_USE_PCINT31 == true)
+		if (pcintNum == 31)
+			callbackPCINT31 = userFunc;
+#endif#endif // PCINT_API
+	}
 	else return;
 
 	// call the actual hardware attach function
@@ -410,6 +569,10 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	}
 	else if (pcintPort == 2){
 		if (PCINT_USE_PORT2 == false)
+			return;
+	}
+	else if (pcintPort == 3){
+		if (PCINT_USE_PORT3 == false)
 			return;
 	}
 	else return;

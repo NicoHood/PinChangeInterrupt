@@ -31,18 +31,18 @@ THE SOFTWARE.
 #if defined(PCINT_ALINKAGE) && defined(PCINT_COMPILE_ENABLED_ISR) && defined(PCINT_INCLUDE_FROM_CPP) \
 	|| !defined(PCINT_ALINKAGE) || !defined(PCINT_COMPILE_ENABLED_ISR)
 
-#if (PCINT_USE_PORT0 == true)
+#if (PCINT_USE_PORT3 == true)
 
-void attachPinChangeInterrupt0(void) {
+void attachPinChangeInterrupt3(void) {
 	// fake function to make the IDE link this file
 }
 
-ISR(PCINT0_vect) {
+ISR(PCINT3_vect) {
 	// get the new and old pin states for port
-	uint8_t newPort = PCINT_INPUT_PORT0;
+	uint8_t newPort = PCINT_INPUT_PORT3;
 
 	// compare with the old value to detect a rising or falling
-	uint8_t arrayPos = getArrayPosPCINT(0);
+	uint8_t arrayPos = getArrayPosPCINT(3);
 	uint8_t change = newPort ^ oldPorts[arrayPos];
 	uint8_t rising = change & newPort;
 	uint8_t falling = change & oldPorts[arrayPos];
@@ -59,17 +59,17 @@ ISR(PCINT0_vect) {
 	// This way we can exclude a single function
 	// and the calling is also much faster
 	// We may also reorder the pins for different priority
-#if !defined(PCINT_CALLBACK_PORT0)
-	PCINT_CALLBACK(0, 0);
-	PCINT_CALLBACK(1, 1);
-	PCINT_CALLBACK(2, 2);
-	PCINT_CALLBACK(3, 3);
-	PCINT_CALLBACK(4, 4);
-	PCINT_CALLBACK(5, 5);
-	PCINT_CALLBACK(6, 6);
-	PCINT_CALLBACK(7, 7);
+#if !defined(PCINT_CALLBACK_PORT3)
+	PCINT_CALLBACK(0, 24);
+	PCINT_CALLBACK(1, 25);
+	PCINT_CALLBACK(2, 26);
+	PCINT_CALLBACK(3, 27);
+	PCINT_CALLBACK(4, 28);
+	PCINT_CALLBACK(5, 29);
+	PCINT_CALLBACK(6, 30);
+	PCINT_CALLBACK(7, 31);
 #else
-	PCINT_CALLBACK_PORT0
+	PCINT_CALLBACK_PORT3
 #endif
 }
 
@@ -91,57 +91,55 @@ Serial.print(i);
 Serial.println("();");
 Serial.println("}");
 Serial.println("#endif");
-}*/#if (PCINT_USE_PCINT0 == true)
-volatile callback callbackPCINT0 = pcint_null_callback;
-void PinChangeInterruptEventPCINT0(void){
-	callbackPCINT0();
+}*/#if (PCINT_USE_PCINT24 == true)
+volatile callback callbackPCINT24 = pcint_null_callback;
+void PinChangeInterruptEventPCINT24(void){
+	callbackPCINT24();
 }
 #endif
-#if (PCINT_USE_PCINT1 == true)
-volatile callback callbackPCINT1 = pcint_null_callback;
-void PinChangeInterruptEventPCINT1(void){
-	callbackPCINT1();
+#if (PCINT_USE_PCINT25 == true)
+volatile callback callbackPCINT25 = pcint_null_callback;
+void PinChangeInterruptEventPCINT25(void){
+	callbackPCINT25();
 }
 #endif
-#if (PCINT_USE_PCINT2 == true)
-volatile callback callbackPCINT2 = pcint_null_callback;
-void PinChangeInterruptEventPCINT2(void){
-	callbackPCINT2();
+#if (PCINT_USE_PCINT26 == true)
+volatile callback callbackPCINT26 = pcint_null_callback;
+void PinChangeInterruptEventPCINT26(void){
+	callbackPCINT26();
 }
 #endif
-#if (PCINT_USE_PCINT3 == true)
-volatile callback callbackPCINT3 = pcint_null_callback;
-void PinChangeInterruptEventPCINT3(void){
-	callbackPCINT3();
+#if (PCINT_USE_PCINT27 == true)
+volatile callback callbackPCINT27 = pcint_null_callback;
+void PinChangeInterruptEventPCINT27(void){
+	callbackPCINT27();
 }
 #endif
-#if (PCINT_USE_PCINT4 == true)
-volatile callback callbackPCINT4 = pcint_null_callback;
-void PinChangeInterruptEventPCINT4(void){
-	callbackPCINT4();
+#if (PCINT_USE_PCINT28 == true)
+volatile callback callbackPCINT28 = pcint_null_callback;
+void PinChangeInterruptEventPCINT28(void){
+	callbackPCINT28();
 }
 #endif
-#if (PCINT_USE_PCINT5 == true)
-volatile callback callbackPCINT5 = pcint_null_callback;
-void PinChangeInterruptEventPCINT5(void){
-	callbackPCINT5();
+#if (PCINT_USE_PCINT29 == true)
+volatile callback callbackPCINT29 = pcint_null_callback;
+void PinChangeInterruptEventPCINT29(void){
+	callbackPCINT29();
 }
 #endif
-#if (PCINT_USE_PCINT6 == true)
-volatile callback callbackPCINT6 = pcint_null_callback;
-void PinChangeInterruptEventPCINT6(void){
-	callbackPCINT6();
+#if (PCINT_USE_PCINT30 == true)
+volatile callback callbackPCINT30 = pcint_null_callback;
+void PinChangeInterruptEventPCINT30(void){
+	callbackPCINT30();
 }
 #endif
-#if (PCINT_USE_PCINT7 == true)
-volatile callback callbackPCINT7 = pcint_null_callback;
-void PinChangeInterruptEventPCINT7(void){
-	callbackPCINT7();
+#if (PCINT_USE_PCINT31 == true)
+volatile callback callbackPCINT31 = pcint_null_callback;
+void PinChangeInterruptEventPCINT31(void){
+	callbackPCINT31();
 }
-#endif
+#endif#endif // PCINT_API
 
-#endif // PCINT_API
-
-#endif // PCINT_USE_PORT0
+#endif // PCINT_USE_PORT3
 
 #endif // PCINT_INCLUDE_FROM_CPP

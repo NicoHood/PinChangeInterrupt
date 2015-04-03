@@ -43,6 +43,7 @@ That is done by the macros. */
 #define PCINT_ENABLE_PORT0
 #define PCINT_ENABLE_PORT1
 #define PCINT_ENABLE_PORT2
+#define PCINT_ENABLE_PORT3
 
 #define PCINT_ENABLE_PCINT0
 #define PCINT_ENABLE_PCINT1
@@ -68,6 +69,14 @@ That is done by the macros. */
 #define PCINT_ENABLE_PCINT21
 #define PCINT_ENABLE_PCINT22
 #define PCINT_ENABLE_PCINT23
+#define PCINT_ENABLE_PCINT24
+#define PCINT_ENABLE_PCINT25
+#define PCINT_ENABLE_PCINT26
+#define PCINT_ENABLE_PCINT27
+#define PCINT_ENABLE_PCINT28
+#define PCINT_ENABLE_PCINT29
+#define PCINT_ENABLE_PCINT30
+#define PCINT_ENABLE_PCINT31
 
 // use API with function pointers (better optimized with .a linkage)
 #define PCINT_API
@@ -205,6 +214,7 @@ PCINT_CALLBACK(3, 3); /* SPI MOSI */
 /* Attiny 25/45/85 only has a very few pins
 activate all by default
 The order is also okay. */
+
 #if defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
 // Port1 is connected to reset, crystal and Pin Interrupt 0
 // deactivate it by default

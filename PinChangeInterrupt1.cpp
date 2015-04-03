@@ -42,7 +42,7 @@ ISR(PCINT1_vect) {
 	uint8_t newPort = PCINT_INPUT_PORT1;
 
 	// compare with the old value to detect a rising or falling
-	uint8_t arrayPos = PCINT_ARRAY_POS(1);
+	uint8_t arrayPos = getArrayPosPCINT(1);
 	uint8_t change = newPort ^ oldPorts[arrayPos];
 	uint8_t rising = change & newPort;
 	uint8_t falling = change & oldPorts[arrayPos];
@@ -76,7 +76,7 @@ ISR(PCINT1_vect) {
 #if defined(PCINT_API)
 
 /*
-for (int i = 0; i < 24; i++) {
+for (int i = 0; i < 32; i++) {
 Serial.print("#if (PCINT_USE_PCINT");
 Serial.print(i);
 Serial.println(" == true)");

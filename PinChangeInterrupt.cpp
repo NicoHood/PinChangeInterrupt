@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "PinChangeInterrupt0.cpp"
 #include "PinChangeInterrupt1.cpp"
 #include "PinChangeInterrupt2.cpp"
+#include "PinChangeInterrupt3.cpp"
 #else
 
 //================================================================================
@@ -38,7 +39,7 @@ THE SOFTWARE.
 
 // create all weak functions which are all (if not used) alias of the pcint_null_callback above
 /*
-for (int i = 0; i < 24; i++) {
+for (int i = 0; i < 32; i++) {
 Serial.print("void PinChangeInterruptEventPCINT");
 Serial.print(i);
 Serial.println("(void) __attribute__((weak, alias(\"pcint_null_callback\")));");
@@ -67,7 +68,16 @@ void PinChangeInterruptEventPCINT19(void) __attribute__((weak, alias("pcint_null
 void PinChangeInterruptEventPCINT20(void) __attribute__((weak, alias("pcint_null_callback")));
 void PinChangeInterruptEventPCINT21(void) __attribute__((weak, alias("pcint_null_callback")));
 void PinChangeInterruptEventPCINT22(void) __attribute__((weak, alias("pcint_null_callback")));
-void PinChangeInterruptEventPCINT23(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT23(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT24(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT25(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT26(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT27(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT28(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT29(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT30(void) __attribute__((weak, alias("pcint_null_callback")));
+void PinChangeInterruptEventPCINT31(void) __attribute__((weak, alias("pcint_null_callback")));
+
 #endif // PCINT_INCLUDE_FROM_CPP
 
 // useless function for weak implemented/not used functions, extern c needed for the alias
@@ -89,7 +99,7 @@ uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit, const uint8_t mode) {
 	// get bitmask and array position
 	uint8_t pcintMask = (1 << pcintBit);
-	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
+	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
 
 	// save settings related to mode and registers
 	if (mode == CHANGE || mode == RISING)
@@ -110,7 +120,7 @@ void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 void detachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit) {
 	// get bitmask and array position
 	uint8_t pcintMask = (1 << pcintBit);
-	uint8_t arrayPos = PCINT_ARRAY_POS(pcintPort);
+	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
 
 	// delete setting
 	risingPorts[arrayPos] &= ~pcintMask;
