@@ -61,7 +61,7 @@ if (PCINT_USE_PCINT ## pcint PCINT_MACRO_TRUE \
 if (trigger & (1 << bit)) \
 PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 
-// definition used by the user to create custom Low-Level PCINT Events
+// definition used by the user to create custom LowLevel PCINT Events
 #define PinChangeInterruptEvent_Wrapper(n) PinChangeInterruptEventPCINT ## n
 #define PinChangeInterruptEvent(n) PinChangeInterruptEvent_Wrapper(n)
 
@@ -73,6 +73,12 @@ PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 // convert a normal pin to its PCINT number (0 - max 23), used by the user
 // calculates the pin by the Arduino definitions
 #define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * digitalPinToPCICRbit(p)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
+
+// alias for shorter writing
+#define PCINTEvent(n) PinChangeInterruptEvent_Wrapper(n)
+#define digitalPinToPCINT digitalPinToPinChangeInterrupt
+#define attachPCINT attachPinChangeInterrupt
+#define detachPCINT detachPinChangeInterrupt
 
 //================================================================================
 // Function Prototypes + Variables

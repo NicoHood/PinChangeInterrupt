@@ -3,22 +3,22 @@ PinChangeInterrupt Library 1.2
 
 ![Header Picture](header.png)
 
-New PinChangeInterrupt with a very resource friendly implementation.
-PinChangeInterrupts are a bit slower than normal Pin Interrupts because of the pin change comparison
-but this library tries to reduce this disadvantage to a minimum, even with an user friendly API.
-Compared with the normal Interrupts it is even more compact and all available PCINTs can be used.
+PinChangeInterrupt library with a resource friendly implementation (API and LowLevel).
+PinChangeInterrupts are different than normal Interrupts. See detail below.
 
-**Features:**
+#####Features:
 * PinChangeInterrupt for a lot of pins
 * Rising, Falling or Change detection for every pin separately
-* Usable on every standard Arduino and Attiny as well
-* Uses less ram & flash than normal Interrupts
-* Implementation is fast and compact
-* Ports/Pins can be manually deactivated in the .h file
+* Usable on a lot Arduino compatible boards
+* Implementation is fast, compact and resource friendly
+* Ports/Pins can be manually deactivated in the Settings file
 * API and LowLevel option
+* Full Port0-3 support
 * .a linkage optimization
 
-**Supported pins for PinChangeInterrupt:**
+#####Supported pins for PinChangeInterrupt:
+See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pcint-pin-table) at the bottom for more details.
+
 ```
  Arduino Uno: All pins are usable  
  Arduino Mega: 10, 11, 12, 13, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64),
@@ -29,7 +29,6 @@ Compared with the normal Interrupts it is even more compact and all available PC
  Attiny 25/45/85: All pins are usable 
  ATmega644P/ATmega1284P: All pins are usable 
 ```
-See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pcint-pin-table) at the bottom for more details.
 
 **[Comment for feedback on my blog.](http://www.nicohood.de)**
 
@@ -160,7 +159,7 @@ I don't expect anyone to use those pins at all with PCINT but at least the prior
 
 The API takes those functions and just overwrites all of them and call the function pointers of the attached functions instead.
 This way the function can be changed at runtime and its also easier to integrate into other libraries.
-The function pointers take a bit flash though.
+The function pointers take a bit flash though (LowLevel: 1526/18, API: 1790/58 for Led example).
 
 You can get better performance and less code size if you deactivate the not used pins/ports manually.
 This way only the needed pins get compiled and the code is optimized by the preprocessor.
@@ -177,7 +176,7 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
-1.2 Release (xx.02.2015)
+1.2 Release (xx.xx.2015)
 * Added weak interrupt function
 * Improved interrupt function calls
 * Changed the digitalPinToPinChangeInterrupt(p) macro
@@ -190,7 +189,7 @@ Version History
 * Moved attach function to .cpp file
 * Updated examples
 * Added API and LowLevel
-* Added Port3 support
+* Added Port3 support (ATmega644P/ATmega1284P)
 
 1.1 Release (06.12.2014)
 * Added port deactivation

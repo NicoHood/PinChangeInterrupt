@@ -12,7 +12,10 @@
 
 attachPinChangeInterrupt	KEYWORD2
 detachPinChangeInterrupt	KEYWORD2
+attachPCINT	KEYWORD2
+detachPCINT	KEYWORD2
 PinChangeInterruptEvent	KEYWORD2
+PCINTEvent	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
