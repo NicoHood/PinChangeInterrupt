@@ -57,15 +57,15 @@ it is still unclear what pin of the port caused this interrupt. Therefore this l
 This way we can also see if it was a RISING or FALLING edge instead of only knowing the CHANGE.
 
 A **PinChangeInterrupt** will only be triggered for the attached pins per port.
-Meaning if you set PCINT for a pin another pin on the same port is changing a lot
+Meaning if you set PCINT for a pin and another pin on the same port is changing a lot
 it will not interrupt your code.
 
 **PinChangeInterrupts** might be a tiny bit slower and not that reliable because of that detection overhead (talking about micro seconds).
 Make sure to not use longer function calls inside the ISR or Serial print.
 You have the same issues on normal **PinInterrupts** and interrupts in general.
 
-The library is coded to get maximum speed and minimum code size. The low level without the API takes 4uS to enter the interrupt function in the worst case
-which is pretty good and might be even better than the **PinInterrupt** code from the official Arduino core.
+The library is coded to get maximum speed and minimum code size. The LowLevel example without the API takes 4uS to enter the interrupt function in the worst case
+which is pretty good and might be even better than the **PinInterrupt** code from the official Arduino core due to high optimization.
 If you need very precise interrupts you better use **PinInterrupts** without the Arduino IDE at all.
 
 ###Examples
@@ -162,7 +162,8 @@ Not all MCUs have all Ports/Pins physically available.
 | ----- | --------------- | ------------- | ----------------- |
 ```
 
-#####Information about this library itself (advanced):
+Developer Information
+=====================
 If a PinChangeInterrupt occurs it will determine the triggered pin(s).
 The library uses weak callback functions that are called for the triggered pins(s).
 This way we can easily skip not triggered pins (I looked at the assembler) and also implement a fast LowLevel version.
