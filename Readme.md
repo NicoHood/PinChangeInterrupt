@@ -17,13 +17,13 @@ PinChangeInterrupts are different than normal Interrupts. See detail below.
 * .a linkage optimization
 
 #####Supported pins for PinChangeInterrupt:
-See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pcint-pin-table) at the bottom for more details.
+See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangeinterrupt-table) at the bottom for more details.
 
 ```
- Arduino Uno: All pins are usable  
+ Arduino Uno/Nano/Mini: All pins are usable  
  Arduino Mega: 10, 11, 12, 13, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64),
                A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
- Arduino Leonardo: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
+ Arduino Leonardo/Micro: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
  HoodLoader2: All (broken out 1-7) pins are usable
  Attiny 24/44/84: All pins are usable  
  Attiny 25/45/85: All pins are usable 
@@ -47,40 +47,46 @@ How to use
 ==========
 
 It is important that you know at least the basic difference between **PinInterrupts** and **PinChangeInterrupts**.
-I will explain the basics of PinChangeInterrupts (PCINTs) based on an Arduino Uno.
+I will explain the basics of **PinChangeInterrupts** (PCINTs) based on an Arduino Uno.
 
-On a standard Arduino Pin 2 and 3 have **PinInterrupts**. Those are exclusively for each single pin and can detect RISING, FALLING and CHANGE.
+On a standard Arduino Pin 2 and 3 have **PinInterrupts**. Those are exclusively for a single pin and can detect RISING, FALLING and CHANGE.
 
-PinChangeInterrupts instead are used for a whole port (they should have better named them PortChangeInterrupts) and can only detect CHANGE.
-Each pin row (0-7, 8-13, A0-A5) represents a port. If an Interrupt occurs on one of the pins of this port
-it is still unclear what pin caused this interrupt. Therefore this library saves the state of all pins per port and compares the state.
-This way we can also see if it was a RISING or FALLING edge instead of only knowing the pin has changed.
-A PinChangeInterrupt will only be triggered for the attached pins per port. Meaning if your input on pin 6 is changing a lot
-but only a PCINT for pin 7 is set it will not disturb your program.
+**PinChangeInterrupts** instead are used for a whole port (they should have better named them PortChangeInterrupts) and can only detect CHANGE for a whole port.
+Each pin row (0-7, 8-13, A0-A5) represents a port. If an interrupt (ISR) occurs on one pin of a port
+it is still unclear what pin of the port caused this interrupt. Therefore this library saves the state of the whole port and compares with the last state.
+This way we can also see if it was a RISING or FALLING edge instead of only knowing the CHANGE.
 
-You should know that PinChangeInterrupts are slower and not that reliable because of that detection overhead if you need very precise interrupts (ISR).
-But since it is never good to add long ISRs that should be fine. You have the same issues on normal **PinInterrupts** if your ISR takes too long.
+A **PinChangeInterrupt** will only be triggered for the attached pins per port.
+Meaning if you set PCINT for a pin another pin on the same port is changing a lot
+it will not interrupt your code.
+
+**PinChangeInterrupts** might be a tiny bit slower and not that reliable because of that detection overhead (talking about micro seconds).
+Make sure to not use longer function calls inside the ISR or Serial print.
+You have the same issues on normal **PinInterrupts** and interrupts in general.
+
 The library is coded to get maximum speed and minimum code size. The low level without the API takes 4uS to enter the interrupt function in the worst case
 which is pretty good and might be even better than the **PinInterrupt** code from the official Arduino core.
+If you need very precise interrupts you better use **PinInterrupts** without the Arduino IDE at all.
 
-#####Examples
+###Examples
 To see how the code works just check the Led and TickTock example.
 The LowLevel example is for advanced users with more optimization and more direct access.
 The HowItWorks example shows the basic PinChangeInterrupt setup and decoding routine, similar to the library.
 See the notes in the examples about more details.
 
-An useful example of the PinChangeInterrupt library can be found here:
+An useful "real use" example of the PinChangeInterrupt library can be found here:
 https://github.com/NicoHood/IRLremote
 
 
-###PCINT pin table
+PinchangeInterrupt Table
+========================
 Pins with * are not broken out/deactivated by default.
 You may activate them in the setting file (advanced).
 
-PCINT0-7 is on Port0, PCINT8-15 on Port1, PCINT16-23 on Port2, PCINT24-31 on Port3.
+Each row section represents a port(0-3).
 Not all MCUs have all Ports/Pins physically available.
 
-#####Official Arduinos
+####Official Arduinos
 ```
 | PCINT |  Uno/Nano/Mini  |   Mega/2560    | Leonardo/Micro | HoodLoader2 (16u2)|
 | ----- | --------------- | -------------- | -------------- | -------------- |
@@ -92,14 +98,16 @@ Not all MCUs have all Ports/Pins physically available.
 |     5 | 13 SCK   (PB5)  | 11      (PB5)  |  9/A9   (PB5)  |  5      (PB5)  |
 |     6 |    XTAL1 (PB6)* | 12      (PB6)  | 10/A10  (PB6)  |  6      (PB6)  |
 |     7 |    XTAL2 (PB7)* | 13      (PB7)  | 11      (PB7)  |  7      (PB7)  |
+| ----- | --------------- | -------------- | -------------- | -------------- |
 |     8 | A0       (PC0)  |  0 RX   (PE0)* |                |         (PC6)* |
 |     9 | A1       (PC1)  | 15 RX3  (PJ0)* |                |         (PC5)* |
 |    10 | A2       (PC2)  | 14 TX3  (PJ1)* |                |         (PC4)* |
-|    11 | A3       (PC3)  |     NC  (PJ2)* |                |         (PC2)* |
-|    12 | A4 SDA   (PC4)  |     NC  (PJ3)* |                |         (PD5)* |
-|    13 | A5 SDC   (PC5)  |     NC  (PJ4)* |                |                |
-|    14 |    RST   (PC6)* |     NC  (PJ5)* |                |                |
-|    15 |                 |     NC  (PJ6)* |                |                |
+|    11 | A3       (PC3)  |    NC   (PJ2)* |                |         (PC2)* |
+|    12 | A4 SDA   (PC4)  |    NC   (PJ3)* |                |         (PD5)* |
+|    13 | A5 SDC   (PC5)  |    NC   (PJ4)* |                |                |
+|    14 |    RST   (PC6)* |    NC   (PJ5)* |                |                |
+|    15 |                 |    NC   (PJ6)* |                |                |
+| ----- | --------------- | -------------- | -------------- | -------------- |
 |    16 |  0 RX    (PD0)  | A8      (PK0)  |                |                |
 |    17 |  1 TX    (PD1)  | A9      (PK1)  |                |                |
 |    18 |  2 INT0  (PD2)  | A10     (PK2)  |                |                |
@@ -108,9 +116,10 @@ Not all MCUs have all Ports/Pins physically available.
 |    21 |  5       (PD5)  | A13     (PK5)  |                |                |
 |    22 |  6       (PD6)  | A14     (PK6)  |                |                |
 |    23 |  7       (PD7)  | A15     (PK7)  |                |                |
+| ----- | --------------- | -------------- | -------------- | -------------- |
 ```
 
-#####Other Atmel MCUs
+####Other Atmel MCUs
 
 ```
 | PCINT |    Attiny x4    |   Attiny x5   | ATmega644P/1284P  |
@@ -123,6 +132,7 @@ Not all MCUs have all Ports/Pins physically available.
 |     5 |  5 MISO  (PA5)  | 5 RST   (PB5) | A5/D29      (PA5) |
 |     6 |  6 MOSI  (PA6)  |               | A6/D30      (PA6) |
 |     7 |  7       (PA7)  |               | A7/D31      (PA7) |
+| ----- | --------------- | ------------- | ----------------- |
 |     8 | 10 XTAL1 (PB0)* |               |  0          (PB0) |
 |     9 |  9 XTAL2 (PB1)* |               |  1          (PB1) |
 |    10 |  8 INT0  (PB2)* |               |  2 INT2     (PB2) |
@@ -131,6 +141,7 @@ Not all MCUs have all Ports/Pins physically available.
 |    13 |                 |               |  5 MOSI/PWM (PB5) |
 |    14 |                 |               |  6 MISO/PWM (PB6) |
 |    15 |                 |               |  7 SCK      (PB7) |
+| ----- | --------------- | ------------- | ----------------- |
 |    16 |                 |               | 16 SCL      (PC0) |
 |    17 |                 |               | 17 SDA      (PC1) |
 |    18 |                 |               | 18 TCK      (PC2) |
@@ -139,6 +150,7 @@ Not all MCUs have all Ports/Pins physically available.
 |    21 |                 |               | 21 TDI      (PC5) |
 |    22 |                 |               | 22          (PC6) |
 |    23 |                 |               | 23          (PC7) |
+| ----- | --------------- | ------------- | ----------------- |
 |    24 |                 |               |  8 RX0      (PD0) |
 |    25 |                 |               |  9 TX0      (PD1) |
 |    26 |                 |               | 10 RX1/INT0 (PD2) |
@@ -147,6 +159,7 @@ Not all MCUs have all Ports/Pins physically available.
 |    29 |                 |               | 13 PWM      (PD5) |
 |    30 |                 |               | 14 PWM      (PD6) |
 |    31 |                 |               | 15 PWM      (PD7) |
+| ----- | --------------- | ------------- | ----------------- |
 ```
 
 #####Information about this library itself (advanced):

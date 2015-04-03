@@ -21,10 +21,10 @@
  This library is not compatible with SoftSerial.
 
  The following pins are usable for PinChangeInterrupt:
- Arduino Uno: All pins are usable
+ Arduino Uno/Nano/Mini: All pins are usable
  Arduino Mega: 10, 11, 12, 13, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64),
                A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
- Arduino Leonardo: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
+ Arduino Leonardo/Micro: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
  HoodLoader2: All (broken out 1-7) pins are usable
  Attiny 24/44/84: All pins are usable
  Attiny 25/45/85: All pins are usable
