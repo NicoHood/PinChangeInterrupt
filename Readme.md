@@ -16,7 +16,7 @@ PinChangeInterrupts are different than normal Interrupts. See detail below.
 * Full Port0-3 support
 * .a linkage optimization
 
-#####Supported pins for PinChangeInterrupt:
+####Supported pins for PinChangeInterrupt:
 See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangeinterrupt-table) at the bottom for more details.
 
 ```
@@ -169,19 +169,19 @@ The library uses weak callback functions that are called for the triggered pins(
 This way we can easily skip not triggered pins (I looked at the assembler) and also implement a fast LowLevel version.
 
 Also the order of the function execution is (normally) ordered from the lower pin number to the higher.
-Meaning pin 8 will be checked faster as pin 13. Talking about micro seconds here! You can change the order in the settings.
-For example by default pin 0-3 have a low priority order than pin 4-7. Because they are used for Serial and normal PinChangeInterrupts.
+Meaning pin 8 will be checked faster as pin 13 (Arduino Uno). Talking about micro seconds here! You can change the order in the settings.
+For example by default pin 0-3 have a low priority order than pin 4-7 (Arduino Uno). Because they are used for Serial and normal PinInterrupts.
 I don't expect anyone to use those pins at all with PCINT but at least the priority is lowered compared to the other pins.
 
-The API takes those functions and just overwrites all of them and call the function pointers of the attached functions instead.
+The API takes those weak functions and just overwrites all of them and call the function pointers of the attached functions instead.
 This way the function can be changed at runtime and its also easier to integrate into other libraries.
 The function pointers take a bit flash though (LowLevel: 1526/18, API: 1790/58 for Led example).
 
-You can get better performance and less code size if you deactivate the not used pins/ports manually.
+You can get better performance and less code size if you deactivate the not used pins/ports manually in the settings file.
 This way only the needed pins get compiled and the code is optimized by the preprocessor.
-For a bit more comfortable/automatic optimization you can [install the library into the core]()
+For a bit more comfortable/automatic optimization you can [install the library into the core](https://github.com/NicoHood/PinChangeInterrupt/#optional-installation)
 to get use of the .a linkage. This way only the used ports get compiled.
-So if you only use pins on a single port (eg 8-13) then only this port get compiled. This only works with the core installation.
+So if you only use pins on a single port (eg 8-13) then only this port gets compiled. This only works with the core installation.
 
 
 That's it! I hope you like the library. I tried to make it as simple and small as possible.
@@ -195,7 +195,6 @@ Version History
 1.2 Release (xx.xx.2015)
 * Added weak interrupt function
 * Improved interrupt function calls
-* Changed the digitalPinToPinChangeInterrupt(p) macro
 * Fixed attach/detach array position when ports are deactivated
 * Improved manual PCINT deactivation by user
 * Improved definitions for different boards
