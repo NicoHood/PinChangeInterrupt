@@ -77,6 +77,31 @@ See the notes in the examples about more details.
 An useful "real use" example of the PinChangeInterrupt library can be found here:
 https://github.com/NicoHood/IRLremote
 
+###API Reference
+
+#####`void attachPinChangeInterrupt(const uint8_t pcintNum, void(*userFunc)(void), const uint8_t mode)`
+Attaches a user function to a specific pin. The pin number has to be a pcint number.
+It is recommended to use the digitalPinToPinChangeInterrupt(p) makro with this function.
+Valid modes are `RISING`, `FALLING` and `CHANGE`.
+After this function is called all interrupts on the selected pin will execute the attached function.
+For the LowLevel mode no user function is required.
+`attachPCINT` is an equivalent alias.
+
+#####`void detachPinChangeInterrupt(const uint8_t pcintNum)`
+Detaches the pin and its user function. Interrupts will no longer occur for this pin.
+Call the attachPinChangeInterrupt() function again to reactivate any interrupt.
+It is recommended to use the digitalPinToPinChangeInterrupt(p) makro with this function.
+`detachPCINT` is an equivalent alias.
+
+#####`digitalPinToPinChangeInterrupt(p)`
+Makro to convert a pin to its PCINT number. Only input valid PCINT pins or it won't work.
+`digitalPinToPCINT` is an equivalent alias.
+
+#####`PinChangeInterruptEvent(n)`
+LowLevel function that is called when an interrupt occurs for a specific PCINT.
+It is required to know the exact PCINT number, no Arduino pin number will work here.
+See LowLevel example for more information.
+`PCINTEvent(n)` is an equivalent alias.
 
 PinchangeInterrupt Table
 ========================
@@ -88,35 +113,35 @@ Not all MCUs have all Ports/Pins physically available.
 
 ####Official Arduinos
 ```
-| PCINT |  Uno/Nano/Mini  |   Mega/2560    | Leonardo/Micro | HoodLoader2 (16u2)|
-| ----- | --------------- | -------------- | -------------- | -------------- |
-|     0 |  8       (PB0)  | 53 SS   (PB0)  |    SS   (PB0)* |  0 SS   (PB0)* |
-|     1 |  9       (PB1)  | 52 SCK  (PB1)  |    SCK  (PB1)  |  1 SCK  (PB1)  |
-|     2 | 10 SS    (PB2)  | 51 MOSI (PB2)  |    MOSI (PB2)  |  2 MOSI (PB2)  |
-|     3 | 11 MISO  (PB3)  | 50 MISO (PB3)  |    MISO (PB3)  |  3 MISO (PB3)  |
-|     4 | 12 MOSI  (PB4)  | 10      (PB4)  |  8/A8   (PB4)  |  4      (PB4)  |
-|     5 | 13 SCK   (PB5)  | 11      (PB5)  |  9/A9   (PB5)  |  5      (PB5)  |
-|     6 |    XTAL1 (PB6)* | 12      (PB6)  | 10/A10  (PB6)  |  6      (PB6)  |
-|     7 |    XTAL2 (PB7)* | 13      (PB7)  | 11      (PB7)  |  7      (PB7)  |
-| ----- | --------------- | -------------- | -------------- | -------------- |
-|     8 | A0       (PC0)  |  0 RX   (PE0)* |                |         (PC6)* |
-|     9 | A1       (PC1)  | 15 RX3  (PJ0)* |                |         (PC5)* |
-|    10 | A2       (PC2)  | 14 TX3  (PJ1)* |                |         (PC4)* |
-|    11 | A3       (PC3)  |    NC   (PJ2)* |                |         (PC2)* |
-|    12 | A4 SDA   (PC4)  |    NC   (PJ3)* |                |         (PD5)* |
-|    13 | A5 SDC   (PC5)  |    NC   (PJ4)* |                |                |
-|    14 |    RST   (PC6)* |    NC   (PJ5)* |                |                |
-|    15 |                 |    NC   (PJ6)* |                |                |
-| ----- | --------------- | -------------- | -------------- | -------------- |
-|    16 |  0 RX    (PD0)  | A8      (PK0)  |                |                |
-|    17 |  1 TX    (PD1)  | A9      (PK1)  |                |                |
-|    18 |  2 INT0  (PD2)  | A10     (PK2)  |                |                |
-|    19 |  3 INT1  (PD3)  | A11     (PK3)  |                |                |
-|    20 |  4       (PD4)  | A12     (PK4)  |                |                |
-|    21 |  5       (PD5)  | A13     (PK5)  |                |                |
-|    22 |  6       (PD6)  | A14     (PK6)  |                |                |
-|    23 |  7       (PD7)  | A15     (PK7)  |                |                |
-| ----- | --------------- | -------------- | -------------- | -------------- |
+| PCINT |  Uno/Nano/Mini  |   Mega/2560    | Leonardo/Micro | HL2 (8/16/32u2) |
+| ----- | --------------- | -------------- | -------------- | --------------- |
+|     0 |  8       (PB0)  | 53 SS   (PB0)  |    SS   (PB0)* |  0 SS   (PB0)*  |
+|     1 |  9       (PB1)  | 52 SCK  (PB1)  |    SCK  (PB1)  |  1 SCK  (PB1)   |
+|     2 | 10 SS    (PB2)  | 51 MOSI (PB2)  |    MOSI (PB2)  |  2 MOSI (PB2)   |
+|     3 | 11 MISO  (PB3)  | 50 MISO (PB3)  |    MISO (PB3)  |  3 MISO (PB3)   |
+|     4 | 12 MOSI  (PB4)  | 10      (PB4)  |  8/A8   (PB4)  |  4      (PB4)   |
+|     5 | 13 SCK   (PB5)  | 11      (PB5)  |  9/A9   (PB5)  |  5      (PB5)   |
+|     6 |    XTAL1 (PB6)* | 12      (PB6)  | 10/A10  (PB6)  |  6      (PB6)   |
+|     7 |    XTAL2 (PB7)* | 13      (PB7)  | 11      (PB7)  |  7      (PB7)   |
+| ----- | --------------- | -------------- | -------------- | --------------- |
+|     8 | A0       (PC0)  |  0 RX   (PE0)* |                |         (PC6)*  |
+|     9 | A1       (PC1)  | 15 RX3  (PJ0)* |                |         (PC5)*  |
+|    10 | A2       (PC2)  | 14 TX3  (PJ1)* |                |         (PC4)*  |
+|    11 | A3       (PC3)  |    NC   (PJ2)* |                |         (PC2)*  |
+|    12 | A4 SDA   (PC4)  |    NC   (PJ3)* |                |         (PD5)*  |
+|    13 | A5 SDC   (PC5)  |    NC   (PJ4)* |                |                 |
+|    14 |    RST   (PC6)* |    NC   (PJ5)* |                |                 |
+|    15 |                 |    NC   (PJ6)* |                |                 |
+| ----- | --------------- | -------------- | -------------- | --------------- |
+|    16 |  0 RX    (PD0)  | A8      (PK0)  |                |                 |
+|    17 |  1 TX    (PD1)  | A9      (PK1)  |                |                 |
+|    18 |  2 INT0  (PD2)  | A10     (PK2)  |                |                 |
+|    19 |  3 INT1  (PD3)  | A11     (PK3)  |                |                 |
+|    20 |  4       (PD4)  | A12     (PK4)  |                |                 |
+|    21 |  5       (PD5)  | A13     (PK5)  |                |                 |
+|    22 |  6       (PD6)  | A14     (PK6)  |                |                 |
+|    23 |  7       (PD7)  | A15     (PK7)  |                |                 |
+| ----- | --------------- | -------------- | -------------- | --------------- |
 ```
 
 ####Other Atmel MCUs

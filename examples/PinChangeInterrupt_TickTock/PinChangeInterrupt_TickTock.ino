@@ -55,7 +55,7 @@ void loop() {
 
   // print values
   Serial.print(i, DEC);
-  Serial.print(" ");
+  Serial.print(F(" "));
   Serial.println(ticktocks);
 
   // abort if we printed 100 times
