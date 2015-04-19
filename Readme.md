@@ -79,7 +79,7 @@ https://github.com/NicoHood/IRLremote
 
 ###API Reference
 
-#####`void attachPinChangeInterrupt(const uint8_t pcintNum, void(*userFunc)(void), const uint8_t mode)`
+#####`void attachPinChangeInterrupt(uint8_t pcintNum, void(*userFunc)(void), uint8_t mode)`
 Attaches a user function to a specific pin. The pin number has to be a pcint number.
 It is recommended to use the digitalPinToPinChangeInterrupt(p) makro with this function.
 Valid modes are `RISING`, `FALLING` and `CHANGE`.
@@ -87,7 +87,7 @@ After this function is called all interrupts on the selected pin will execute th
 For the LowLevel mode no user function is required.
 `attachPCINT` is an equivalent alias.
 
-#####`void detachPinChangeInterrupt(const uint8_t pcintNum)`
+#####`void detachPinChangeInterrupt(uint8_t pcintNum)`
 Detaches the pin and its user function. Interrupts will no longer occur for this pin.
 Call the attachPinChangeInterrupt() function again to reactivate any interrupt.
 It is recommended to use the digitalPinToPinChangeInterrupt(p) makro with this function.
@@ -230,6 +230,7 @@ Version History
 * Updated examples
 * Added API and LowLevel
 * Added Port3 support (ATmega644P/ATmega1284P)
+* Added PCINT_VERSION definition
 
 1.1 Release (06.12.2014)
 * Added port deactivation

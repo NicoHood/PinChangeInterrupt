@@ -25,6 +25,9 @@ THE SOFTWARE.
 #ifndef PINCHANGEINTERRUPT_H
 #define PINCHANGEINTERRUPT_H
 
+// software version
+#define PCINT_VERSION 120
+
 #include "Arduino.h"
 
 //================================================================================
