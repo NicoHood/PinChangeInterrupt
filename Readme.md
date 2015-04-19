@@ -217,7 +217,7 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
-1.2 Release (xx.xx.2015)
+1.2 Release (19.04.2015)
 * Added weak interrupt function
 * Improved interrupt function calls
 * Fixed attach/detach array position when ports are deactivated
