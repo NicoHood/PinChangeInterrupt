@@ -21,8 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef PINCHANGEINTERRUPTPINS_H
-#define PINCHANGEINTERRUPTPINS_H
+#pragma once // include guard
 
 /*
 The strategy in this file:
@@ -708,5 +707,3 @@ PCINT_USE_PORT0 + \
 PCINT_USE_PORT1 + \
 PCINT_USE_PORT2 + \
 PCINT_USE_PORT3)
-
-#endif // include guard

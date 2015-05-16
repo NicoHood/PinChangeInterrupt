@@ -21,9 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
-#ifndef PINCHANGEINTERRUPTSETTINGS_H
-#define PINCHANGEINTERRUPTSETTINGS_H
+#pragma once // include guard
 
 //================================================================================
 // General Settings
@@ -222,5 +220,3 @@ The order is also okay. */
 #undef PCINT_ENABLE_PCINT1
 #endif
 #endif
-
-#endif // include guard

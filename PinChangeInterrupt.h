@@ -21,14 +21,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
-#ifndef PINCHANGEINTERRUPT_H
-#define PINCHANGEINTERRUPT_H
+// include guard
+#pragma once
 
 // software version
 #define PCINT_VERSION 120
 
 #include "Arduino.h"
+
+#ifdef ARDUINO_ARCH_ARM
+#error This library can only be used with AVR
+#endif
 
 //================================================================================
 // General Helper Definitions and Mappings
@@ -134,7 +137,7 @@ extern uint8_t risingPorts[PCINT_NUM_USED_PORTS];
 
 
 static inline uint8_t getArrayPosPCINT(uint8_t pcintPort)__attribute__((alway_inline));
-static inline uint8_t getArrayPosPCINT(uint8_t pcintPort){
+static inline uint8_t getArrayPosPCINT(uint8_t pcintPort) {
 	/*
 	Maps the port to the array.
 	This is needed since you can deactivate ports
@@ -146,49 +149,49 @@ static inline uint8_t getArrayPosPCINT(uint8_t pcintPort){
 	That's why the function is inline.
 	*/
 
-	if (PCINT_NUM_USED_PORTS == 1){
+	if (PCINT_NUM_USED_PORTS == 1) {
 		// only the first element is used for a single port
 		return 0;
 	}
-	else if (PCINT_NUM_USED_PORTS == PCINT_NUM_PORTS){
+	else if (PCINT_NUM_USED_PORTS == PCINT_NUM_PORTS) {
 		// use all ports and down remap the array position.
 		return pcintPort;
 	}
-	else if (PCINT_NUM_PORTS - PCINT_NUM_USED_PORTS == 1){
+	else if (PCINT_NUM_PORTS - PCINT_NUM_USED_PORTS == 1) {
 		// one port is not used
-		if (PCINT_USE_PORT0 == 0){
+		if (PCINT_USE_PORT0 == 0) {
 			// first port is not used, decrease all port numbers
 			return (pcintPort - 1);
 		}
-		else if (PCINT_HAS_PORT3 == 0){
+		else if (PCINT_HAS_PORT3 == 0) {
 			// 3 ports (standard)
-			if (PCINT_USE_PORT2 == 0){
+			if (PCINT_USE_PORT2 == 0) {
 				// last port not used, no mapping needed
 				return pcintPort;
 			}
-			else{
+			else {
 				// worst case, port in the middle not used, remap
 				return ((pcintPort >> 1) & 0x01);
 				//if (pcintPort == 0) return 0;
 				//else return 1;
 			}
 		}
-		else{
+		else {
 			// 4 ports (special case for a few AVRs)
-			if (PCINT_USE_PORT3 == 0){
+			if (PCINT_USE_PORT3 == 0) {
 				// last port not used, no mapping needed
 				return pcintPort;
 			}
-			else{
+			else {
 				// worst case, one of two ports in the middle not used, remap
-				if (PCINT_USE_PORT1 == 0){
+				if (PCINT_USE_PORT1 == 0) {
 					// port1 not used, mapping needed
 					if (pcintPort == 0)
 						return 0;
 					else
 						return pcintPort - 1;
 				}
-				else if (PCINT_USE_PORT2 == 0){
+				else if (PCINT_USE_PORT2 == 0) {
 					// port2 not used, mapping needed
 					if (pcintPort == 3)
 						return 2;
@@ -201,28 +204,28 @@ static inline uint8_t getArrayPosPCINT(uint8_t pcintPort){
 		// use all ports and down remap the array position.
 		return pcintPort;
 	}
-	else if (PCINT_NUM_PORTS - PCINT_NUM_USED_PORTS == 2){
-		if (PCINT_USE_PORT2 == 0 && PCINT_USE_PORT3 == 0){
+	else if (PCINT_NUM_PORTS - PCINT_NUM_USED_PORTS == 2) {
+		if (PCINT_USE_PORT2 == 0 && PCINT_USE_PORT3 == 0) {
 			// no need for mapping
 			return pcintPort;
 		}
-		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT3 == 0){
+		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT3 == 0) {
 			// 1 offset
 			return (pcintPort - 1);
 		}
-		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT1 == 0){
+		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT1 == 0) {
 			// 2 offset
 			return (pcintPort - 2);
 		}
-		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT2 == 0){
+		else if (PCINT_USE_PORT0 == 0 && PCINT_USE_PORT2 == 0) {
 			// 2 -> 1
-			return (pcintPort >>1);
+			return (pcintPort >> 1);
 		}
-		else if (PCINT_USE_PORT1 == 0 && PCINT_USE_PORT2 == 0){
+		else if (PCINT_USE_PORT1 == 0 && PCINT_USE_PORT2 == 0) {
 			// 3 -> 1
 			return (pcintPort >> 1);
 		}
-		else if (PCINT_USE_PORT1 == 0 && PCINT_USE_PORT3 == 0){
+		else if (PCINT_USE_PORT1 == 0 && PCINT_USE_PORT3 == 0) {
 			// 3 -> 1, 1 -> 0
 			return (pcintPort >> 1);
 		}
@@ -350,7 +353,8 @@ extern volatile callback callbackPCINT30;
 #endif
 #if (PCINT_USE_PCINT31 == true)
 extern volatile callback callbackPCINT31;
-#endif
+#endif
+
 /*
 for (int i = 0; i < 32; i++) {
 Serial.print("#if (PCINT_USE_PCINT");
@@ -379,14 +383,14 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	uint8_t pcintBit = pcintNum % 8;
 
 	// port 0
-	if (pcintPort == 0 && PCINT_USE_PORT0 == true){
+	if (pcintPort == 0 && PCINT_USE_PORT0 == true) {
 		// use fake functions to make the ISRs compile with .a linkage
 #if defined(PCINT_ALINKAGE) && !defined(PCINT_COMPILE_ENABLED_ISR)
 		attachPinChangeInterrupt0();
 #endif
 
 		//  attache the function pointers for the API
-#if defined(PCINT_API)		
+#if defined(PCINT_API)
 #if (PCINT_USE_PCINT0 == true)
 		if (pcintNum == 0)
 			callbackPCINT0 = userFunc;
@@ -423,7 +427,7 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	}
 
 	// port 1
-	else if (pcintPort == 1 && PCINT_USE_PORT1 == true){
+	else if (pcintPort == 1 && PCINT_USE_PORT1 == true) {
 		// use fake functions to make the ISRs compile with .a linkage
 #if defined(PCINT_ALINKAGE) && !defined(PCINT_COMPILE_ENABLED_ISR)
 		attachPinChangeInterrupt1();
@@ -467,7 +471,7 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	}
 
 	// port 2
-	else if (pcintPort == 2 && PCINT_USE_PORT2 == true){
+	else if (pcintPort == 2 && PCINT_USE_PORT2 == true) {
 		// use fake functions to make the ISRs compile with .a linkage
 #if defined(PCINT_ALINKAGE) && !defined(PCINT_COMPILE_ENABLED_ISR)
 		attachPinChangeInterrupt2();
@@ -510,7 +514,7 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	}
 
 	// port 3
-	else if (pcintPort == 3 && PCINT_USE_PORT3 == true){
+	else if (pcintPort == 3 && PCINT_USE_PORT3 == true) {
 		// use fake functions to make the ISRs compile with .a linkage
 #if defined(PCINT_ALINKAGE) && !defined(PCINT_COMPILE_ENABLED_ISR)
 		attachPinChangeInterrupt3();
@@ -548,7 +552,8 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 #if (PCINT_USE_PCINT31 == true)
 		if (pcintNum == 31)
 			callbackPCINT31 = userFunc;
-#endif#endif // PCINT_API
+#endif
+#endif // PCINT_API
 	}
 	else return;
 
@@ -568,19 +573,19 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	uint8_t pcintBit = pcintNum % 8;
 
 	// check if pcint is a valid pcint, exclude deactivated ports
-	if (pcintPort == 0){
+	if (pcintPort == 0) {
 		if (PCINT_USE_PORT0 == false)
 			return;
 	}
-	else if (pcintPort == 1){
+	else if (pcintPort == 1) {
 		if (PCINT_USE_PORT1 == false)
 			return;
 	}
-	else if (pcintPort == 2){
+	else if (pcintPort == 2) {
 		if (PCINT_USE_PORT2 == false)
 			return;
 	}
-	else if (pcintPort == 3){
+	else if (pcintPort == 3) {
 		if (PCINT_USE_PORT3 == false)
 			return;
 	}
@@ -589,5 +594,3 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	// call the actual hardware detach function
 	detachPinChangeInterruptHelper(pcintPort, pcintBit);
 }
-
-#endif // include guard
