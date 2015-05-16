@@ -114,7 +114,13 @@ void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 	*(&PCMSK0 + pcintPort) |= pcintMask;
 
 	// PCICR: Pin Change Interrupt Control Register - enables interrupt vectors
-	PCICR |= (1 << pcintPort);
+#ifdef PCICR
+	PCICR |= (1  << (pcintPort + PCIE0));
+#elif defined(GIMSK)
+	GIMSK |= (1  << (pcintPort + PCIE0));
+#else
+#error MCU has no such a register
+#endif
 }
 
 void detachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit) {
@@ -131,12 +137,18 @@ void detachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 
 	// if that's the last one, disable the interrupt.
 	if (*(&PCMSK0 + pcintPort) == 0)
-		PCICR &= ~(1 << pcintPort);
+#ifdef PCICR
+		PCICR &= ~(1  << (pcintPort + PCIE0));
+#elif defined(GIMSK)
+		GIMSK &= ~(1  << (pcintPort + PCIE0));
+#else
+#error MCU has no such a register
+#endif
 }
 
-
-// asm output (nothing to optimize here)
 /*
+asm output (nothing to optimize here)
+
 ISR(PCINT0_vect) {
 push r1
 push r0
