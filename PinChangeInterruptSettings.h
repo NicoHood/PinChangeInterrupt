@@ -177,7 +177,7 @@ PCINT_CALLBACK(3, 3); /* SPI MOSI */
 #endif
 
 // Hoodloader2 (u2 Series)
-#if defined(__AVR_AT90USB82__) || defined(__AVR_AT90USB162__) || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega8U2__) 
+#if defined(__AVR_AT90USB82__) || defined(__AVR_AT90USB162__) || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega8U2__)
 #if defined(ARDUINO_HOODLOADER2)
 // on HoodLoader2 Arduino boards only PB1-7 (port0) is broken out, save this flash
 #if defined(PCINT_ENABLE_PORT1)
