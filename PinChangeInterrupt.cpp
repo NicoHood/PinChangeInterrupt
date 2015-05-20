@@ -111,13 +111,19 @@ void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 	oldPorts[arrayPos] = *portInputRegister(pcintPort);
 
 	// pin change mask registers decide which pins are ENABLE as triggers
+#ifdef PCMSK0
 	*(&PCMSK0 + pcintPort) |= pcintMask;
+#elif defined(PCMSK)
+	*(&PCMSK + pcintPort) |= pcintMask;
+#endif
 
 	// PCICR: Pin Change Interrupt Control Register - enables interrupt vectors
 #ifdef PCICR
 	PCICR |= (1  << (pcintPort + PCIE0));
-#elif defined(GIMSK)
+#elif defined(GIMSK) && defined(PCIE0) /* e.g. ATtiny X4 */
 	GIMSK |= (1  << (pcintPort + PCIE0));
+#elif defined(GIMSK) && defined(PCIE) /* e.g. ATtiny X5 */
+	GIMSK |= (1  << (pcintPort + PCIE));
 #else
 #error MCU has no such a register
 #endif
@@ -132,15 +138,25 @@ void detachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 	risingPorts[arrayPos] &= ~pcintMask;
 	fallingPorts[arrayPos] &= ~pcintMask;
 
+#ifdef PCMSK0
 	// disable the mask.
 	*(&PCMSK0 + pcintPort) &= ~pcintMask;
 
 	// if that's the last one, disable the interrupt.
 	if (*(&PCMSK0 + pcintPort) == 0)
+#elif defined(PCMSK)
+	// disable the mask.
+	*(&PCMSK + pcintPort) &= ~pcintMask;
+
+	// if that's the last one, disable the interrupt.
+	if (*(&PCMSK + pcintPort) == 0)
+#endif
 #ifdef PCICR
 		PCICR &= ~(1  << (pcintPort + PCIE0));
-#elif defined(GIMSK)
+#elif defined(GIMSK) && defined(PCIE0) /* e.g. ATtiny X4 */
 		GIMSK &= ~(1  << (pcintPort + PCIE0));
+#elif defined(GIMSK) && defined(PCIE) /* e.g. ATtiny X5 */
+		GIMSK &= ~(1  << (pcintPort + PCIE));
 #else
 #error MCU has no such a register
 #endif
