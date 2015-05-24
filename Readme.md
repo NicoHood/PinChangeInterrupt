@@ -221,7 +221,7 @@ Version History
 * Fix Attiny Issue #1
 * Added enable/disable function
 * Added getPinChangeInterruptTrigger() function
-* Added Arduino IDE board manager files
+* Added to Arduino IDE library manager
 
 1.2 Release (19.04.2015)
 * Added weak interrupt function
