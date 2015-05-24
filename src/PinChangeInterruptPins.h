@@ -21,7 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once // include guard
+// include guard
+#pragma once
 
 /*
 The strategy in this file:
@@ -51,7 +52,9 @@ EXTERNAL_NUM_PINCHANGEINTERRUPT (0-24)
 EXTERNAL_NUM_USED_PINCHANGEINTERRUPT (0-24)
 PCINT_NUM_PORTS (0-3)
 PCINT_NUM_USED_PORTS (0-3)
-*///================================================================================
+*/
+
+//================================================================================
 // Enabled Pins
 //================================================================================
 
@@ -184,7 +187,8 @@ Serial.println();
 #if defined(PCINT_ENABLE_PCINT31)
 #undef PCINT_ENABLE_PCINT31
 #endif
-#endif
+#endif
+
 
 //================================================================================
 // Hardware Definitions
@@ -351,7 +355,8 @@ Serial.println("#endif");
 #define PCINT_HAS_PCINT23 true
 #else
 #define PCINT_HAS_PCINT23 false
-#endif#ifdef PCINT24
+#endif
+#ifdef PCINT24
 #define PCINT_HAS_PCINT24 true
 #else
 #define PCINT_HAS_PCINT24 false
@@ -390,7 +395,12 @@ Serial.println("#endif");
 #define PCINT_HAS_PCINT31 true
 #else
 #define PCINT_HAS_PCINT31 false
-#endif// count numbers of available pins on each port/*for (int port = 0; port < 4; port++) {
+#endif
+
+
+// count numbers of available pins on each port
+/*
+for (int port = 0; port < 4; port++) {
 Serial.print("#define PCINT_NUM_PINS_PORT");
 Serial.print(port);
 Serial.println(" ( \\");
@@ -402,7 +412,9 @@ Serial.println(" + \\");
 }
 Serial.println(")");
 Serial.println();
-}*/#define PCINT_NUM_PINS_PORT0 ( \
+}
+*/
+#define PCINT_NUM_PINS_PORT0 ( \
 PCINT_HAS_PCINT0 + \
 PCINT_HAS_PCINT1 + \
 PCINT_HAS_PCINT2 + \
@@ -430,7 +442,8 @@ PCINT_HAS_PCINT19 + \
 PCINT_HAS_PCINT20 + \
 PCINT_HAS_PCINT21 + \
 PCINT_HAS_PCINT22 + \
-PCINT_HAS_PCINT23)
+PCINT_HAS_PCINT23)
+
 #define PCINT_NUM_PINS_PORT3 ( \
 PCINT_HAS_PCINT24 + \
 PCINT_HAS_PCINT25 + \
@@ -439,10 +452,22 @@ PCINT_HAS_PCINT27 + \
 PCINT_HAS_PCINT28 + \
 PCINT_HAS_PCINT29 + \
 PCINT_HAS_PCINT30 + \
-PCINT_HAS_PCINT31)// number of available hardware pins#define EXTERNAL_NUM_PINCHANGEINTERRUPT ( \PCINT_NUM_PINS_PORT0 + \PCINT_NUM_PINS_PORT1 + \PCINT_NUM_PINS_PORT2 + \PCINT_NUM_PINS_PORT3)
+PCINT_HAS_PCINT31)
+
+
+// number of available hardware pins
+#define EXTERNAL_NUM_PINCHANGEINTERRUPT ( \
+PCINT_NUM_PINS_PORT0 + \
+PCINT_NUM_PINS_PORT1 + \
+PCINT_NUM_PINS_PORT2 + \
+PCINT_NUM_PINS_PORT3)
+
+
 //================================================================================
 // Used Pins
-//================================================================================// check if pins are physically available and enabled
+//================================================================================
+
+// check if pins are physically available and enabled
 /*
 for (int i = 0; i < 32; i++) {
 Serial.print("#if (PCINT_HAS_PCINT");
@@ -619,12 +644,16 @@ Serial.println("#endif");
 #define PCINT_USE_PCINT31 true
 #else
 #define PCINT_USE_PCINT31 false
-#endif
+#endif
+
 
 //================================================================================
 // Number Used Pins
-//================================================================================
-// count numbers of used pins on each port/*for (int port = 0; port < 4; port++) {
+//================================================================================
+
+// count numbers of used pins on each port
+/*
+for (int port = 0; port < 4; port++) {
 Serial.print("#define PCINT_NUM_USED_PINS_PORT");
 Serial.print(port);
 Serial.println(" ( \\");
@@ -636,7 +665,9 @@ Serial.println(" + \\");
 }
 Serial.println(")");
 Serial.println();
-}*/#define PCINT_NUM_USED_PINS_PORT0 ( \
+}
+*/
+#define PCINT_NUM_USED_PINS_PORT0 ( \
 PCINT_USE_PCINT0 + \
 PCINT_USE_PCINT1 + \
 PCINT_USE_PCINT2 + \
@@ -674,11 +705,20 @@ PCINT_USE_PCINT27 + \
 PCINT_USE_PCINT28 + \
 PCINT_USE_PCINT29 + \
 PCINT_USE_PCINT30 + \
-PCINT_USE_PCINT31)
+PCINT_USE_PCINT31)
 
-// number of used hardware pins#define EXTERNAL_NUM_USED_PINCHANGEINTERRUPT ( \PCINT_NUM_USED_PINS_PORT0 + \PCINT_NUM_USED_PINS_PORT1 + \PCINT_NUM_USED_PINS_PORT2 + \PCINT_NUM_USED_PINS_PORT3)//================================================================================
+
+// number of used hardware pins
+#define EXTERNAL_NUM_USED_PINCHANGEINTERRUPT ( \
+PCINT_NUM_USED_PINS_PORT0 + \
+PCINT_NUM_USED_PINS_PORT1 + \
+PCINT_NUM_USED_PINS_PORT2 + \
+PCINT_NUM_USED_PINS_PORT3)
+
+//================================================================================
 // Used Ports
-//================================================================================
+//================================================================================
+
 // check if ports are used
 #if PCINT_NUM_USED_PINS_PORT0
 #define PCINT_USE_PORT0 true

@@ -25,7 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 // software version
-#define PCINT_VERSION 120
+#define PCINT_VERSION 121
 
 #include "Arduino.h"
 
@@ -84,7 +84,12 @@ PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 #define PCINTEvent(n) PinChangeInterruptEvent_Wrapper(n)
 #define digitalPinToPCINT digitalPinToPinChangeInterrupt
 #define attachPCINT attachPinChangeInterrupt
+#define enablePCINT enablePinChangeInterrupt
 #define detachPCINT detachPinChangeInterrupt
+// detach does not delete the function, so we can use this for detaching as well
+#define disablePCINT detachPinChangeInterrupt
+#define disablePinChangeInterrupt detachPinChangeInterrupt
+#define getPCINTTrigger getPinChangeInterruptTrigger
 
 //================================================================================
 // Function Prototypes + Variables
@@ -560,6 +565,38 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	// call the actual hardware attach function
 	attachPinChangeInterruptHelper(pcintPort, pcintBit, mode);
 }
+
+// enable interrupt again if temporary disabled
+static void enablePinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) __attribute__((always_inline));
+void enablePinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
+	// get PCINT registers
+	uint8_t pcintPort = pcintNum / 8;
+	uint8_t pcintBit = pcintNum % 8;
+
+	// check if pcint is a valid pcint, exclude deactivated ports
+	if (pcintPort == 0) {
+		if (PCINT_USE_PORT0 == false)
+			return;
+	}
+	else if (pcintPort == 1) {
+		if (PCINT_USE_PORT1 == false)
+			return;
+	}
+	else if (pcintPort == 2) {
+		if (PCINT_USE_PORT2 == false)
+			return;
+	}
+	else if (pcintPort == 3) {
+		if (PCINT_USE_PORT3 == false)
+			return;
+	}
+	else return;
+
+	// call the actual hardware attach function
+	attachPinChangeInterruptHelper(pcintPort, pcintBit, mode);
+}
+
+
 //================================================================================
 // Detach Function (partly inlined)
 //================================================================================
@@ -593,4 +630,43 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 
 	// call the actual hardware detach function
 	detachPinChangeInterruptHelper(pcintPort, pcintBit);
+}
+
+
+//================================================================================
+// getTrigger Function (inlined)
+//================================================================================
+
+static uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) __attribute__((always_inline));
+uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) {
+	// get PCINT registers
+	uint8_t pcintPort = pcintNum / 8;
+	uint8_t pcintBit = pcintNum % 8;
+
+	// check if pcint is a valid pcint, exclude deactivated ports
+	if (pcintPort == 0) {
+		if (PCINT_USE_PORT0 == false)
+			return CHANGE;
+	}
+	else if (pcintPort == 1) {
+		if (PCINT_USE_PORT1 == false)
+			return CHANGE;
+	}
+	else if (pcintPort == 2) {
+		if (PCINT_USE_PORT2 == false)
+			return CHANGE;
+	}
+	else if (pcintPort == 3) {
+		if (PCINT_USE_PORT3 == false)
+			return CHANGE;
+	}
+	else return CHANGE;
+
+	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
+
+	// specify the CHANGE mode
+	if (oldPorts[arrayPos] & (1 << pcintBit))
+		return RISING;
+	else
+		return FALLING;
 }

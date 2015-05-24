@@ -1,5 +1,5 @@
-PinChangeInterrupt Library 1.2
-==============================
+PinChangeInterrupt Library 1.2.1
+================================
 
 ![Header Picture](header.png)
 
@@ -217,6 +217,12 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
+1.2.1 Release (24.05.2015)
+* Fix Attiny Issue #1
+* Added enable/disable function
+* Added getPinChangeInterruptTrigger() function
+* Added Arduino IDE board manager files
+
 1.2 Release (19.04.2015)
 * Added weak interrupt function
 * Improved interrupt function calls
