@@ -49,7 +49,7 @@ How to use
 It is important that you know at least the basic difference between **PinInterrupts** and **PinChangeInterrupts**.
 I will explain the basics of **PinChangeInterrupts** (PCINTs) based on an Arduino Uno.
 
-On a standard Arduino Pin 2 and 3 have **PinInterrupts**. Those are exclusively for a single pin and can detect RISING, FALLING and CHANGE.
+On a standard Arduino Uno Pin 2 and 3 have **PinInterrupts**. Those are exclusively for a single pin and can detect RISING, FALLING and CHANGE.
 
 **PinChangeInterrupts** instead are used for a whole port (they should have better named them PortChangeInterrupts) and can only detect CHANGE for a whole port.
 Each pin row (0-7, 8-13, A0-A5) represents a port. If an interrupt (ISR) occurs on one pin of a port
