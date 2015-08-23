@@ -30,7 +30,9 @@ See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangei
  ATmega644P/ATmega1284P: All pins are usable 
 ```
 
-**[Comment for feedback on my blog.](http://www.nicohood.de)**
+Contact information can be found here:
+
+www.nicohood.de
 
 Installation
 ============
