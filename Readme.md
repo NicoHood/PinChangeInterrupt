@@ -25,9 +25,10 @@ See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangei
                A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
  Arduino Leonardo/Micro: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
  HoodLoader2: All (broken out 1-7) pins are usable
- Attiny 24/44/84: All pins are usable  
- Attiny 25/45/85: All pins are usable 
- ATmega644P/ATmega1284P: All pins are usable 
+ Attiny 24/44/84: All pins are usable 
+ Attiny 25/45/85: All pins are usable
+ Attiny 13: All pins are usable
+ ATmega644P/ATmega1284P: All pins are usable
 ```
 
 **[Comment for feedback on my blog.](http://www.nicohood.de)**
@@ -147,7 +148,7 @@ Not all MCUs have all Ports/Pins physically available.
 ####Other Atmel MCUs
 
 ```
-| PCINT |  Attiny13A   |    Attiny x4    |   Attiny x5   | ATmega644P/1284P  |
+| PCINT |   Attiny13   |    Attiny x4    |   Attiny x5   | ATmega644P/1284P  |
 | ----- | ------------ | --------------- | ------------- | ----------------- |
 |     0 | 0 MOSI (PB0) |  0       (PA0)  | 0 MOSI  (PB0) | A0/D24      (PA0) |
 |     1 | 1 MISO (PB1) |  1       (PA1)  | 1 MISO  (PB1) | A1/D25      (PA1) |
@@ -184,7 +185,7 @@ Not all MCUs have all Ports/Pins physically available.
 |    29 |              |                 |               | 13 PWM      (PD5) |
 |    30 |              |                 |               | 14 PWM      (PD6) |
 |    31 |              |                 |               | 15 PWM      (PD7) |
-| ----- |              | --------------- | ------------- | ----------------- |
+| ----- | ------------ | --------------- | ------------- | ----------------- |
 ```
 
 Developer Information
@@ -218,7 +219,7 @@ Version History
 ===============
 ```
 1.2.2 Release (xx.xx.2015)
-* Added Attiny13A support Issue #4
+* Added Attiny13 support Issue #4
 * Updated documentation
 
 1.2.1 Release (24.05.2015)
