@@ -31,7 +31,9 @@ See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangei
  ATmega644P/ATmega1284P: All pins are usable
 ```
 
-**[Comment for feedback on my blog.](http://www.nicohood.de)**
+Contact information can be found here:
+
+www.nicohood.de
 
 Installation
 ============
@@ -50,7 +52,7 @@ How to use
 It is important that you know at least the basic difference between **PinInterrupts** and **PinChangeInterrupts**.
 I will explain the basics of **PinChangeInterrupts** (PCINTs) based on an Arduino Uno.
 
-On a standard Arduino Pin 2 and 3 have **PinInterrupts**. Those are exclusively for a single pin and can detect RISING, FALLING and CHANGE.
+On a standard Arduino Uno Pin 2 and 3 have **PinInterrupts**. Those are exclusively for a single pin and can detect RISING, FALLING and CHANGE.
 
 **PinChangeInterrupts** instead are used for a whole port (they should have better named them PortChangeInterrupts) and can only detect CHANGE for a whole port.
 Each pin row (0-7, 8-13, A0-A5) represents a port. If an interrupt (ISR) occurs on one pin of a port
@@ -80,29 +82,68 @@ https://github.com/NicoHood/IRLremote
 
 ###API Reference
 
-#####`void attachPinChangeInterrupt(uint8_t pcintNum, void(*userFunc)(void), uint8_t mode)`
-Attaches a user function to a specific pin. The pin number has to be a pcint number.
-It is recommended to use the digitalPinToPinChangeInterrupt(p) makro with this function.
-Valid modes are `RISING`, `FALLING` and `CHANGE`.
-After this function is called all interrupts on the selected pin will execute the attached function.
-For the LowLevel mode no user function is required.
-`attachPCINT` is an equivalent alias.
+#####Attach a PinChangeInterrupt
+```cpp
+// The pin has to be a PCINT number. Use the makro to convert a pin to a PCINT number.
+// Enables event functions which need to be defined in the sketch.
+// Valid interrupt modes are: RISING, FALLING or CHANGE
+attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick), tick, RISING);
 
-#####`void detachPinChangeInterrupt(uint8_t pcintNum)`
-Detaches the pin and its user function. Interrupts will no longer occur for this pin.
-Call the attachPinChangeInterrupt() function again to reactivate any interrupt.
-It is recommended to use the digitalPinToPinChangeInterrupt(p) makro with this function.
-`detachPCINT` is an equivalent alias.
+// You can also input the PCINT number (see table below)
+attachPinChangeInterrupt(5, tock, FALLING);
 
-#####`digitalPinToPinChangeInterrupt(p)`
-Makro to convert a pin to its PCINT number. Only input valid PCINT pins or it won't work.
-`digitalPinToPCINT` is an equivalent alias.
+// PinChangeInterrupt can always be abbreviated with PCINT
+attachPCINT(digitalPinToPCINT(pinBlink), blinkLed, CHANGE);
+```
 
-#####`PinChangeInterruptEvent(n)`
-LowLevel function that is called when an interrupt occurs for a specific PCINT.
-It is required to know the exact PCINT number, no Arduino pin number will work here.
-See LowLevel example for more information.
-`PCINTEvent(n)` is an equivalent alias.
+#####Detach a PinChangeInterrupt
+```cpp
+// Similar usage as the attachPCINT function.
+// Interrupts will no longer occur.
+detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick));
+detachPinChangeInterrupt(5);
+detachPCINT(digitalPinToPCINT(pinTock));
+```
+
+#####Enable/Disable a PinChangeInterrupt
+```cpp
+// Similar usage as the attachPCINT function.
+// Use this to temporary enable/disable the Interrupt
+disablePinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick));
+disablePinChangeInterrupt(5);
+disablePCINT(digitalPinToPCINT(pinBlink));
+
+// Currently you need to pass the mode to enable again.
+enablePinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick), RISING);
+enablePinChangeInterrupt(5, FALLING);
+enablePCINT(digitalPinToPCINT(pinBlink), CHANGE);
+```
+
+#####Get Trigger on mode CHANGE
+```cpp
+// Differenciate between RISING and FALLING on mode CHANGE.
+// Only use this in the attached interrupt function.
+uint8_t trigger = getPinChangeInterruptTrigger(digitalPinToPCINT(pinTick));
+if(trigger == RISING)
+  // Do something
+else if(trigger == FALLING)
+  // Do something
+else
+  // Wrong usage (trigger == CHANGE)
+```
+
+#####LowLevel API
+See [LowLevel example](examples/PinChangeInterrupt_LowLevel/PinChangeInterrupt_LowLevel.ino) for more details.
+```cpp
+// Use the attach function as you are used to, just leave out the function name
+attachPinChangeInterrupt(interruptBlink, CHANGE);
+
+// LowLevel function that is called when an interrupt occurs for a specific PCINT.
+// It is required to know the exact PCINT number, no Arduino pin number will work here.
+void PinChangeInterruptEvent(5)(void) {
+  // Do something
+}
+```
 
 PinchangeInterrupt Table
 ========================
@@ -146,7 +187,6 @@ Not all MCUs have all Ports/Pins physically available.
 ```
 
 ####Other Atmel MCUs
-
 ```
 | PCINT |   Attiny13   |    Attiny x4    |   Attiny x5   | ATmega644P/1284P  |
 | ----- | ------------ | --------------- | ------------- | ----------------- |
