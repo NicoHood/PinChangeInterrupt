@@ -662,8 +662,11 @@ uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) {
 	}
 	else return CHANGE;
 
-	// TODO check if modes were set. Otherwise return error?
 	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
+
+	// Check if no mode was set, return an error
+	if(!(risingPorts[arrayPos] & (1 << pcintBit)) && !(fallingPorts[arrayPos] & (1 << pcintBit)))
+		return CHANGE;
 
 	// specify the CHANGE mode
 	if (oldPorts[arrayPos] & (1 << pcintBit))
