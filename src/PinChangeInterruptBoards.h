@@ -70,9 +70,16 @@ THE SOFTWARE.
 #define PCINT_INPUT_PORT0 PINB
 #define PCINT_INPUT_PORT1 (((PINC >> 6) & (1 << 0)) | ((PINC >> 4) & (1 << 1)) | ((PINC >> 2) & (1 << 2)) | ((PINC << 1) & (1 << 3)) | ((PIND >> 1) & (1 << 4)))
 
-#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny13__)
-// Attiny x5 and 13A
+#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+// Attiny x5
 #define PCINT_INPUT_PORT0 PINB
+
+#elif defined(__AVR_ATtiny13__)
+// Attiny 13A
+#define PCINT_INPUT_PORT0 PINB
+#ifndef portInputRegister
+#define portInputRegister(P) ( (volatile uint8_t *)( PINB) )
+#endif
 
 #elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
 // Attiny x4
