@@ -78,7 +78,7 @@ THE SOFTWARE.
 // Attiny 13A
 #define PCINT_INPUT_PORT0 PINB
 #ifndef portInputRegister
-#define portInputRegister(P) ( (volatile uint8_t *)( PINB) )
+#define portInputRegister(P) ( (volatile uint8_t *)(PINB) )
 #endif
 
 #elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)

@@ -9,7 +9,7 @@
 
  To maximize speed and size also uncomment all not used pins above.
  Then you could also uncomment "#define PCINT_COMPILE_ENABLED_ISR"
- to get away if the .a linkage overhead.
+ to get away the .a linkage overhead.
 
  Connect a button/cable to pin 7 and ground (Uno).
  Strong overwritten callback functions are called when an interrupt occurs.

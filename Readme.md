@@ -113,10 +113,10 @@ disablePinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick));
 disablePinChangeInterrupt(5);
 disablePCINT(digitalPinToPCINT(pinBlink));
 
-// Currently you need to pass the mode to enable again.
-enablePinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick), RISING);
-enablePinChangeInterrupt(5, FALLING);
-enablePCINT(digitalPinToPCINT(pinBlink), CHANGE);
+// Enable the PCINT with the old settings again (function + mode)
+enablePinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick));
+enablePinChangeInterrupt(5);
+enablePCINT(digitalPinToPCINT(pinBlink));
 ```
 
 #####Get Trigger on mode CHANGE
@@ -258,9 +258,11 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
-1.2.2 Release (xx.xx.2015)
+1.2.2 Release (xx.08.2015)
 * Added Attiny13 support Issue #4
 * Updated documentation
+* Improved detaching function
+* Improved attaching and enabling
 
 1.2.1 Release (24.05.2015)
 * Fix Attiny Issue #1
