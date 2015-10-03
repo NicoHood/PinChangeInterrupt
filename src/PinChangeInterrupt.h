@@ -139,8 +139,8 @@ extern uint8_t fallingPorts[PCINT_NUM_USED_PORTS];
 extern uint8_t risingPorts[PCINT_NUM_USED_PORTS];
 
 
-static inline uint8_t getArrayPosPCINT(uint8_t pcintPort)__attribute__((alway_inline));
-static inline uint8_t getArrayPosPCINT(uint8_t pcintPort) {
+static inline uint8_t getArrayPosPCINT(uint8_t pcintPort) __attribute__((always_inline));
+uint8_t getArrayPosPCINT(uint8_t pcintPort) {
 	/*
 	Maps the port to the array.
 	This is needed since you can deactivate ports
@@ -374,10 +374,10 @@ Serial.println("#endif");
 */
 
 // API attach function
-static void attachPinChangeInterrupt(const uint8_t pcintNum, void(*userFunc)(void), const uint8_t mode) __attribute__((always_inline));
+static inline void attachPinChangeInterrupt(const uint8_t pcintNum, void(*userFunc)(void), const uint8_t mode) __attribute__((always_inline));
 void attachPinChangeInterrupt(const uint8_t pcintNum, void(*userFunc)(void), const uint8_t mode) {
 #else // no API attach function
-static void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) __attribute__((always_inline));
+static inline void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) __attribute__((always_inline));
 void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 #endif // PCINT_API
 
@@ -575,7 +575,7 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 }
 
 // enable interrupt again if temporary disabled
-static void enablePinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
+static inline void enablePinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
 void enablePinChangeInterrupt(const uint8_t pcintNum) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
@@ -612,7 +612,7 @@ void enablePinChangeInterrupt(const uint8_t pcintNum) {
 //================================================================================
 
 void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintMask);
-static void detachPinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
+static inline void detachPinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
 
 void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	// get PCINT registers
@@ -789,7 +789,7 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	disablePinChangeInterruptHelper(pcintPort, pcintMask);
 }
 
-static void disablePinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
+static inline void disablePinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
 void disablePinChangeInterrupt(const uint8_t pcintNum) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
@@ -828,7 +828,7 @@ void disablePinChangeInterrupt(const uint8_t pcintNum) {
 // getTrigger Function (inlined)
 //================================================================================
 
-static uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) __attribute__((always_inline));
+static inline uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) __attribute__((always_inline));
 uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
