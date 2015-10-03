@@ -104,13 +104,21 @@ THE SOFTWARE.
 // add fakes if ports are not used
 #ifndef PCINT_INPUT_PORT0
 #define PCINT_INPUT_PORT0 0
+#else
+#define PCINT_INPUT_PORT0_USED
 #endif
 #ifndef PCINT_INPUT_PORT1
 #define PCINT_INPUT_PORT1 0
+#else
+#define PCINT_INPUT_PORT1_USED
 #endif
 #ifndef PCINT_INPUT_PORT2
 #define PCINT_INPUT_PORT2 0
+#else
+#define PCINT_INPUT_PORT2_USED
 #endif
 #ifndef PCINT_INPUT_PORT3
 #define PCINT_INPUT_PORT3 0
+#else
+#define PCINT_INPUT_PORT3_USED
 #endif

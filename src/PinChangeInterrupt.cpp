@@ -98,7 +98,28 @@ uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 
 void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintMask, const uint8_t arrayPos){
 	// Update the old state to the actual state
-	oldPorts[arrayPos] = *portInputRegister(pcintPort);
+	switch(pcintPort){
+#ifdef PCINT_INPUT_PORT0_USED
+		case 0:
+			oldPorts[arrayPos] = PCINT_INPUT_PORT0;
+		break;
+#endif
+#ifdef PCINT_INPUT_PORT1_USED
+		case 1:
+			oldPorts[arrayPos] = PCINT_INPUT_PORT1;
+		break;
+#endif
+#ifdef PCINT_INPUT_PORT2_USED
+		case 2:
+			oldPorts[arrayPos] = PCINT_INPUT_PORT2;
+		break;
+#endif
+#ifdef PCINT_INPUT_PORT3_USED
+		case 3:
+			oldPorts[arrayPos] = PCINT_INPUT_PORT3;
+		break;
+#endif
+	}
 
 	// Pin change mask registers decide which pins are ENABLE as triggers
 #ifdef PCMSK0

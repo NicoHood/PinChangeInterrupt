@@ -259,6 +259,7 @@ Version History
 ===============
 ```
 1.2.2 Release (xx.08.2015)
+* Fixed initial value when enabled issue
 * Added Attiny13 support Issue #4
 * Updated documentation
 * Improved detaching function
