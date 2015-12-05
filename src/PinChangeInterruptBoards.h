@@ -74,6 +74,13 @@ THE SOFTWARE.
 // Attiny x5
 #define PCINT_INPUT_PORT0 PINB
 
+#elif defined(__AVR_ATtiny13__)
+// Attiny 13A
+#define PCINT_INPUT_PORT0 PINB
+#ifndef portInputRegister
+#define portInputRegister(P) ( (volatile uint8_t *)(PINB) )
+#endif
+
 #elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
 // Attiny x4
 #define PCINT_INPUT_PORT0 PINA
@@ -97,13 +104,21 @@ THE SOFTWARE.
 // add fakes if ports are not used
 #ifndef PCINT_INPUT_PORT0
 #define PCINT_INPUT_PORT0 0
+#else
+#define PCINT_INPUT_PORT0_USED
 #endif
 #ifndef PCINT_INPUT_PORT1
 #define PCINT_INPUT_PORT1 0
+#else
+#define PCINT_INPUT_PORT1_USED
 #endif
 #ifndef PCINT_INPUT_PORT2
 #define PCINT_INPUT_PORT2 0
+#else
+#define PCINT_INPUT_PORT2_USED
 #endif
 #ifndef PCINT_INPUT_PORT3
 #define PCINT_INPUT_PORT3 0
+#else
+#define PCINT_INPUT_PORT3_USED
 #endif

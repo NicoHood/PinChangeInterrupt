@@ -96,21 +96,32 @@ uint8_t oldPorts[PCINT_NUM_USED_PORTS] = { 0 };
 uint8_t fallingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 
-void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit, const uint8_t mode) {
-	// get bitmask and array position
-	uint8_t pcintMask = (1 << pcintBit);
-	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
+void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintMask, const uint8_t arrayPos){
+	// Update the old state to the actual state
+	switch(pcintPort){
+#ifdef PCINT_INPUT_PORT0_USED
+		case 0:
+			oldPorts[arrayPos] = PCINT_INPUT_PORT0;
+		break;
+#endif
+#ifdef PCINT_INPUT_PORT1_USED
+		case 1:
+			oldPorts[arrayPos] = PCINT_INPUT_PORT1;
+		break;
+#endif
+#ifdef PCINT_INPUT_PORT2_USED
+		case 2:
+			oldPorts[arrayPos] = PCINT_INPUT_PORT2;
+		break;
+#endif
+#ifdef PCINT_INPUT_PORT3_USED
+		case 3:
+			oldPorts[arrayPos] = PCINT_INPUT_PORT3;
+		break;
+#endif
+	}
 
-	// save settings related to mode and registers
-	if (mode == CHANGE || mode == RISING)
-		risingPorts[arrayPos] |= pcintMask;
-	if (mode == CHANGE || mode == FALLING)
-		fallingPorts[arrayPos] |= pcintMask;
-
-	// update the old state to the actual state
-	oldPorts[arrayPos] = *portInputRegister(pcintPort);
-
-	// pin change mask registers decide which pins are ENABLE as triggers
+	// Pin change mask registers decide which pins are ENABLE as triggers
 #ifdef PCMSK0
 	*(&PCMSK0 + pcintPort) |= pcintMask;
 #elif defined(PCMSK)
@@ -129,15 +140,7 @@ void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 #endif
 }
 
-void detachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit) {
-	// get bitmask and array position
-	uint8_t pcintMask = (1 << pcintBit);
-	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
-
-	// delete setting
-	risingPorts[arrayPos] &= ~pcintMask;
-	fallingPorts[arrayPos] &= ~pcintMask;
-
+void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintMask) {
 #ifdef PCMSK0
 	// disable the mask.
 	*(&PCMSK0 + pcintPort) &= ~pcintMask;

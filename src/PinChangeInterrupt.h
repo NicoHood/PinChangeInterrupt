@@ -25,11 +25,11 @@ THE SOFTWARE.
 #pragma once
 
 // software version
-#define PCINT_VERSION 121
+#define PCINT_VERSION 122
 
 #include "Arduino.h"
 
-#ifdef ARDUINO_ARCH_ARM
+#ifndef ARDUINO_ARCH_AVR
 #error This library can only be used with AVR
 #endif
 
@@ -86,9 +86,7 @@ PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 #define attachPCINT attachPinChangeInterrupt
 #define enablePCINT enablePinChangeInterrupt
 #define detachPCINT detachPinChangeInterrupt
-// detach does not delete the function, so we can use this for detaching as well
-#define disablePCINT detachPinChangeInterrupt
-#define disablePinChangeInterrupt detachPinChangeInterrupt
+#define disablePCINT disablePinChangeInterrupt
 #define getPCINTTrigger getPinChangeInterruptTrigger
 
 //================================================================================
@@ -141,8 +139,8 @@ extern uint8_t fallingPorts[PCINT_NUM_USED_PORTS];
 extern uint8_t risingPorts[PCINT_NUM_USED_PORTS];
 
 
-static inline uint8_t getArrayPosPCINT(uint8_t pcintPort)__attribute__((alway_inline));
-static inline uint8_t getArrayPosPCINT(uint8_t pcintPort) {
+static inline uint8_t getArrayPosPCINT(uint8_t pcintPort) __attribute__((always_inline));
+uint8_t getArrayPosPCINT(uint8_t pcintPort) {
 	/*
 	Maps the port to the array.
 	This is needed since you can deactivate ports
@@ -244,7 +242,7 @@ static inline uint8_t getArrayPosPCINT(uint8_t pcintPort) {
 // Attach Function (partly inlined)
 //================================================================================
 
-void attachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit, const uint8_t mode);
+void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintMask, const uint8_t arrayPos);
 void attachPinChangeInterrupt0(void);
 void attachPinChangeInterrupt1(void);
 void attachPinChangeInterrupt2(void);
@@ -376,10 +374,10 @@ Serial.println("#endif");
 */
 
 // API attach function
-static void attachPinChangeInterrupt(const uint8_t pcintNum, void(*userFunc)(void), const uint8_t mode) __attribute__((always_inline));
+static inline void attachPinChangeInterrupt(const uint8_t pcintNum, void(*userFunc)(void), const uint8_t mode) __attribute__((always_inline));
 void attachPinChangeInterrupt(const uint8_t pcintNum, void(*userFunc)(void), const uint8_t mode) {
 #else // no API attach function
-static void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) __attribute__((always_inline));
+static inline void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) __attribute__((always_inline));
 void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 #endif // PCINT_API
 
@@ -562,13 +560,23 @@ void attachPinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	}
 	else return;
 
+	// get bitmask and array position
+	uint8_t pcintMask = (1 << pcintBit);
+	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
+
+	// save settings related to mode and registers
+	if (mode == CHANGE || mode == RISING)
+		risingPorts[arrayPos] |= pcintMask;
+	if (mode == CHANGE || mode == FALLING)
+		fallingPorts[arrayPos] |= pcintMask;
+
 	// call the actual hardware attach function
-	attachPinChangeInterruptHelper(pcintPort, pcintBit, mode);
+	enablePinChangeInterruptHelper(pcintPort, pcintMask, arrayPos);
 }
 
 // enable interrupt again if temporary disabled
-static void enablePinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) __attribute__((always_inline));
-void enablePinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
+static inline void enablePinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
+void enablePinChangeInterrupt(const uint8_t pcintNum) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
 	uint8_t pcintBit = pcintNum % 8;
@@ -593,7 +601,9 @@ void enablePinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 	else return;
 
 	// call the actual hardware attach function
-	attachPinChangeInterruptHelper(pcintPort, pcintBit, mode);
+	uint8_t pcintMask = (1 << pcintBit);
+	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
+	enablePinChangeInterruptHelper(pcintPort, pcintMask, arrayPos);
 }
 
 
@@ -601,10 +611,186 @@ void enablePinChangeInterrupt(const uint8_t pcintNum, const uint8_t mode) {
 // Detach Function (partly inlined)
 //================================================================================
 
-void detachPinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintBit);
-static void detachPinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
+void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintMask);
+static inline void detachPinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
 
 void detachPinChangeInterrupt(const uint8_t pcintNum) {
+	// get PCINT registers
+	uint8_t pcintPort = pcintNum / 8;
+	uint8_t pcintBit = pcintNum % 8;
+
+	// check if pcint is a valid pcint, exclude deactivated ports
+	// port 0
+	if (pcintPort == 0 && PCINT_USE_PORT0 == true) {
+		//  attache the function pointers for the API
+#if defined(PCINT_API)
+#if (PCINT_USE_PCINT0 == true)
+		if (pcintNum == 0)
+			callbackPCINT0 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT1 == true)
+		if (pcintNum == 1)
+			callbackPCINT1 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT2 == true)
+		if (pcintNum == 2)
+			callbackPCINT2 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT3 == true)
+		if (pcintNum == 3)
+			callbackPCINT3 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT4 == true)
+		if (pcintNum == 4)
+			callbackPCINT4 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT5 == true)
+		if (pcintNum == 5)
+			callbackPCINT5 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT6 == true)
+		if (pcintNum == 6)
+			callbackPCINT6 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT7 == true)
+		if (pcintNum == 7)
+			callbackPCINT7 = pcint_null_callback;
+#endif
+#endif // PCINT_API
+	}
+
+	// port 1
+	else if (pcintPort == 1 && PCINT_USE_PORT1 == true) {
+		//  attache the function pointers for the API
+#if defined(PCINT_API)
+#if (PCINT_USE_PCINT8 == true)
+		if (pcintNum == 8)
+			callbackPCINT8 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT9 == true)
+		if (pcintNum == 9)
+			callbackPCINT9 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT10 == true)
+		if (pcintNum == 10)
+			callbackPCINT10 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT11 == true)
+		if (pcintNum == 11)
+			callbackPCINT11 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT12 == true)
+		if (pcintNum == 12)
+			callbackPCINT12 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT13 == true)
+		if (pcintNum == 13)
+			callbackPCINT13 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT14 == true)
+		if (pcintNum == 14)
+			callbackPCINT14 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT15 == true)
+		if (pcintNum == 15)
+			callbackPCINT15 = pcint_null_callback;
+#endif
+#endif // PCINT_API
+	}
+
+	// port 2
+	else if (pcintPort == 2 && PCINT_USE_PORT2 == true) {
+		//  attache the function pointers for the API
+#if defined(PCINT_API)
+#if (PCINT_USE_PCINT16 == true)
+		if (pcintNum == 16)
+			callbackPCINT16 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT17 == true)
+		if (pcintNum == 17)
+			callbackPCINT17 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT18 == true)
+		if (pcintNum == 18)
+			callbackPCINT18 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT19 == true)
+		if (pcintNum == 19)
+			callbackPCINT19 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT20 == true)
+		if (pcintNum == 20)
+			callbackPCINT20 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT21 == true)
+		if (pcintNum == 21)
+			callbackPCINT21 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT22 == true)
+		if (pcintNum == 22)
+			callbackPCINT22 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT23 == true)
+		if (pcintNum == 23)
+			callbackPCINT23 = pcint_null_callback;
+#endif
+#endif // PCINT_API
+	}
+
+	// port 3
+	else if (pcintPort == 3 && PCINT_USE_PORT3 == true) {
+		//  attache the function pointers for the API
+#if defined(PCINT_API)
+#if (PCINT_USE_PCINT24 == true)
+		if (pcintNum == 24)
+			callbackPCINT24 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT25 == true)
+		if (pcintNum == 25)
+			callbackPCINT25 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT26 == true)
+		if (pcintNum == 26)
+			callbackPCINT26 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT27 == true)
+		if (pcintNum == 27)
+			callbackPCINT27 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT28 == true)
+		if (pcintNum == 28)
+			callbackPCINT28 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT29 == true)
+		if (pcintNum == 29)
+			callbackPCINT29 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT30 == true)
+		if (pcintNum == 30)
+			callbackPCINT30 = pcint_null_callback;
+#endif
+#if (PCINT_USE_PCINT31 == true)
+		if (pcintNum == 31)
+			callbackPCINT31 = pcint_null_callback;
+#endif
+#endif // PCINT_API
+	}
+	else return;
+
+	// get bitmask and array position
+	uint8_t pcintMask = (1 << pcintBit);
+	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
+
+	// delete setting
+	risingPorts[arrayPos] &= ~pcintMask;
+	fallingPorts[arrayPos] &= ~pcintMask;
+
+	// call the actual hardware disable function
+	disablePinChangeInterruptHelper(pcintPort, pcintMask);
+}
+
+static inline void disablePinChangeInterrupt(const uint8_t pcintNum) __attribute__((always_inline));
+void disablePinChangeInterrupt(const uint8_t pcintNum) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
 	uint8_t pcintBit = pcintNum % 8;
@@ -628,16 +814,21 @@ void detachPinChangeInterrupt(const uint8_t pcintNum) {
 	}
 	else return;
 
-	// call the actual hardware detach function
-	detachPinChangeInterruptHelper(pcintPort, pcintBit);
-}
+	// get bitmask
+	uint8_t pcintMask = (1 << pcintBit);
 
+	// Do not delete mode settings nor detach the user function
+	// Just turn off interrupts
+
+	// call the actual hardware disable function
+	disablePinChangeInterruptHelper(pcintPort, pcintMask);
+}
 
 //================================================================================
 // getTrigger Function (inlined)
 //================================================================================
 
-static uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) __attribute__((always_inline));
+static inline uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) __attribute__((always_inline));
 uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) {
 	// get PCINT registers
 	uint8_t pcintPort = pcintNum / 8;
@@ -663,6 +854,10 @@ uint8_t getPinChangeInterruptTrigger(const uint8_t pcintNum) {
 	else return CHANGE;
 
 	uint8_t arrayPos = getArrayPosPCINT(pcintPort);
+
+	// Check if no mode was set, return an error
+	if(!(risingPorts[arrayPos] & (1 << pcintBit)) && !(fallingPorts[arrayPos] & (1 << pcintBit)))
+		return CHANGE;
 
 	// specify the CHANGE mode
 	if (oldPorts[arrayPos] & (1 << pcintBit))

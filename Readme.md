@@ -1,4 +1,4 @@
-PinChangeInterrupt Library 1.2.1
+PinChangeInterrupt Library 1.2.2
 ================================
 
 ![Header Picture](header.png)
@@ -25,12 +25,15 @@ See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangei
                A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
  Arduino Leonardo/Micro: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
  HoodLoader2: All (broken out 1-7) pins are usable
- Attiny 24/44/84: All pins are usable  
- Attiny 25/45/85: All pins are usable 
- ATmega644P/ATmega1284P: All pins are usable 
+ Attiny 24/44/84: All pins are usable 
+ Attiny 25/45/85: All pins are usable
+ Attiny 13: All pins are usable
+ ATmega644P/ATmega1284P: All pins are usable
 ```
 
-**[Comment for feedback on my blog.](http://www.nicohood.de)**
+Contact information can be found here:
+
+www.nicohood.de
 
 Installation
 ============
@@ -49,7 +52,7 @@ How to use
 It is important that you know at least the basic difference between **PinInterrupts** and **PinChangeInterrupts**.
 I will explain the basics of **PinChangeInterrupts** (PCINTs) based on an Arduino Uno.
 
-On a standard Arduino Pin 2 and 3 have **PinInterrupts**. Those are exclusively for a single pin and can detect RISING, FALLING and CHANGE.
+On a standard Arduino Uno Pin 2 and 3 have **PinInterrupts**. Those are exclusively for a single pin and can detect RISING, FALLING and CHANGE.
 
 **PinChangeInterrupts** instead are used for a whole port (they should have better named them PortChangeInterrupts) and can only detect CHANGE for a whole port.
 Each pin row (0-7, 8-13, A0-A5) represents a port. If an interrupt (ISR) occurs on one pin of a port
@@ -79,29 +82,68 @@ https://github.com/NicoHood/IRLremote
 
 ###API Reference
 
-#####`void attachPinChangeInterrupt(uint8_t pcintNum, void(*userFunc)(void), uint8_t mode)`
-Attaches a user function to a specific pin. The pin number has to be a pcint number.
-It is recommended to use the digitalPinToPinChangeInterrupt(p) makro with this function.
-Valid modes are `RISING`, `FALLING` and `CHANGE`.
-After this function is called all interrupts on the selected pin will execute the attached function.
-For the LowLevel mode no user function is required.
-`attachPCINT` is an equivalent alias.
+#####Attach a PinChangeInterrupt
+```cpp
+// The pin has to be a PCINT number. Use the makro to convert a pin to a PCINT number.
+// Enables event functions which need to be defined in the sketch.
+// Valid interrupt modes are: RISING, FALLING or CHANGE
+attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick), tick, RISING);
 
-#####`void detachPinChangeInterrupt(uint8_t pcintNum)`
-Detaches the pin and its user function. Interrupts will no longer occur for this pin.
-Call the attachPinChangeInterrupt() function again to reactivate any interrupt.
-It is recommended to use the digitalPinToPinChangeInterrupt(p) makro with this function.
-`detachPCINT` is an equivalent alias.
+// You can also input the PCINT number (see table below)
+attachPinChangeInterrupt(5, tock, FALLING);
 
-#####`digitalPinToPinChangeInterrupt(p)`
-Makro to convert a pin to its PCINT number. Only input valid PCINT pins or it won't work.
-`digitalPinToPCINT` is an equivalent alias.
+// PinChangeInterrupt can always be abbreviated with PCINT
+attachPCINT(digitalPinToPCINT(pinBlink), blinkLed, CHANGE);
+```
 
-#####`PinChangeInterruptEvent(n)`
-LowLevel function that is called when an interrupt occurs for a specific PCINT.
-It is required to know the exact PCINT number, no Arduino pin number will work here.
-See LowLevel example for more information.
-`PCINTEvent(n)` is an equivalent alias.
+#####Detach a PinChangeInterrupt
+```cpp
+// Similar usage as the attachPCINT function.
+// Interrupts will no longer occur.
+detachPinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick));
+detachPinChangeInterrupt(5);
+detachPCINT(digitalPinToPCINT(pinTock));
+```
+
+#####Enable/Disable a PinChangeInterrupt
+```cpp
+// Similar usage as the attachPCINT function.
+// Use this to temporary enable/disable the Interrupt
+disablePinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick));
+disablePinChangeInterrupt(5);
+disablePCINT(digitalPinToPCINT(pinBlink));
+
+// Enable the PCINT with the old settings again (function + mode)
+enablePinChangeInterrupt(digitalPinToPinChangeInterrupt(pinTick));
+enablePinChangeInterrupt(5);
+enablePCINT(digitalPinToPCINT(pinBlink));
+```
+
+#####Get Trigger on mode CHANGE
+```cpp
+// Differenciate between RISING and FALLING on mode CHANGE.
+// Only use this in the attached interrupt function.
+uint8_t trigger = getPinChangeInterruptTrigger(digitalPinToPCINT(pinTick));
+if(trigger == RISING)
+  // Do something
+else if(trigger == FALLING)
+  // Do something
+else
+  // Wrong usage (trigger == CHANGE)
+```
+
+#####LowLevel API
+See [LowLevel example](examples/PinChangeInterrupt_LowLevel/PinChangeInterrupt_LowLevel.ino) for more details.
+```cpp
+// Use the attach function as you are used to, just leave out the function name
+attachPinChangeInterrupt(interruptBlink, CHANGE);
+
+// LowLevel function that is called when an interrupt occurs for a specific PCINT.
+// It is required to know the exact PCINT number, no Arduino pin number will work here.
+void PinChangeInterruptEvent(5)(void) {
+  // Do something
+}
+```
 
 PinchangeInterrupt Table
 ========================
@@ -145,46 +187,45 @@ Not all MCUs have all Ports/Pins physically available.
 ```
 
 ####Other Atmel MCUs
-
 ```
-| PCINT |    Attiny x4    |   Attiny x5   | ATmega644P/1284P  |
-| ----- | --------------- | ------------- | ----------------- |
-|     0 |  0       (PA0)  | 0 MOSI  (PB0) | A0/D24      (PA0) |
-|     1 |  1       (PA1)  | 1 MISO  (PB1) | A1/D25      (PA1) |
-|     2 |  2       (PA2)  | 2 SCK   (PB2) | A2/D26      (PA2) |
-|     3 |  3       (PA3)  | 3 XTAL1 (PB3) | A3/D27      (PA3) |
-|     4 |  4 SCK   (PA4)  | 4 XTAL2 (PB4) | A4/D28      (PA4) |
-|     5 |  5 MISO  (PA5)  | 5 RST   (PB5) | A5/D29      (PA5) |
-|     6 |  6 MOSI  (PA6)  |               | A6/D30      (PA6) |
-|     7 |  7       (PA7)  |               | A7/D31      (PA7) |
-| ----- | --------------- | ------------- | ----------------- |
-|     8 | 10 XTAL1 (PB0)* |               |  0          (PB0) |
-|     9 |  9 XTAL2 (PB1)* |               |  1          (PB1) |
-|    10 |  8 INT0  (PB2)* |               |  2 INT2     (PB2) |
-|    11 |    RST   (PB3)* |               |  3 PWM      (PB3) |
-|    12 |                 |               |  4 SS/PWM   (PB4) |
-|    13 |                 |               |  5 MOSI/PWM (PB5) |
-|    14 |                 |               |  6 MISO/PWM (PB6) |
-|    15 |                 |               |  7 SCK      (PB7) |
-| ----- | --------------- | ------------- | ----------------- |
-|    16 |                 |               | 16 SCL      (PC0) |
-|    17 |                 |               | 17 SDA      (PC1) |
-|    18 |                 |               | 18 TCK      (PC2) |
-|    19 |                 |               | 19 TMS      (PC3) |
-|    20 |                 |               | 20 TDO      (PC4) |
-|    21 |                 |               | 21 TDI      (PC5) |
-|    22 |                 |               | 22          (PC6) |
-|    23 |                 |               | 23          (PC7) |
-| ----- | --------------- | ------------- | ----------------- |
-|    24 |                 |               |  8 RX0      (PD0) |
-|    25 |                 |               |  9 TX0      (PD1) |
-|    26 |                 |               | 10 RX1/INT0 (PD2) |
-|    27 |                 |               | 11 TX1/INT1 (PD3) |
-|    28 |                 |               | 12 PWM      (PD4) |
-|    29 |                 |               | 13 PWM      (PD5) |
-|    30 |                 |               | 14 PWM      (PD6) |
-|    31 |                 |               | 15 PWM      (PD7) |
-| ----- | --------------- | ------------- | ----------------- |
+| PCINT |   Attiny13   |    Attiny x4    |   Attiny x5   | ATmega644P/1284P  |
+| ----- | ------------ | --------------- | ------------- | ----------------- |
+|     0 | 0 MOSI (PB0) |  0       (PA0)  | 0 MOSI  (PB0) | A0/D24      (PA0) |
+|     1 | 1 MISO (PB1) |  1       (PA1)  | 1 MISO  (PB1) | A1/D25      (PA1) |
+|     2 | 2 SCK  (PB2) |  2       (PA2)  | 2 SCK   (PB2) | A2/D26      (PA2) |
+|     3 | 3      (PB3) |  3       (PA3)  | 3 XTAL1 (PB3) | A3/D27      (PA3) |
+|     4 | 4      (PB4) |  4 SCK   (PA4)  | 4 XTAL2 (PB4) | A4/D28      (PA4) |
+|     5 | 5 RST  (PB5) |  5 MISO  (PA5)  | 5 RST   (PB5) | A5/D29      (PA5) |
+|     6 |              |  6 MOSI  (PA6)  |               | A6/D30      (PA6) |
+|     7 |              |  7       (PA7)  |               | A7/D31      (PA7) |
+| ----- | ------------ | --------------- | ------------- | ----------------- |
+|     8 |              | 10 XTAL1 (PB0)* |               |  0          (PB0) |
+|     9 |              |  9 XTAL2 (PB1)* |               |  1          (PB1) |
+|    10 |              |  8 INT0  (PB2)* |               |  2 INT2     (PB2) |
+|    11 |              |    RST   (PB3)* |               |  3 PWM      (PB3) |
+|    12 |              |                 |               |  4 SS/PWM   (PB4) |
+|    13 |              |                 |               |  5 MOSI/PWM (PB5) |
+|    14 |              |                 |               |  6 MISO/PWM (PB6) |
+|    15 |              |                 |               |  7 SCK      (PB7) |
+| ----- | ------------ | --------------- | ------------- | ----------------- |
+|    16 |              |                 |               | 16 SCL      (PC0) |
+|    17 |              |                 |               | 17 SDA      (PC1) |
+|    18 |              |                 |               | 18 TCK      (PC2) |
+|    19 |              |                 |               | 19 TMS      (PC3) |
+|    20 |              |                 |               | 20 TDO      (PC4) |
+|    21 |              |                 |               | 21 TDI      (PC5) |
+|    22 |              |                 |               | 22          (PC6) |
+|    23 |              |                 |               | 23          (PC7) |
+| ----- | ------------ | --------------- | ------------- | ----------------- |
+|    24 |              |                 |               |  8 RX0      (PD0) |
+|    25 |              |                 |               |  9 TX0      (PD1) |
+|    26 |              |                 |               | 10 RX1/INT0 (PD2) |
+|    27 |              |                 |               | 11 TX1/INT1 (PD3) |
+|    28 |              |                 |               | 12 PWM      (PD4) |
+|    29 |              |                 |               | 13 PWM      (PD5) |
+|    30 |              |                 |               | 14 PWM      (PD6) |
+|    31 |              |                 |               | 15 PWM      (PD7) |
+| ----- | ------------ | --------------- | ------------- | ----------------- |
 ```
 
 Developer Information
@@ -217,6 +258,14 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
+1.2.2 Release (05.12.2015)
+* Fixed initial value when enabled issue
+* Enabled official dot_a_linkage
+* Added Attiny13 support Issue #4
+* Updated documentation
+* Improved detaching function
+* Improved attaching and enabling
+
 1.2.1 Release (24.05.2015)
 * Fix Attiny Issue #1
 * Added enable/disable function
