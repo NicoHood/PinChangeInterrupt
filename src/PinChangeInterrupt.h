@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 #include "Arduino.h"
 
-#ifdef ARDUINO_ARCH_ARM
+#ifndef ARDUINO_ARCH_AVR
 #error This library can only be used with AVR
 #endif
 
