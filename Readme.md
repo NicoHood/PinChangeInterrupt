@@ -258,7 +258,7 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
-1.2.2 Release (xx.08.2015)
+1.2.2 Release (05.12.2015)
 * Fixed initial value when enabled issue
 * Enabled official dot_a_linkage
 * Added Attiny13 support Issue #4
