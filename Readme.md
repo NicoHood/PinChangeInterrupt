@@ -1,4 +1,4 @@
-PinChangeInterrupt Library 1.2.2
+PinChangeInterrupt Library 1.2.3
 ================================
 
 ![Header Picture](header.png)
