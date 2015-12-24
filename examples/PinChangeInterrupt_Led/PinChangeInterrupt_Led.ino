@@ -22,6 +22,7 @@ HoodLoader2: All (broken out 1-7) pins are usable
 Attiny 24/44/84: All pins are usable
 Attiny 25/45/85: All pins are usable
 Attiny 13: All pins are usable
+Attiny 441/841: All pins are usable
 ATmega644P/ATmega1284P: All pins are usable
 */
 

@@ -93,6 +93,26 @@ THE SOFTWARE.
 #define PCINT_INPUT_PORT2 PINC
 #define PCINT_INPUT_PORT3 PIND
 
+#elif defined(__AVR_ATtinyX41__) || defined(__AVR_ATtiny441__) || defined(__AVR_ATtiny841__)
+// Attiny x41
+#define PCINT_INPUT_PORT0 PINA
+#define PCINT_INPUT_PORT1 PINB
+
+// "iotn841.h" is missing those definitions, so we add them here
+#define PCINT0 0
+#define PCINT1 1
+#define PCINT2 2
+#define PCINT3 3
+#define PCINT4 4
+#define PCINT5 5
+#define PCINT6 6
+#define PCINT7 7
+
+#define PCINT8 0
+#define PCINT9 1
+#define PCINT10 2
+#define PCINT11 3
+
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.
 #endif
