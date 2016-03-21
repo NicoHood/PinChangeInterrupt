@@ -79,9 +79,9 @@ PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 // convert a normal pin to its PCINT number (0 - max 23), used by the user
 // calculates the pin by the Arduino definitions
 #if defined(PCIE0)
-#define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * (PCIE0 - digitalPinToPCICRbit(p))) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
+#define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * (digitalPinToPCICRbit(p) - PCIE0)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
 #elif defined(PCIE)
-#define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * (PCIE - digitalPinToPCICRbit(p))) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
+#define digitalPinToPinChangeInterrupt(p) (digitalPinToPCICR(p) ? ((8 * (digitalPinToPCICRbit(p) - PCIE)) + digitalPinToPCMSKbit(p)) : NOT_AN_INTERRUPT)
 #else
 #error MCU has no such a register
 #endif
