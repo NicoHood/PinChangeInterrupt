@@ -1,4 +1,4 @@
-PinChangeInterrupt Library 1.2.3
+PinChangeInterrupt Library 1.2.4
 ================================
 
 ![Header Picture](header.png)
@@ -283,6 +283,9 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
+1.2.4 Release (21.03.2016)
+* Fixed Attinyx4/x5 Issue #8
+
 1.2.3 Release (24.12.2015)
 * Added Attiny441/841 support
 

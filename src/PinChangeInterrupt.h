@@ -25,7 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 // software version
-#define PCINT_VERSION 123
+#define PCINT_VERSION 124
 
 #include "Arduino.h"
 
