@@ -216,8 +216,8 @@ The order is also okay. */
 
 #if defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
 // Port1 is connected to reset, crystal and Pin Interrupt 0
-// deactivate it by default
-#if defined(PCINT_ENABLE_PCINT1)
+// Deactivate it by default
+#if defined(PCINT_ENABLE_PORT1)
 #undef PCINT_ENABLE_PORT1
 #endif
 #endif
