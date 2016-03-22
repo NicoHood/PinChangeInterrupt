@@ -218,6 +218,6 @@ The order is also okay. */
 // Port1 is connected to reset, crystal and Pin Interrupt 0
 // deactivate it by default
 #if defined(PCINT_ENABLE_PCINT1)
-#undef PCINT_ENABLE_PCINT1
+#undef PCINT_ENABLE_PORT1
 #endif
 #endif
