@@ -25,7 +25,7 @@ See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangei
                A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
  Arduino Leonardo/Micro: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
  HoodLoader2: All (broken out 1-7) pins are usable
- Attiny 24/44/84: All pins are usable 
+ Attiny 24/44/84: All pins are usable
  Attiny 25/45/85: All pins are usable
  Attiny 13: All pins are usable
  Attiny 441/841: All pins are usable
@@ -283,7 +283,7 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
-1.2.4 Release (21.03.2016)
+1.2.4 Release (16.04.2016)
 * Fixed Attinyx4/x5 Issue #8
 
 1.2.3 Release (24.12.2015)
