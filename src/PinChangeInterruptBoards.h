@@ -86,6 +86,12 @@ THE SOFTWARE.
 #define PCINT_INPUT_PORT0 PINA
 #define PCINT_INPUT_PORT1 PINB
 
+#elif defined(__AVR_ATtinyX313__)
+// ATtiny x313
+#define PCINT_INPUT_PORT0 PINA
+#define PCINT_INPUT_PORT1 PINB
+#define PCINT_INPUT_PORT2 PIND
+
 #elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__)
 // 1284p and 644p, special 4 port case
 #define PCINT_INPUT_PORT0 PINA
