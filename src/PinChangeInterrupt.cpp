@@ -98,6 +98,10 @@ uint8_t risingPorts[PCINT_NUM_USED_PORTS] = { 0 };
 
 void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcintMask, const uint8_t arrayPos){
 	// Update the old state to the actual state
+ Serial.println("TEST");
+ Serial.println(pcintPort,BIN);
+ Serial.println(pcintMask,BIN);
+ Serial.println(arrayPos,BIN);
 	switch(pcintPort){
 #ifdef PCINT_INPUT_PORT0_USED
 		case 0:
@@ -125,13 +129,15 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 #ifdef PCMSK0
 #ifdef PCMSK1
 	// Special case for Attinyx4 where PCMSK1 and PCMSK0 are not next to each other
-	if(&PCMSK1 - &PCMSK0 == 1){
+  // This is here where is goes wrong for atmega1284p. #FIXME
+	//if(&PCMSK1 - &PCMSK0 == 1){
+  if(0){
 #endif
 		*(&PCMSK0 + pcintPort) |= pcintMask;
 #ifdef PCMSK1
 	}
 	else{
-		switch(pcintPort){
+ switch(pcintPort){
 			case 0:
 				PCMSK0 |= pcintMask;
 			break;
