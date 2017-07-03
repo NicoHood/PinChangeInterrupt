@@ -6,7 +6,7 @@ PinChangeInterrupt Library 1.2.4
 PinChangeInterrupt library with a resource friendly implementation (API and LowLevel).
 PinChangeInterrupts are different than normal Interrupts. See detail below.
 
-#####Features:
+##### Features:
 * PinChangeInterrupt for a lot of pins
 * Rising, Falling or Change detection for every pin separately
 * Usable on a lot Arduino compatible boards
@@ -16,7 +16,7 @@ PinChangeInterrupts are different than normal Interrupts. See detail below.
 * Full Port0-3 support
 * .a linkage optimization
 
-####Supported pins for PinChangeInterrupt:
+#### Supported pins for PinChangeInterrupt:
 See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangeinterrupt-table) at the bottom for more details.
 
 ```
@@ -42,7 +42,7 @@ Installation
 Download the zip, extract and remove the "-master" of the folder.
 Install the library [as described here](http://arduino.cc/en/pmwiki.php?n=Guide/Libraries).
 
-#####Optional Installation
+##### Optional Installation
 To get even more optimization you can move the library to the Arduino core folder instead.
 Then the library is linked different (through .a file) and better optimized if you use less ports.
 Place all files into https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/cores/arduino instead.
@@ -72,7 +72,7 @@ The library is coded to get maximum speed and minimum code size. The LowLevel ex
 which is pretty good and might be even better than the **PinInterrupt** code from the official Arduino core due to high optimization.
 If you need very precise interrupts you better use **PinInterrupts** without the Arduino IDE at all.
 
-###Examples
+### Examples
 To see how the code works just check the Led and TickTock example.
 The LowLevel example is for advanced users with more optimization and more direct access.
 The HowItWorks example shows the basic PinChangeInterrupt setup and decoding routine, similar to the library.
@@ -81,9 +81,9 @@ See the notes in the examples about more details.
 An useful "real use" example of the PinChangeInterrupt library can be found here:
 https://github.com/NicoHood/IRLremote
 
-###API Reference
+### API Reference
 
-#####Attach a PinChangeInterrupt
+##### Attach a PinChangeInterrupt
 ```cpp
 // The pin has to be a PCINT number. Use the makro to convert a pin to a PCINT number.
 // Enables event functions which need to be defined in the sketch.
@@ -97,7 +97,7 @@ attachPinChangeInterrupt(5, tock, FALLING);
 attachPCINT(digitalPinToPCINT(pinBlink), blinkLed, CHANGE);
 ```
 
-#####Detach a PinChangeInterrupt
+##### Detach a PinChangeInterrupt
 ```cpp
 // Similar usage as the attachPCINT function.
 // Interrupts will no longer occur.
@@ -106,7 +106,7 @@ detachPinChangeInterrupt(5);
 detachPCINT(digitalPinToPCINT(pinTock));
 ```
 
-#####Enable/Disable a PinChangeInterrupt
+##### Enable/Disable a PinChangeInterrupt
 ```cpp
 // Similar usage as the attachPCINT function.
 // Use this to temporary enable/disable the Interrupt
@@ -120,7 +120,7 @@ enablePinChangeInterrupt(5);
 enablePCINT(digitalPinToPCINT(pinBlink));
 ```
 
-#####Get Trigger on mode CHANGE
+##### Get Trigger on mode CHANGE
 ```cpp
 // Differenciate between RISING and FALLING on mode CHANGE.
 // Only use this in the attached interrupt function.
@@ -133,7 +133,7 @@ else
   // Wrong usage (trigger == CHANGE)
 ```
 
-#####LowLevel API
+##### LowLevel API
 See [LowLevel example](examples/PinChangeInterrupt_LowLevel/PinChangeInterrupt_LowLevel.ino) for more details.
 ```cpp
 // Use the attach function as you are used to, just leave out the function name
@@ -154,7 +154,7 @@ You may activate them in the setting file (advanced).
 Each row section represents a port(0-3).
 Not all MCUs have all Ports/Pins physically available.
 
-####Official Arduinos
+#### Official Arduinos
 ```
 | PCINT |  Uno/Nano/Mini  |   Mega/2560    | Leonardo/Micro | HL2 (8/16/32u2) |
 | ----- | --------------- | -------------- | -------------- | --------------- |
@@ -187,7 +187,7 @@ Not all MCUs have all Ports/Pins physically available.
 | ----- | --------------- | -------------- | -------------- | --------------- |
 ```
 
-####Atmel Attinys
+#### Atmel Attinys
 ```
 | PCINT |   Attiny13   |    Attiny x4    |   Attiny x5   |     Attiny x41      |
 | ----- | ------------ | --------------- | ------------- | ------------------- |
@@ -211,7 +211,7 @@ Not all MCUs have all Ports/Pins physically available.
 | ----- | ------------ | --------------- | ------------- | ------------------- |
 ```
 
-####Other Atmel MCUs
+#### Other Atmel MCUs
 ```
 | PCINT | ATmega644P/1284P  |
 | ----- | ----------------- |
