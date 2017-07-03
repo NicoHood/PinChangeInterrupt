@@ -113,6 +113,11 @@ THE SOFTWARE.
 #define PCINT10 2
 #define PCINT11 3
 
+#elif defined(__AVR_ATtinyX313__)
+// ATtiny x313, PORT A is almost useless, left out here
+#define PCINT_INPUT_PORT1 PINB
+#define PCINT_INPUT_PORT2 PIND
+
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.
 #endif
