@@ -36,6 +36,11 @@ void setup() {
   pinMode(pinBlink, INPUT_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
 
+  // Manually blink once to test if LED is functional
+  blinkLed();
+  delay(1000);
+  blinkLed();
+
   // Attach the new PinChangeInterrupt and enable event function below
   attachPCINT(digitalPinToPCINT(pinBlink), blinkLed, CHANGE);
 }
