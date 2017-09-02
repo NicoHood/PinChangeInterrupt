@@ -14,7 +14,7 @@ PinChangeInterrupts are different than normal Interrupts. See detail below.
 * Ports/Pins can be manually deactivated in the Settings file
 * API and LowLevel option
 * Full Port0-3 support
-* .a linkage optimization
+* .a linkage optimization (Arduino IDE)
 
 #### Supported pins for PinChangeInterrupt:
 See [PCINT pin table](https://github.com/NicoHood/PinChangeInterrupt/#pinchangeinterrupt-table) at the bottom for more details.
@@ -42,10 +42,7 @@ Installation
 Download the zip, extract and remove the "-master" of the folder.
 Install the library [as described here](http://arduino.cc/en/pmwiki.php?n=Guide/Libraries).
 
-##### Optional Installation
-To get even more optimization you can move the library to the Arduino core folder instead.
-Then the library is linked different (through .a file) and better optimized if you use less ports.
-Place all files into https://github.com/arduino/Arduino/tree/master/hardware/arduino/avr/cores/arduino instead.
+This library can also be used with the [DMBS AVR Library Collection](https://github.com/NicoHood/avr) and a pure makefile.
 
 How to use
 ==========
