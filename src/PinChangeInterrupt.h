@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2015 NicoHood
+Copyright (c) 2014-2017 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,16 +21,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// include guard
+// Include Guard
 #pragma once
 
-// software version
-#define PCINT_VERSION 124
+// Software Version
+#define PCINT_VERSION 125
 
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+#ifdef ARDUINO
 #include "Arduino.h"
 
 #ifndef ARDUINO_ARCH_AVR
 #error This library can only be used with AVR
+#endif
+
+#else
+enum pcint_mode_t
+{
+    LOW     = 0,
+    CHANGE  = 1,
+    FALLING = 2,
+    RISING  = 3,
+};
+
 #endif
 
 //================================================================================
@@ -103,9 +118,13 @@ PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 typedef void(*callback)(void);
 
 // useless function for weak implemented/not used functions, extern c needed for the alias
+#ifdef __cplusplus
 extern "C" {
-	void pcint_null_callback(void);
+#endif
+    void pcint_null_callback(void);
+#ifdef __cplusplus
 }
+#endif
 
 void PinChangeInterruptEventPCINT0(void);
 void PinChangeInterruptEventPCINT1(void);

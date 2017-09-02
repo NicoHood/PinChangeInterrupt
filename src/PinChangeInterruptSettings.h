@@ -39,6 +39,8 @@ Same for the port if you deactivate all 8 pins.
 You dont have to deactivate pins/ports that dont exist.
 That is done by the macros. */
 
+#ifndef PCINT_ENABLE_MANUAL
+
 #define PCINT_ENABLE_PORT0
 #define PCINT_ENABLE_PORT1
 #define PCINT_ENABLE_PORT2
@@ -77,6 +79,9 @@ That is done by the macros. */
 #define PCINT_ENABLE_PCINT30
 #define PCINT_ENABLE_PCINT31
 
+#endif
+
+#ifdef ARDUINO
 // use API with function pointers (better optimized with .a linkage)
 #define PCINT_API
 
@@ -86,6 +91,8 @@ That is done by the macros. */
 
 // force compile all enabled port ISRs (with .a linkage)
 //#define PCINT_COMPILE_ENABLED_ISR
+
+#endif
 
 //================================================================================
 // Suggested Settings
