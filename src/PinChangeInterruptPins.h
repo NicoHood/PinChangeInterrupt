@@ -27,13 +27,17 @@ THE SOFTWARE.
 /*
 The strategy in this file:
 
+0. Makefile optimization:
+   To disable PCINT/PORTs via makefile use -DPCINT_DISABLE_PORT0 etc.
+   This will undef a previously defined PCINT_ENABLE_PORT0.
+
 1. Reduce the user settings to the enabled pins.
-If the whole port is deactivated, also disable all pins on this port.
+   If the whole port is deactivated, also disable all pins on this port.
 
 2. Define the hardware available pins/ports.
 
 3. Compare the hardware definition with the enabled pin definitions.
-If the pin is available and enabled, create a makro to use the pin.
+   If the pin is available and enabled, create a makro to use the pin.
 
 4. Count all used pins (for each port).
 
@@ -53,6 +57,179 @@ EXTERNAL_NUM_USED_PINCHANGEINTERRUPT (0-24)
 PCINT_NUM_PORTS (0-3)
 PCINT_NUM_USED_PORTS (0-3)
 */
+
+//================================================================================
+// Disabled Pins
+//================================================================================
+/*
+for (int port = 0; port < 4; port++) {
+  Serial.print("#if defined(PCINT_ENABLE_PORT");
+  Serial.print(port);
+  Serial.print(") && defined(PCINT_DISABLE_PORT");
+  Serial.print(port);
+  Serial.println(")");
+  Serial.print("#undef PCINT_ENABLE_PORT");
+  Serial.println(port);
+  Serial.println("#endif");
+  Serial.println();
+}
+
+for (int i = 0; i < 32; i++) {
+  Serial.print("#if defined(PCINT_ENABLE_PCINT");
+  Serial.print(i);
+  Serial.print(") && defined(PCINT_DISABLE_PCINT");
+  Serial.print(i);
+  Serial.println(")");
+  Serial.print("#undef PCINT_ENABLE_PCINT");
+  Serial.println(i);
+  Serial.println("#endif");
+  Serial.println();
+}
+*/
+#if defined(PCINT_ENABLE_PORT0) && defined(PCINT_DISABLE_PORT0)
+#undef PCINT_ENABLE_PORT0
+#endif
+
+#if defined(PCINT_ENABLE_PORT1) && defined(PCINT_DISABLE_PORT1)
+#undef PCINT_ENABLE_PORT1
+#endif
+
+#if defined(PCINT_ENABLE_PORT2) && defined(PCINT_DISABLE_PORT2)
+#undef PCINT_ENABLE_PORT2
+#endif
+
+#if defined(PCINT_ENABLE_PORT3) && defined(PCINT_DISABLE_PORT3)
+#undef PCINT_ENABLE_PORT3
+#endif
+
+#if defined(PCINT_ENABLE_PCINT0) && defined(PCINT_DISABLE_PCINT0)
+#undef PCINT_ENABLE_PCINT0
+#endif
+
+#if defined(PCINT_ENABLE_PCINT1) && defined(PCINT_DISABLE_PCINT1)
+#undef PCINT_ENABLE_PCINT1
+#endif
+
+#if defined(PCINT_ENABLE_PCINT2) && defined(PCINT_DISABLE_PCINT2)
+#undef PCINT_ENABLE_PCINT2
+#endif
+
+#if defined(PCINT_ENABLE_PCINT3) && defined(PCINT_DISABLE_PCINT3)
+#undef PCINT_ENABLE_PCINT3
+#endif
+
+#if defined(PCINT_ENABLE_PCINT4) && defined(PCINT_DISABLE_PCINT4)
+#undef PCINT_ENABLE_PCINT4
+#endif
+
+#if defined(PCINT_ENABLE_PCINT5) && defined(PCINT_DISABLE_PCINT5)
+#undef PCINT_ENABLE_PCINT5
+#endif
+
+#if defined(PCINT_ENABLE_PCINT6) && defined(PCINT_DISABLE_PCINT6)
+#undef PCINT_ENABLE_PCINT6
+#endif
+
+#if defined(PCINT_ENABLE_PCINT7) && defined(PCINT_DISABLE_PCINT7)
+#undef PCINT_ENABLE_PCINT7
+#endif
+
+#if defined(PCINT_ENABLE_PCINT8) && defined(PCINT_DISABLE_PCINT8)
+#undef PCINT_ENABLE_PCINT8
+#endif
+
+#if defined(PCINT_ENABLE_PCINT9) && defined(PCINT_DISABLE_PCINT9)
+#undef PCINT_ENABLE_PCINT9
+#endif
+
+#if defined(PCINT_ENABLE_PCINT10) && defined(PCINT_DISABLE_PCINT10)
+#undef PCINT_ENABLE_PCINT10
+#endif
+
+#if defined(PCINT_ENABLE_PCINT11) && defined(PCINT_DISABLE_PCINT11)
+#undef PCINT_ENABLE_PCINT11
+#endif
+
+#if defined(PCINT_ENABLE_PCINT12) && defined(PCINT_DISABLE_PCINT12)
+#undef PCINT_ENABLE_PCINT12
+#endif
+
+#if defined(PCINT_ENABLE_PCINT13) && defined(PCINT_DISABLE_PCINT13)
+#undef PCINT_ENABLE_PCINT13
+#endif
+
+#if defined(PCINT_ENABLE_PCINT14) && defined(PCINT_DISABLE_PCINT14)
+#undef PCINT_ENABLE_PCINT14
+#endif
+
+#if defined(PCINT_ENABLE_PCINT15) && defined(PCINT_DISABLE_PCINT15)
+#undef PCINT_ENABLE_PCINT15
+#endif
+
+#if defined(PCINT_ENABLE_PCINT16) && defined(PCINT_DISABLE_PCINT16)
+#undef PCINT_ENABLE_PCINT16
+#endif
+
+#if defined(PCINT_ENABLE_PCINT17) && defined(PCINT_DISABLE_PCINT17)
+#undef PCINT_ENABLE_PCINT17
+#endif
+
+#if defined(PCINT_ENABLE_PCINT18) && defined(PCINT_DISABLE_PCINT18)
+#undef PCINT_ENABLE_PCINT18
+#endif
+
+#if defined(PCINT_ENABLE_PCINT19) && defined(PCINT_DISABLE_PCINT19)
+#undef PCINT_ENABLE_PCINT19
+#endif
+
+#if defined(PCINT_ENABLE_PCINT20) && defined(PCINT_DISABLE_PCINT20)
+#undef PCINT_ENABLE_PCINT20
+#endif
+
+#if defined(PCINT_ENABLE_PCINT21) && defined(PCINT_DISABLE_PCINT21)
+#undef PCINT_ENABLE_PCINT21
+#endif
+
+#if defined(PCINT_ENABLE_PCINT22) && defined(PCINT_DISABLE_PCINT22)
+#undef PCINT_ENABLE_PCINT22
+#endif
+
+#if defined(PCINT_ENABLE_PCINT23) && defined(PCINT_DISABLE_PCINT23)
+#undef PCINT_ENABLE_PCINT23
+#endif
+
+#if defined(PCINT_ENABLE_PCINT24) && defined(PCINT_DISABLE_PCINT24)
+#undef PCINT_ENABLE_PCINT24
+#endif
+
+#if defined(PCINT_ENABLE_PCINT25) && defined(PCINT_DISABLE_PCINT25)
+#undef PCINT_ENABLE_PCINT25
+#endif
+
+#if defined(PCINT_ENABLE_PCINT26) && defined(PCINT_DISABLE_PCINT26)
+#undef PCINT_ENABLE_PCINT26
+#endif
+
+#if defined(PCINT_ENABLE_PCINT27) && defined(PCINT_DISABLE_PCINT27)
+#undef PCINT_ENABLE_PCINT27
+#endif
+
+#if defined(PCINT_ENABLE_PCINT28) && defined(PCINT_DISABLE_PCINT28)
+#undef PCINT_ENABLE_PCINT28
+#endif
+
+#if defined(PCINT_ENABLE_PCINT29) && defined(PCINT_DISABLE_PCINT29)
+#undef PCINT_ENABLE_PCINT29
+#endif
+
+#if defined(PCINT_ENABLE_PCINT30) && defined(PCINT_DISABLE_PCINT30)
+#undef PCINT_ENABLE_PCINT30
+#endif
+
+#if defined(PCINT_ENABLE_PCINT31) && defined(PCINT_DISABLE_PCINT31)
+#undef PCINT_ENABLE_PCINT31
+#endif
+
 
 //================================================================================
 // Enabled Pins
