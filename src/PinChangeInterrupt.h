@@ -59,7 +59,7 @@ enum pcint_mode_t
 #include "PinChangeInterruptPins.h"
 
 #if !PCINT_NUM_USED_PORTS
-#error Please enable at least one PCINT port!
+#error Please enable at least one PCINT port and pin!
 #endif
 
 // manually include cpp files to save flash if only 1 ISR is present
