@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2017 NicoHood
+Copyright (c) 2014-2018 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,7 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 // Software Version
-#define PCINT_VERSION 125
+#define PCINT_VERSION 126
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -38,13 +38,19 @@ THE SOFTWARE.
 #endif
 
 #else
-enum pcint_mode_t
-{
-    LOW     = 0,
-    CHANGE  = 1,
-    FALLING = 2,
-    RISING  = 3,
-};
+
+#ifndef LOW
+#define LOW 0x0
+#endif
+#ifndef CHANGE
+#define CHANGE 0x1
+#endif
+#ifndef FALLING
+#define FALLING 0x2
+#endif
+#ifndef RISING
+#define RISING 0x3
+#endif
 
 #endif
 

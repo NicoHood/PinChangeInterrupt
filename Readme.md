@@ -1,4 +1,4 @@
-PinChangeInterrupt Library 1.2.5
+PinChangeInterrupt Library 1.2.6
 ================================
 
 ![Header Picture](header.png)
@@ -280,6 +280,9 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
+1.2.6 Release (10.02.2018)
+* Fix makefile compilation problems
+
 1.2.5 Release (02.09.2017)
 * Fixed makefile compilation
 * Added support to disable pcint/port via -DPCINT_DISABLE_PORT0 etc.
@@ -338,7 +341,7 @@ License and Copyright
 If you use this library for any cool project let me know!
 
 ```
-Copyright (c) 2014-2015 NicoHood
+Copyright (c) 2014-2018 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
