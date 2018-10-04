@@ -163,6 +163,8 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 	// PCICR: Pin Change Interrupt Control Register - enables interrupt vectors
 #ifdef PCICR
 	PCICR |= (1  << (pcintPort + PCIE0));
+#elif defined(GICR) /* e.g. ATmega162 */
+	GICR |= (1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && defined(PCIE0) /* e.g. ATtiny X4 */
 	GIMSK |= (1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && defined(PCIE) /* e.g. ATtiny X5 */
@@ -240,6 +242,8 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 	{
 #ifdef PCICR
 		PCICR &= ~(1  << (pcintPort + PCIE0));
+#elif defined(GICR) /* e.g. ATmega162 */
+		GICR &= ~(1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && defined(PCIE0) /* e.g. ATtiny X4 */
 		GIMSK &= ~(1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && defined(PCIE) /* e.g. ATtiny X5 */
