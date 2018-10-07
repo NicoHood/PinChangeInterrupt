@@ -25,7 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 // Software Version
-#define PCINT_VERSION 126
+#define PCINT_VERSION 127
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
