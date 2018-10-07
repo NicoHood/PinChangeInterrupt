@@ -36,6 +36,11 @@ THE SOFTWARE.
 #define PCINT_INPUT_PORT1 PINC
 #define PCINT_INPUT_PORT2 PIND
 
+#elif defined(__AVR_ATmega162__)
+
+#define PCINT_INPUT_PORT0 PINA
+#define PCINT_INPUT_PORT1 PINC
+
 #elif defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega640__)
 // Arduino Mega/Mega2560
 #define PCINT_INPUT_PORT0 PINB
