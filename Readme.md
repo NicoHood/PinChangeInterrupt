@@ -148,7 +148,7 @@ void PinChangeInterruptEvent(5)(void) {
 PinchangeInterrupt Table
 ========================
 Pins with * are not broken out/deactivated by default.
-You may activate them in the setting file (advanced).
+You may activate them in the setting file (comment out [this line](https://github.com/NicoHood/PinChangeInterrupt/blob/master/src/PinChangeInterruptSettings.h#L228)).
 
 Each row section represents a port(0-3).
 Not all MCUs have all Ports/Pins physically available.
