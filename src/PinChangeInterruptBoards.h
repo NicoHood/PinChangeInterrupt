@@ -30,11 +30,15 @@ THE SOFTWARE.
 
 // Microcontroller specific definitions
 
-#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
 // Arduino Uno
 #define PCINT_INPUT_PORT0 PINB
 #define PCINT_INPUT_PORT1 PINC
 #define PCINT_INPUT_PORT2 PIND
+
+#if defined(__AVR_ATmega328PB__)
+#define PCINT_INPUT_PORT3 PINE
+#endif
 
 #elif defined(__AVR_ATmega162__)
 
