@@ -47,7 +47,7 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
 
   // attach the new PinChangeInterrupts and enable event functions below
-  attachPinChangeInterrupt(interruptBlink, CHANGE);
+  attachPinChangeInterrupt(digitalPinToPCINT(pinBlink), interruptBlink, CHANGE);
 }
 
 void PinChangeInterruptEvent(interruptBlink)(void) {
