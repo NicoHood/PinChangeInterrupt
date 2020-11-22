@@ -91,7 +91,7 @@ THE SOFTWARE.
 #define PCINT_INPUT_PORT0 PINA
 #define PCINT_INPUT_PORT1 PINB
 
-#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__)
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 // 1284p and 644p, special 4 port case
 #define PCINT_INPUT_PORT0 PINA
 #define PCINT_INPUT_PORT1 PINB
