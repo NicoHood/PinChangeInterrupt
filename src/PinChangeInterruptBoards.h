@@ -129,7 +129,7 @@ THE SOFTWARE.
 #elif defined(__AVR_ATtiny2313__)
 #define PCINT_INPUT_PORT0 PINB
 
-#elif defined(__AVR_ATtiny2313A__) || defined(__AVR_ATtiny4313__)
+#elif defined(__AVR_ATtiny2313A__) || defined(__AVR_ATtiny4313__) || defined(__AVR_ATtinyX313__)
 // All 8 pins
 #define PCINT_INPUT_PORT0 PINB
 // PinA has 3 PCINTs on the reset and clock lines, we do not use this port
