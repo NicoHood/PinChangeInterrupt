@@ -121,15 +121,10 @@ THE SOFTWARE.
 #define PCINT10 2
 #define PCINT11 3
 
-#elif defined(__AVR_ATtinyX313__)
-// ATtiny x313, PORT A is almost useless, left out here
-#define PCINT_INPUT_PORT1 PINB
-#define PCINT_INPUT_PORT2 PIND
-
 #elif defined(__AVR_ATtiny2313__)
 #define PCINT_INPUT_PORT0 PINB
 
-#elif defined(__AVR_ATtiny2313A__) || defined(__AVR_ATtiny4313__) || defined(__AVR_ATtinyX313__)
+#elif defined(__AVR_ATtiny2313A__) || defined(__AVR_ATtiny4313__)
 // All 8 pins
 #define PCINT_INPUT_PORT0 PINB
 // PinA has 3 PCINTs on the reset and clock lines, we do not use this port
