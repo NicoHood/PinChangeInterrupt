@@ -27,12 +27,15 @@ Arduino Mega: 10, 11, 12, 13, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64),
            A11 (65), A12 (66), A13 (67), A14 (68), A15 (69)
 Arduino Leonardo/Micro: 8, 9, 10, 11, 14 (MISO), 15 (SCK), 16 (MOSI)
 HoodLoader2: All (broken out 1-7) pins are usable
-Attiny 24/44/84: All pins are usable
-Attiny 25/45/85: All pins are usable
-Attiny 13: All pins are usable
-Attiny 441/841: All pins are usable
+Attiny24/44/84: All pins are usable
+Attiny25/45/85: All pins are usable
+Attiny13: All pins are usable
+Attiny441/841: All pins are usable
+Attiny261/461/861: All pins are usable
+Attiny2313/2313A/4313: PORTB is usable
 ATmega644/ATmega644P/ATmega1284P: All pins are usable
-ATmega 162: PORTA and PORTC usable
+ATmega162: PORTA and PORTC usable
+ATmega48/88/168/328/328PB: All pins are usable
 ```
 
 Contact information can be found here:
@@ -149,10 +152,12 @@ void PinChangeInterruptEvent(5)(void) {
 PinchangeInterrupt Table
 ========================
 Pins with * are not broken out/deactivated by default.
-You may activate them in the setting file (advanced).
+You may activate them in the [setting file](https://github.com/NicoHood/PinChangeInterrupt/blob/master/src/PinChangeInterruptSettings.h#L98) (advanced).
 
 Each row section represents a port(0-3).
 Not all MCUs have all Ports/Pins physically available.
+
+**Note: Not all supported AVRs are listed here. There are way more supported, please refer to the shorter list above.**
 
 #### Official Arduinos
 ```
@@ -283,6 +288,13 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
+1.2.9 Release (xx.xx.2021)
+* Added Attiny261/461/861 support #39
+* Added Attiny2313/2313A/4313 support #37
+* Added ATMega328PB support #30
+* Added ATMega48 support #38
+* Fixed ATMega88/168 support #38
+
 1.2.8 Release (22.11.2020)
 * Add support for ATmega644 #34
 
@@ -350,7 +362,7 @@ License and Copyright
 If you use this library for any cool project let me know!
 
 ```
-Copyright (c) 2014-2018 NicoHood
+Copyright (c) 2014-2021 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
