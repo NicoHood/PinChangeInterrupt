@@ -1,4 +1,4 @@
-PinChangeInterrupt Library 1.2.8
+PinChangeInterrupt Library 1.2.9
 ================================
 
 ![Header Picture](header.png)
@@ -288,7 +288,7 @@ the new PinChangeInterrupts may help you a lot.
 Version History
 ===============
 ```
-1.2.9 Release (xx.xx.2021)
+1.2.9 Release (18.05.2021)
 * Added Attiny261/461/861 support #39
 * Added Attiny2313/2313A/4313 support #37
 * Added ATMega328PB support #30

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2018 NicoHood
+Copyright (c) 2014-2021 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,7 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 // Software Version
-#define PCINT_VERSION 128
+#define PCINT_VERSION 129
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
