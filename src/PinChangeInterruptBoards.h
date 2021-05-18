@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2015 NicoHood
+Copyright (c) 2014-2021 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,6 +29,7 @@ THE SOFTWARE.
 //================================================================================
 
 // Microcontroller specific definitions
+// Avr Variants are defined here: https://svn.savannah.gnu.org/viewvc/avr-libc/trunk/avr-libc/include/avr/io.h?view=markup
 
 #if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
 // Arduino Uno
@@ -86,6 +87,8 @@ THE SOFTWARE.
 #elif defined(__AVR_ATtiny13__)
 // Attiny 13A
 #define PCINT_INPUT_PORT0 PINB
+// This is just a workaround for the missing definition in the following core: https://sourceforge.net/projects/ard-core13/
+// It should work fine with: https://github.com/MCUdude/MicroCore
 #ifndef portInputRegister
 #define portInputRegister(P) ( (volatile uint8_t *)(PINB) )
 #endif
@@ -122,10 +125,15 @@ THE SOFTWARE.
 #define PCINT10 2
 #define PCINT11 3
 
-#elif defined(__AVR_ATtinyX313__)
-// ATtiny x313, PORT A is almost useless, left out here
-#define PCINT_INPUT_PORT1 PINB
-#define PCINT_INPUT_PORT2 PIND
+#elif defined(__AVR_ATtiny2313__)
+#define PCINT_INPUT_PORT0 PINB
+
+#elif defined(__AVR_ATtiny2313A__) || defined(__AVR_ATtiny4313__)
+// All 8 pins
+#define PCINT_INPUT_PORT0 PINB
+// PinA has 3 PCINTs on the reset and clock lines, we do not use this port
+// PIND has 7 pins available, but the pin ordering is so messed up,
+// that it does not work with the current library structure.
 
 #elif defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)
 // PORTB has Reset, clock and SPI while PORTA has I2C and Analog Pins. We just enable all pins.
