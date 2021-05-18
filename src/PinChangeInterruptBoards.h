@@ -128,8 +128,8 @@ THE SOFTWARE.
 // All 8 pins
 #define PCINT_INPUT_PORT0 PINB
 // PinA has 3 PCINTs on the reset and clock lines, we do not use this port
-// PIND has 7 pins available
-#define PCINT_INPUT_PORT2 PIND
+// PIND has 7 pins available, but the pin ordering is so messed up,
+// that it does not work with the current library structure.
 
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.
