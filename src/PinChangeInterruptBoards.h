@@ -31,7 +31,10 @@ THE SOFTWARE.
 // Microcontroller specific definitions
 // Avr Variants are defined here: https://svn.savannah.gnu.org/viewvc/avr-libc/trunk/avr-libc/include/avr/io.h?view=markup
 
-#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88__)
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328A__) || defined(__AVR_ATmega328PA__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) \
+   || defined(__AVR_ATmega168__) || defined(__AVR_ATmega168A__) || defined(__AVR_ATmega168PA__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega168PB__) \
+   || defined(__AVR_ATmega88__) || defined(__AVR_ATmega88A__) || defined(__AVR_ATmega88PA__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega88PB__) \
+   || defined(__AVR_ATmega48__) || defined(__AVR_ATmega48A__) || defined(__AVR_ATmega48PA__) || defined(__AVR_ATmega48P__) || defined(__AVR_ATmega48PB__)
 // Arduino Uno
 #define PCINT_INPUT_PORT0 PINB
 #define PCINT_INPUT_PORT1 PINC
