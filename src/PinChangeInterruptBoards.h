@@ -127,6 +127,11 @@ THE SOFTWARE.
 #define PCINT_INPUT_PORT1 PINB
 #define PCINT_INPUT_PORT2 PIND
 
+#elif defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)
+// PORTB has Reset, clock and SPI while PORTA has I2C and Analog Pins. We just enable all pins.
+#define PCINT_INPUT_PORT0 PINA
+#define PCINT_INPUT_PORT1 PINB
+
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.
 #endif
