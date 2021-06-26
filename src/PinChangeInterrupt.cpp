@@ -165,6 +165,13 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 	PCICR |= (1  << (pcintPort + PCIE0));
 #elif defined(GICR) /* e.g. ATmega162 */
 	GICR |= (1  << (pcintPort + PCIE0));
+#elif defined(GIMSK) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__))
+	if (pcintPort == 1 && pcintMask < 16) {
+		GIMSK |= (1 << PCIE0);
+	}
+	else {
+		GIMSK |= (1 << PCIE1);
+	}
 #elif defined(GIMSK) && defined(PCIE0) /* e.g. ATtiny X4 */
 	GIMSK |= (1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && defined(PCIE) /* e.g. ATtiny X5 */

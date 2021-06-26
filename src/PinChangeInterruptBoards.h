@@ -142,6 +142,7 @@ THE SOFTWARE.
 // PORTB has Reset, clock and SPI while PORTA has I2C and Analog Pins. We just enable all pins.
 #define PCINT_INPUT_PORT0 PINA
 #define PCINT_INPUT_PORT1 PINB
+#define PCINT_COMBINE_PORT01 1
 
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.

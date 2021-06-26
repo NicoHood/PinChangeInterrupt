@@ -22,6 +22,7 @@ disablePCINT	KEYWORD2
 disablePinChangeInterrupt	KEYWORD2
 getPCINTTrigger	KEYWORD2
 getPinChangeInterruptTrigger	KEYWORD2
+initPinChangeInterrupt	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
