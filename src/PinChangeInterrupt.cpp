@@ -190,27 +190,30 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 		*(&PCMSK0 + pcintPort) &= ~pcintMask;
 
 		// if that's the last one, disable the interrupt.
-		if (*(&PCMSK0 + pcintPort) == 0)
+		if (*(&PCMSK0 + pcintPort) == 0) {
 			disable = true;
+		}
 #ifdef PCMSK1
 	}
-	else{
-		switch(pcintPort){
+	else {
+		switch (pcintPort) {
 			case 0:
 				// disable the mask.
 				PCMSK0 &= ~pcintMask;
 
 				// if that's the last one, disable the interrupt.
-				if (!PCMSK0)
+				if (!PCMSK0) {
 					disable = true;
+				}
 			break;
 			case 1:
 				// disable the mask.
 				PCMSK1 &= ~pcintMask;
 
 				// if that's the last one, disable the interrupt.
-				if (!PCMSK1)
+				if (!PCMSK1) {
 					disable = true;
+				}
 			break;
 #ifdef PCMSK2
 			case 2:
@@ -218,31 +221,35 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 				PCMSK2 &= ~pcintMask;
 
 				// if that's the last one, disable the interrupt.
-				if (!PCMSK2)
+				if (!PCMSK2) {
 					disable = true;
+				}
 			break;
-#endif
+#endif // ifdef PCMSK2
 #ifdef PCMSK3
 			case 3:
 				// disable the mask.
 				PCMSK3 &= ~pcintMask;
 
 				// if that's the last one, disable the interrupt.
-				if (!PCMSK3)
+				if (!PCMSK3) {
 					disable = true;
+				}
 			break;
-#endif
+#endif // ifdef PCMSK3
 		}
 	}
-#endif
+#endif // ifdef PCMSK1
 #elif defined(PCMSK)
 	// disable the mask.
 	*(&PCMSK + pcintPort) &= ~pcintMask;
 
 	// if that's the last one, disable the interrupt.
-	if (*(&PCMSK + pcintPort) == 0)
+	if (*(&PCMSK + pcintPort) == 0) {
 		disable = true;
-#endif
+	}
+#endif // ifdef PCMSK0
+
 	if(disable)
 	{
 #ifdef PCICR
