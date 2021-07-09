@@ -145,7 +145,7 @@ THE SOFTWARE.
 // Attiny x61 Series has a very special interrupt vector and port mapping.
 // It combines PCINT0_vect and PCINT1_vect into PCINT_vect
 // See datasheet section 9.1: http://ww1.microchip.com/downloads/en/devicedoc/atmel-2588-8-bit-avr-microcontrollers-tinyavr-attiny261-attiny461-attiny861_datasheet.pdf
-#define PCINT_COMBINE_PORT0_PORT1 1
+#define PCINT_COMBINE_PORT0_PORT1 true
 
 #else // Microcontroller not supported
 #error PinChangeInterrupt library does not support this MCU.
