@@ -166,12 +166,20 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 #elif defined(GICR) /* e.g. ATmega162 */
 	GICR |= (1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__))
-	if (pcintPort == 1 && pcintMask < 16) {
-		GIMSK |= (1 << PCIE0);
-	}
-	else {
-		GIMSK |= (1 << PCIE1);
-	}
+    // This is a special case for Attiny x61 series which was very weird PCINT mapping.
+    // See datasheet section 9.3.2: http://ww1.microchip.com/downloads/en/devicedoc/atmel-2588-8-bit-avr-microcontrollers-tinyavr-attiny261-attiny461-attiny861_datasheet.pdf
+#if (PCINT_USE_PORT1 == true)
+    if (pcintPort == 1 && pcintMask < (1 << 4)) {
+        // PCINT11:8 will be enabled with PCIE0
+        GIMSK |= (1 << PCIE0);
+    }
+    else {
+#endif
+        // PCINT7:0 and PCINT15:12 will be enabled with PCIE1
+        GIMSK |= (1 << PCIE1);
+#if (PCINT_USE_PORT1 == true)
+    }
+#endif
 #elif defined(GIMSK) && defined(PCIE0) /* e.g. ATtiny X4 */
 	GIMSK |= (1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && defined(PCIE) /* e.g. ATtiny X5 */
