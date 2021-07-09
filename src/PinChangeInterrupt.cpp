@@ -122,8 +122,7 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 	}
 
 	// Pin change mask registers decide which pins are ENABLE as triggers
-#ifdef PCMSK0
-#ifdef PCMSK1
+#if defined(PCMSK0) && defined(PCMSK1)
 #ifdef PCMSK3
 	// Special case for ATmega1284P where PCMSK3 is not directly after PCMSK2
 	if(false){
@@ -131,9 +130,7 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 	// Special case for Attinyx4 where PCMSK1 and PCMSK0 are not next to each other
 	if(&PCMSK1 - &PCMSK0 == 1){
 #endif
-#endif
 		*(&PCMSK0 + pcintPort) |= pcintMask;
-#ifdef PCMSK1
 	}
 	else{
 		switch(pcintPort){
@@ -155,7 +152,6 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 #endif
 		}
 	}
-#endif
 #elif defined(PCMSK)
 	*(&PCMSK + pcintPort) |= pcintMask;
 #endif
