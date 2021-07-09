@@ -81,7 +81,7 @@ ISR(PCINT0_vect) {
 	PCINT_CALLBACK_PORT0
 #endif
 
-#ifdef PCINT_COMBINE_PORT0_PORT1
+#if defined(PCINT_COMBINE_PORT0_PORT1) && (PCINT_USE_PORT1 == true)
 	// get the new and old pin states for port
 	newPort = PCINT_INPUT_PORT1;
 
@@ -115,7 +115,7 @@ ISR(PCINT0_vect) {
 #else
 	PCINT_CALLBACK_PORT1
 #endif
-#endif // PCINT_COMBINE_PORT0_PORT1
+#endif // defined(PCINT_COMBINE_PORT0_PORT1) && (PCINT_USE_PORT1 == true)
 }
 
 #if defined(PCINT_API)
