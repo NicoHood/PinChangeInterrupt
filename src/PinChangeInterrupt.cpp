@@ -121,6 +121,35 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 #endif
 	}
 
+	// Special case for Attiny x61 where PCMSK0 and PCMSK1 registers
+	// have initial values of 1 for some reason.
+	// See datasheet section 9.3.4 and 9.3.5
+	// https://ww1.microchip.com/downloads/en/devicedoc/atmel-2588-8-bit-avr-microcontrollers-tinyavr-attiny261-attiny461-attiny861_datasheet.pdf
+#if defined(GIMSK) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__))
+#if (PCINT_USE_PORT1 == true)
+	// PCIE0 case
+	if (pcintPort == 1 && pcintMask < (1 << 4)) {
+		if (!(GIMSK & (1 << PCIE0))) {
+			// Clear PCINT11:8
+			PCMSK1 &= ~0x0F;
+		}
+	}
+	// PCIE1 case
+	else {
+#endif
+		if (!(GIMSK & (1 << PCIE1))) {
+#if (PCINT_USE_PORT1 == true)
+			// Clear PCINT15:12
+			PCMSK1 &= ~0xF0;
+#endif
+			// Clear PCINT7:0
+			PCMSK0 = 0x00;
+		}
+#if (PCINT_USE_PORT1 == true)
+	}
+#endif
+#endif
+
 	// Pin change mask registers decide which pins are ENABLE as triggers
 #ifdef PCMSK0
 #ifdef PCMSK1

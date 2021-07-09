@@ -107,12 +107,6 @@ PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 #error MCU has no such a register
 #endif
 
-#if defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)
-#define initPinChangeInterrupt() PCMSK0 = 0; PCMSK1 = 0
-#else
-#define initPinChangeInterrupt() 
-#endif
-
 // alias for shorter writing
 #define PCINTEvent(n) PinChangeInterruptEvent_Wrapper(n)
 #define digitalPinToPCINT digitalPinToPinChangeInterrupt
