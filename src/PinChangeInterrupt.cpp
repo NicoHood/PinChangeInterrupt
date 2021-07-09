@@ -178,9 +178,14 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 	bool disable = false;
 #ifdef PCMSK0
 #ifdef PCMSK1
+#ifdef PCMSK3
+	// Special case for ATmega1284P where PCMSK3 is not directly after PCMSK2
+	if (false){
+#else
 	// Special case for Attinyx4 where PCMSK1 and PCMSK0 are not next to each other
-	if(&PCMSK1 - &PCMSK0 == 1){
-#endif
+	if (&PCMSK1 - &PCMSK0 == 1) {
+#endif // ifdef PCMSK3
+#endif // ifdef PCMSK1
 		// disable the mask.
 		*(&PCMSK0 + pcintPort) &= ~pcintMask;
 
