@@ -31,7 +31,7 @@ THE SOFTWARE.
 #if defined(PCINT_ALINKAGE) && defined(PCINT_COMPILE_ENABLED_ISR) && defined(PCINT_INCLUDE_FROM_CPP) \
 	|| !defined(PCINT_ALINKAGE) || !defined(PCINT_COMPILE_ENABLED_ISR)
 
-#if (PCINT_USE_PORT1 == true) && !defined(PCINT_COMBINE_PORT01)
+#if (PCINT_USE_PORT1 == true) && !defined(PCINT_COMBINE_PORT0_PORT1)
 
 void attachPinChangeInterrupt1(void) {
 	// fake function to make the IDE link this file

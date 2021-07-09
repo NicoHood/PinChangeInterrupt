@@ -36,13 +36,13 @@ THE SOFTWARE.
 void attachPinChangeInterrupt0(void) {
 	// fake function to make the IDE link this file
 }
-#ifdef PCINT_COMBINE_PORT01
+#ifdef PCINT_COMBINE_PORT0_PORT1
 void attachPinChangeInterrupt1(void) {
 	// fake function to make the IDE link this file
 }
 #endif
 
-#ifdef PCINT_COMBINE_PORT01
+#ifdef PCINT_COMBINE_PORT0_PORT1
 ISR(PCINT_vect) {
 #else
 ISR(PCINT0_vect) {
@@ -81,7 +81,7 @@ ISR(PCINT0_vect) {
 	PCINT_CALLBACK_PORT0
 #endif
 
-#ifdef PCINT_COMBINE_PORT01
+#ifdef PCINT_COMBINE_PORT0_PORT1
 	// get the new and old pin states for port
 	newPort = PCINT_INPUT_PORT1;
 
@@ -115,7 +115,7 @@ ISR(PCINT0_vect) {
 #else
 	PCINT_CALLBACK_PORT1
 #endif
-#endif // PCINT_COMBINE_PORT01
+#endif // PCINT_COMBINE_PORT0_PORT1
 }
 
 #if defined(PCINT_API)
@@ -187,7 +187,7 @@ void PinChangeInterruptEventPCINT7(void) {
 }
 #endif
 
-#ifdef PCINT_COMBINE_PORT01
+#ifdef PCINT_COMBINE_PORT0_PORT1
 #if (PCINT_USE_PCINT8 == true)
 volatile callback callbackPCINT8 = pcint_null_callback;
 void PinChangeInterruptEventPCINT8(void) {
@@ -236,7 +236,7 @@ void PinChangeInterruptEventPCINT15(void) {
 	callbackPCINT15();
 }
 #endif
-#endif // PCINT_COMBINE_PORT01
+#endif // PCINT_COMBINE_PORT0_PORT1
 
 #endif // PCINT_API
 
