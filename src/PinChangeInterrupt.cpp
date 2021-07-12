@@ -128,26 +128,20 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 #if defined(GIMSK) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__))
 #if (PCINT_USE_PORT1 == true)
 	// PCIE0 case
-	if (pcintPort == 1 && pcintMask < (1 << 4)) {
-		if (!(GIMSK & (1 << PCIE0))) {
-			// Clear PCINT11:8
-			PCMSK1 &= ~0x0F;
-		}
+	if (!(GIMSK & (1 << PCIE0))) {
+		// Clear PCINT11:8
+		PCMSK1 &= ~0x0F;
 	}
 	// PCIE1 case
-	else {
 #endif
-		if (!(GIMSK & (1 << PCIE1))) {
+	if (!(GIMSK & (1 << PCIE1))) {
 #if (PCINT_USE_PORT1 == true)
-			// Clear PCINT15:12
-			PCMSK1 &= ~0xF0;
+		// Clear PCINT15:12
+		PCMSK1 &= ~0xF0;
 #endif
-			// Clear PCINT7:0
-			PCMSK0 = 0x00;
-		}
-#if (PCINT_USE_PORT1 == true)
+		// Clear PCINT7:0
+		PCMSK0 = 0x00;
 	}
-#endif
 #endif
 
 	// Pin change mask registers decide which pins are ENABLE as triggers
