@@ -239,34 +239,25 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 				// disable the mask.
 				PCMSK0 &= ~pcintMask;
 
-#if (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)) && (PCINT_USE_PORT1 == true)
-				// x61 devices uses the same interrupt enable for all of PCMSK0 (PCINT7:0) and the top half of PCMSK1 (PCINT15:12)
-				if (!PCMSK0 && !(PCMSK1 & 0b11110000))
-					GIMSK &= ~(1  << PCIE1);
-#else
 				// if that's the last one, disable the interrupt.
 				if (!PCMSK0)
 					disable = true;
-#endif
 			break;
 			case 1:
 				// disable the mask.
 				PCMSK1 &= ~pcintMask;
 
-#if (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)) && (PCINT_USE_PORT1 == true)
-				// x61 devices use an interrupt specially for the bottom half of PCMASK1 (PCINT11:8)
-				if (pcintMask < (1 << 4)) {
-					if (!(PCMSK1 & 0b00001111))
-						GIMSK &= ~(1  << PCIE0);
-				}
-				// x61 devices uses the same interrupt enable for all of PCMSK0 (PCINT7:0) and the top half of PCMSK1 (PCINT15:12)
-				else if (!PCMSK0 && !(PCMSK1 & 0b11110000))
-					GIMSK &= ~(1  << PCIE1);
-#else
 				// if that's the last one, disable the interrupt.
+#if (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)) && (PCINT_USE_PORT1 == true)
+				//have to check each half of the register separately to know if something may be disabled. If it is
+				//checked all together then an interrupt enabled on pins 15:12 would stop PCIE0 from being disabled
+				//and an interrupt enabled on pins 11:8 would stop PCIE1 from being disabled if the last interrupt
+				//disabled was on one of pins 15:12 (it would still work if the last one disabled was in pins 7:0).
+				if (!(PCMSK1 & 0x0F) || !(PCMSK1 & 0xF0))
+#else
 				if (!PCMSK1)
-					disable = true;
 #endif
+					disable = true;
 			break;
 #ifdef PCMSK2
 			case 2:
@@ -300,17 +291,34 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 		disable = true;
 #endif
 
-	//the special case for x61 devices will be handled above inline
-#if !((defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)) && (PCINT_USE_PORT1 == true))
 	if(disable)
 	{
 #ifdef PCICR
 		PCICR &= ~(1  << (pcintPort + PCIE0));
 #elif defined(GICR) /* e.g. ATmega162 */
 		GICR &= ~(1  << (pcintPort + PCIE0));
-// if PORT1 is disabled on a x61 device this will handle the backwards PCIE definitions
 #elif defined(GIMSK) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__))
-		GIMSK &= ~(1  << PCIE1);
+		// This is a special case for Attiny x61 series which was very weird PCINT mapping.
+		// See datasheet section 9.3.2:
+		// http://ww1.microchip.com/downloads/en/devicedoc/atmel-2588-8-bit-avr-microcontrollers-tinyavr-attiny261-attiny461-attiny861_datasheet.pdf
+#if (PCINT_USE_PORT1 == true)
+		if (pcintPort == 1 && pcintMask < (1 << 4)) {
+			//PCINT11:8 will be disabled with PCIE0
+			if (!(PCMSK1 & 0x0F)) {
+				GIMSK &= ~(1 << PCIE0);
+			}
+		}
+		else {
+			//PCINT7:0 and PCINT15:12 will be disabled with PCIE1
+			if (!PCMSK0 && !(PCMSK1 & 0xF0)) {
+#else
+			if (!PCMSK0) {
+#endif
+				GIMSK &= ~(1 << PCIE1);
+			}
+#if (PCINT_USE_PORT1 == true)
+		}
+#endif
 #elif defined(GIMSK) && defined(PCIE0) /* e.g. ATtiny X4 */
 		GIMSK &= ~(1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && defined(PCIE) /* e.g. ATtiny X5 */
@@ -319,7 +327,6 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 #error MCU has no such a register
 #endif
 	}
-#endif // !((defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)) && (PCINT_USE_PORT1 == true))
 }
 
 /*
