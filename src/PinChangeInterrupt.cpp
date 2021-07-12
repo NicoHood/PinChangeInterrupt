@@ -121,6 +121,29 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 #endif
 	}
 
+	// Special case for Attiny x61 where PCMSK0 and PCMSK1 registers
+	// have initial values of 1 for some reason.
+	// See datasheet section 9.3.4 and 9.3.5
+	// https://ww1.microchip.com/downloads/en/devicedoc/atmel-2588-8-bit-avr-microcontrollers-tinyavr-attiny261-attiny461-attiny861_datasheet.pdf
+#if defined(GIMSK) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__))
+#if (PCINT_USE_PORT1 == true)
+	// PCIE0 case
+	if (!(GIMSK & (1 << PCIE0))) {
+		// Clear PCINT11:8
+		PCMSK1 &= ~0x0F;
+	}
+	// PCIE1 case
+#endif
+	if (!(GIMSK & (1 << PCIE1))) {
+#if (PCINT_USE_PORT1 == true)
+		// Clear PCINT15:12
+		PCMSK1 &= ~0xF0;
+#endif
+		// Clear PCINT7:0
+		PCMSK0 = 0x00;
+	}
+#endif
+
 	// Pin change mask registers decide which pins are ENABLE as triggers
 #ifdef PCMSK0
 #ifdef PCMSK1
@@ -165,6 +188,21 @@ void enablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcint
 	PCICR |= (1  << (pcintPort + PCIE0));
 #elif defined(GICR) /* e.g. ATmega162 */
 	GICR |= (1  << (pcintPort + PCIE0));
+#elif defined(GIMSK) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__))
+    // This is a special case for Attiny x61 series which was very weird PCINT mapping.
+    // See datasheet section 9.3.2: http://ww1.microchip.com/downloads/en/devicedoc/atmel-2588-8-bit-avr-microcontrollers-tinyavr-attiny261-attiny461-attiny861_datasheet.pdf
+#if (PCINT_USE_PORT1 == true)
+    if (pcintPort == 1 && pcintMask < (1 << 4)) {
+        // PCINT11:8 will be enabled with PCIE0
+        GIMSK |= (1 << PCIE0);
+    }
+    else {
+#endif
+        // PCINT7:0 and PCINT15:12 will be enabled with PCIE1
+        GIMSK |= (1 << PCIE1);
+#if (PCINT_USE_PORT1 == true)
+    }
+#endif
 #elif defined(GIMSK) && defined(PCIE0) /* e.g. ATtiny X4 */
 	GIMSK |= (1  << (pcintPort + PCIE0));
 #elif defined(GIMSK) && defined(PCIE) /* e.g. ATtiny X5 */
@@ -247,9 +285,31 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 	// if that's the last one, disable the interrupt.
 	if (*(&PCMSK + pcintPort) == 0) {
 		disable = true;
-	}
 #endif // ifdef PCMSK0
 
+	// This is a special case for Attiny x61 series which was very weird PCINT mapping.
+	// See datasheet section 9.3.2:
+	// http://ww1.microchip.com/downloads/en/devicedoc/atmel-2588-8-bit-avr-microcontrollers-tinyavr-attiny261-attiny461-attiny861_datasheet.pdf
+#if defined(GIMSK) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__))
+#if (PCINT_USE_PORT1 == true)
+	if (pcintPort == 1 && pcintMask < (1 << 4)) {
+		//PCINT11:8 will be disabled with PCIE0
+		if (!(PCMSK1 & 0x0F)) {
+			GIMSK &= ~(1 << PCIE0);
+		}
+	}
+	else {
+		//PCINT7:0 and PCINT15:12 will be disabled with PCIE1
+		if (!PCMSK0 && !(PCMSK1 & 0xF0)) {
+#else
+		if (!PCMSK0) {
+#endif
+			GIMSK &= ~(1 << PCIE1);
+		}
+#if (PCINT_USE_PORT1 == true)
+	}
+#endif
+#else
 	if(disable)
 	{
 #ifdef PCICR
@@ -264,6 +324,7 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 #error MCU has no such a register
 #endif
 	}
+#endif
 }
 
 /*
