@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2015 NicoHood
+Copyright (c) 2014-2021 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -178,34 +178,42 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 	bool disable = false;
 #ifdef PCMSK0
 #ifdef PCMSK1
+#ifdef PCMSK3
+	// Special case for ATmega1284P where PCMSK3 is not directly after PCMSK2
+	if (false){
+#else
 	// Special case for Attinyx4 where PCMSK1 and PCMSK0 are not next to each other
-	if(&PCMSK1 - &PCMSK0 == 1){
-#endif
+	if (&PCMSK1 - &PCMSK0 == 1) {
+#endif // ifdef PCMSK3
+#endif // ifdef PCMSK1
 		// disable the mask.
 		*(&PCMSK0 + pcintPort) &= ~pcintMask;
 
 		// if that's the last one, disable the interrupt.
-		if (*(&PCMSK0 + pcintPort) == 0)
+		if (*(&PCMSK0 + pcintPort) == 0) {
 			disable = true;
+		}
 #ifdef PCMSK1
 	}
-	else{
-		switch(pcintPort){
+	else {
+		switch (pcintPort) {
 			case 0:
 				// disable the mask.
 				PCMSK0 &= ~pcintMask;
 
 				// if that's the last one, disable the interrupt.
-				if (!PCMSK0)
+				if (!PCMSK0) {
 					disable = true;
+				}
 			break;
 			case 1:
 				// disable the mask.
 				PCMSK1 &= ~pcintMask;
 
 				// if that's the last one, disable the interrupt.
-				if (!PCMSK1)
+				if (!PCMSK1) {
 					disable = true;
+				}
 			break;
 #ifdef PCMSK2
 			case 2:
@@ -213,31 +221,35 @@ void disablePinChangeInterruptHelper(const uint8_t pcintPort, const uint8_t pcin
 				PCMSK2 &= ~pcintMask;
 
 				// if that's the last one, disable the interrupt.
-				if (!PCMSK2)
+				if (!PCMSK2) {
 					disable = true;
+				}
 			break;
-#endif
+#endif // ifdef PCMSK2
 #ifdef PCMSK3
 			case 3:
 				// disable the mask.
 				PCMSK3 &= ~pcintMask;
 
 				// if that's the last one, disable the interrupt.
-				if (!PCMSK3)
+				if (!PCMSK3) {
 					disable = true;
+				}
 			break;
-#endif
+#endif // ifdef PCMSK3
 		}
 	}
-#endif
+#endif // ifdef PCMSK1
 #elif defined(PCMSK)
 	// disable the mask.
 	*(&PCMSK + pcintPort) &= ~pcintMask;
 
 	// if that's the last one, disable the interrupt.
-	if (*(&PCMSK + pcintPort) == 0)
+	if (*(&PCMSK + pcintPort) == 0) {
 		disable = true;
-#endif
+	}
+#endif // ifdef PCMSK0
+
 	if(disable)
 	{
 #ifdef PCICR
