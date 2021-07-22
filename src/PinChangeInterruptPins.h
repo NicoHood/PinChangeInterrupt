@@ -371,12 +371,14 @@ Serial.println();
 // Hardware Definitions
 //================================================================================
 
-#if defined(PCINT0_vect)
+//special case for the x61 where a single interrupt vector is used for multiple ports
+#if defined(PCINT0_vect) || (defined(PCINT_vect) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)))
 #define PCINT_HAS_PORT0 true
 #else
 #define PCINT_HAS_PORT0 false
 #endif
-#if defined(PCINT1_vect)
+//special case for the x61 where a single interrupt vector is used for multiple ports
+#if defined(PCINT1_vect) || (defined(PCINT_vect) && (defined(__AVR_ATtiny261__) || defined(__AVR_ATtiny461__) || defined(__AVR_ATtiny861__)))
 #define PCINT_HAS_PORT1 true
 #else
 #define PCINT_HAS_PORT1 false
